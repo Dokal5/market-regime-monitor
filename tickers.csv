@@ -11,17 +11,29 @@ AVGO,Broadcom Inc.,Semiconductors
 TSM,Taiwan Semiconductor Manufacturing Co. Ltd.,Semiconductors
 ASML,ASML Holding N.V.,Semiconductors
 MU,Micron Technology Inc.,Semiconductors
+QCOM,Qualcomm Incorporated,Semiconductors
+INTC,Intel Corporation,Semiconductors
+ARM,Arm Holdings plc,Semiconductors
+AMAT,Applied Materials Inc.,Semiconductors
+TXN,Texas Instruments Incorporated,Semiconductors
 AVAV,AeroVironment Inc.,Defense Drones
 KTOS,Kratos Defense & Security Solutions Inc.,Defense Drones
 RTX,RTX Corporation,Defense Drones
 LHX,L3Harris Technologies Inc.,Defense Drones
 NOC,Northrop Grumman Corporation,Defense Drones
+RCAT,Red Cat Holdings Inc.,Defense Drones
+ONDS,Ondas Holdings Inc.,Defense Drones
 RKLB,Rocket Lab USA Inc.,Space
 LUNR,Intuitive Machines Inc.,Space
 ASTS,AST SpaceMobile Inc.,Space
 IRDM,Iridium Communications Inc.,Space
 SPCE,Virgin Galactic Holdings Inc.,Space
 PL,Planet Labs PBC,Space
+RDW,Redwire Corporation,Space
+BKSY,BlackSky Technology Inc.,Space
+VSAT,Viasat Inc.,Space
+SATL,Satellogic Inc.,Space
+SPIR,Spire Global Inc.,Space
 CRWD,CrowdStrike Holdings Inc.,Cybersecurity
 PANW,Palo Alto Networks Inc.,Cybersecurity
 FTNT,Fortinet Inc.,Cybersecurity
@@ -40,12 +52,24 @@ ROKU,Roku Inc.,Adtech
 MGNI,Magnite Inc.,Adtech
 PUBM,PubMatic Inc.,Adtech
 DV,DoubleVerify Holdings Inc.,Adtech
-CEG,Constellation Energy Corporation,Energy Nuclear
-VST,Vistra Corp.,Energy Nuclear
-CCJ,Cameco Corporation,Energy Nuclear
-UEC,Uranium Energy Corp.,Energy Nuclear
-LEU,Centrus Energy Corp.,Energy Nuclear
-SMR,NuScale Power Corporation,Energy Nuclear
+CEG,Constellation Energy Corporation,Nuclear
+VST,Vistra Corp.,Nuclear
+CCJ,Cameco Corporation,Nuclear
+UEC,Uranium Energy Corp.,Nuclear
+LEU,Centrus Energy Corp.,Nuclear
+SMR,NuScale Power Corporation,Nuclear
+OKLO,Oklo Inc.,Nuclear
+NNE,NANO Nuclear Energy Inc.,Nuclear
+GEV,GE Vernova Inc.,Renewables
+FSLR,First Solar Inc.,Renewables
+NXT,Nextracker Inc.,Renewables
+ARRY,Array Technologies Inc.,Renewables
+ORA,Ormat Technologies Inc.,Renewables
+FLNC,Fluence Energy Inc.,Energy Storage
+STEM,Stem Inc.,Energy Storage
+ENPH,Enphase Energy Inc.,Energy Storage
+SEDG,SolarEdge Technologies Inc.,Energy Storage
+GNRC,Generac Holdings Inc.,Energy Storage
 ISRG,Intuitive Surgical Inc.,Robotics Automation
 TER,Teradyne Inc.,Robotics Automation
 SYM,Symbotic Inc.,Robotics Automation
