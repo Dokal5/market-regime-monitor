@@ -1,0 +1,84 @@
+ticker,company_name,industry_group
+ANET,Arista Networks Inc.,AI Infrastructure
+VRT,Vertiv Holdings Co.,AI Infrastructure
+DELL,Dell Technologies Inc.,AI Infrastructure
+HPE,Hewlett Packard Enterprise Co.,AI Infrastructure
+SMCI,Super Micro Computer Inc.,AI Infrastructure
+ETN,Eaton Corporation plc,AI Infrastructure
+NVDA,NVIDIA Corporation,Semiconductors
+AMD,Advanced Micro Devices Inc.,Semiconductors
+AVGO,Broadcom Inc.,Semiconductors
+TSM,Taiwan Semiconductor Manufacturing Co. Ltd.,Semiconductors
+ASML,ASML Holding N.V.,Semiconductors
+MU,Micron Technology Inc.,Semiconductors
+AVAV,AeroVironment Inc.,Defense Drones
+KTOS,Kratos Defense & Security Solutions Inc.,Defense Drones
+RTX,RTX Corporation,Defense Drones
+LHX,L3Harris Technologies Inc.,Defense Drones
+NOC,Northrop Grumman Corporation,Defense Drones
+RKLB,Rocket Lab USA Inc.,Space
+LUNR,Intuitive Machines Inc.,Space
+ASTS,AST SpaceMobile Inc.,Space
+IRDM,Iridium Communications Inc.,Space
+SPCE,Virgin Galactic Holdings Inc.,Space
+PL,Planet Labs PBC,Space
+CRWD,CrowdStrike Holdings Inc.,Cybersecurity
+PANW,Palo Alto Networks Inc.,Cybersecurity
+FTNT,Fortinet Inc.,Cybersecurity
+ZS,Zscaler Inc.,Cybersecurity
+OKTA,Okta Inc.,Cybersecurity
+TENB,Tenable Holdings Inc.,Cybersecurity
+CRM,Salesforce Inc.,Cloud Software
+NOW,ServiceNow Inc.,Cloud Software
+SNOW,Snowflake Inc.,Cloud Software
+DDOG,Datadog Inc.,Cloud Software
+MDB,MongoDB Inc.,Cloud Software
+WDAY,Workday Inc.,Cloud Software
+TTD,The Trade Desk Inc.,Adtech
+APP,AppLovin Corporation,Adtech
+ROKU,Roku Inc.,Adtech
+MGNI,Magnite Inc.,Adtech
+PUBM,PubMatic Inc.,Adtech
+DV,DoubleVerify Holdings Inc.,Adtech
+CEG,Constellation Energy Corporation,Energy Nuclear
+VST,Vistra Corp.,Energy Nuclear
+CCJ,Cameco Corporation,Energy Nuclear
+UEC,Uranium Energy Corp.,Energy Nuclear
+LEU,Centrus Energy Corp.,Energy Nuclear
+SMR,NuScale Power Corporation,Energy Nuclear
+ISRG,Intuitive Surgical Inc.,Robotics Automation
+TER,Teradyne Inc.,Robotics Automation
+SYM,Symbotic Inc.,Robotics Automation
+ROK,Rockwell Automation Inc.,Robotics Automation
+CGNX,Cognex Corporation,Robotics Automation
+ZBRA,Zebra Technologies Corporation,Robotics Automation
+XYZ,Block Inc.,Fintech
+PYPL,PayPal Holdings Inc.,Fintech
+HOOD,Robinhood Markets Inc.,Fintech
+COIN,Coinbase Global Inc.,Fintech
+SOFI,SoFi Technologies Inc.,Fintech
+AFRM,Affirm Holdings Inc.,Fintech
+NFLX,Netflix Inc.,Consumer Platforms
+UBER,Uber Technologies Inc.,Consumer Platforms
+ABNB,Airbnb Inc.,Consumer Platforms
+DASH,DoorDash Inc.,Consumer Platforms
+SPOT,Spotify Technology S.A.,Consumer Platforms
+PINS,Pinterest Inc.,Consumer Platforms
+JNJ,Johnson & Johnson,Defensive Healthcare
+MRK,Merck & Co. Inc.,Defensive Healthcare
+PFE,Pfizer Inc.,Defensive Healthcare
+ABBV,AbbVie Inc.,Defensive Healthcare
+UNH,UnitedHealth Group Inc.,Defensive Healthcare
+MDT,Medtronic plc,Defensive Healthcare
+PG,Procter & Gamble Co.,Defensive Staples
+KO,The Coca-Cola Company,Defensive Staples
+PEP,PepsiCo Inc.,Defensive Staples
+WMT,Walmart Inc.,Defensive Staples
+COST,Costco Wholesale Corporation,Defensive Staples
+CL,Colgate-Palmolive Company,Defensive Staples
+SPY,SPDR S&P 500 ETF Trust,Market ETFs
+QQQ,Invesco QQQ Trust,Market ETFs
+IWM,iShares Russell 2000 ETF,Market ETFs
+DIA,SPDR Dow Jones Industrial Average ETF Trust,Market ETFs
+VTI,Vanguard Total Stock Market ETF,Market ETFs
+VOO,Vanguard S&P 500 ETF,Market ETFs

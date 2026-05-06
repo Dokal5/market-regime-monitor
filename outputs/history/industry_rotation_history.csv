@@ -1,0 +1,15 @@
+date,industry_group,industry_rank,average_10d_return,confirmed_signal_pct
+2026-05-06,Semiconductors,1,0.157344,0.500000
+2026-05-06,AI Infrastructure,2,0.064567,0.500000
+2026-05-06,Energy Nuclear,3,0.036917,0.166667
+2026-05-06,Market ETFs,4,0.033652,0.833333
+2026-05-06,Defensive Staples,5,0.030623,0.333333
+2026-05-06,Adtech,6,0.029173,0.500000
+2026-05-06,Robotics Automation,7,0.028260,0.166667
+2026-05-06,Cybersecurity,8,0.005888,0.333333
+2026-05-06,Defensive Healthcare,9,-0.002783,0.166667
+2026-05-06,Cloud Software,10,-0.040470,0.000000
+2026-05-06,Consumer Platforms,11,-0.045768,0.000000
+2026-05-06,Space,12,-0.069675,0.000000
+2026-05-06,Fintech,13,-0.070954,0.000000
+2026-05-06,Defense Drones,14,-0.087238,0.000000
