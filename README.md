@@ -59,12 +59,34 @@ Industry output groups by `industry_group` and reports the mean of each ticker m
 
 The dashboard is a static HTML file with embedded data from the Python run. It does not require a framework, server, or build step.
 
+Industry output also includes breadth fields:
+
+- `positive_5d_pct`: share of industry tickers with `return_5d > 0`
+- `positive_10d_pct`: share of industry tickers with `return_10d > 0`
+- `confirmed_signal_pct`: share of industry tickers with confirmed momentum
+- `strong_signal_pct`: share of industry tickers with strong momentum
+- `high_relative_volume_pct`: share of industry tickers with `relative_volume > 1.2`
+- `breadth_score`: weighted breadth score using 20% positive 5 day, 25% positive 10 day, 25% confirmed, 20% strong, and 10% high relative volume
+
 Industry output also includes trend intelligence fields:
 
 - `rotation_score`: improvement in industry rank over the last 5 historical trading dates, where positive means the industry moved up.
 - `momentum_persistence`: consecutive historical trading dates the industry has stayed in the top 3 by average 10 day return.
 - `momentum_acceleration`: current average 5 day return minus the previous snapshot's average 5 day return.
 - `momentum_exhaustion_warning`: true when average 10 day return is still strong, but average 3 day return has weakened meaningfully or relative volume is below `0.8`.
+
+## Project structure
+
+`main.py` is the orchestration entry point. The implementation lives in `src/`:
+
+- `config.py`: paths, output names, lookback settings, and signal thresholds
+- `data_loader.py`: ticker input cleanup and `yfinance` downloads
+- `metrics.py`: ticker-level return, volume, moving average, drawdown, and up-day calculations
+- `signals.py`: ticker momentum signals, risk warning, and relative strength
+- `industry.py`: industry-level aggregation and confirmed signal percentages
+- `history.py`: dated snapshots, rotation history, and trend intelligence fields
+- `dashboard.py`: static HTML dashboard generation
+- `io_utils.py`: shared CSV writing helpers
 
 ## Historical snapshots
 

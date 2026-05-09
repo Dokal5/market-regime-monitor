@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Stock Momentum Tracker</title>
+  <title>股票動能追蹤</title>
   <style>
     :root {
       color-scheme: light;
@@ -112,6 +112,13 @@
       font-weight: 760;
     }
 
+    .summary-description {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
     .dashboard-section {
       border-top: 1px solid var(--line-strong);
       padding: 22px 0 8px;
@@ -123,6 +130,13 @@
       justify-content: space-between;
       gap: 16px;
       margin-bottom: 10px;
+    }
+
+    .section-note {
+      margin: -4px 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
     }
 
     h2 {
@@ -152,6 +166,10 @@
       border-radius: 8px;
       background: var(--surface);
       box-shadow: var(--shadow);
+    }
+
+    .mobile-card-list {
+      display: none;
     }
 
     .rotation-grid {
@@ -227,6 +245,77 @@
       text-overflow: ellipsis;
     }
 
+    .mobile-row-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 13px 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .mobile-card-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 9px;
+    }
+
+    .mobile-card-title {
+      min-width: 0;
+      font-size: 15px;
+      font-weight: 760;
+      overflow-wrap: anywhere;
+    }
+
+    .mobile-card-rank {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .mobile-card-subtitle {
+      margin: -3px 0 11px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .mobile-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 12px;
+    }
+
+    .mobile-metric {
+      min-width: 0;
+      border-top: 1px solid var(--line);
+      padding-top: 7px;
+    }
+
+    .mobile-metric-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 740;
+      text-transform: uppercase;
+    }
+
+    .mobile-metric-value {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 680;
+      overflow-wrap: anywhere;
+    }
+
+    .mobile-metric-hint {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
     .positive {
       color: var(--green);
       font-weight: 720;
@@ -293,318 +382,462 @@
         grid-template-columns: 1fr;
       }
     }
+
+    @media (max-width: 640px) {
+      .table-wrap {
+        display: none;
+      }
+
+      .mobile-card-list:not([hidden]) {
+        display: grid;
+        gap: 10px;
+      }
+
+      .mobile-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 360px) {
+      .mobile-metrics {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
     <div class="header-inner">
       <div>
-        <h1>Stock Momentum Tracker</h1>
-        <p class="subhead">Static signal dashboard generated from the latest local CSV run.</p>
+        <h1>股票動能追蹤</h1>
+        <p class="subhead">由最新 CSV 輸出產生的靜態動能訊號儀表板。</p>
       </div>
       <p class="timestamp" id="generated-date"></p>
     </div>
   </header>
 
   <main>
-    <section class="summary-grid" id="summary-grid" aria-label="Momentum summary"></section>
+    <section class="summary-grid" id="summary-grid" aria-label="動能摘要"></section>
 
     <section class="dashboard-section">
       <div class="section-heading">
-        <h2>Industry momentum ranking by average 10 day return</h2>
+        <h2>產業動能排名：依平均 10 日報酬排序</h2>
         <span class="row-count" data-count-for="industry-momentum"></span>
       </div>
+      <p class="section-note">排序仍依平均 10 日報酬；欄位按 5 日、10 日、20 日排列，方便比較短中期動能。</p>
       <div class="table-wrap">
         <table data-table="industry-momentum"></table>
       </div>
-      <p class="empty-state" data-empty-for="industry-momentum" hidden>No industry rows.</p>
+      <p class="empty-state" data-empty-for="industry-momentum" hidden>目前沒有產業資料。</p>
     </section>
 
     <section class="dashboard-section">
       <div class="section-heading">
-        <h2>Industries ranked by percentage of tickers with confirmed_momentum_signal</h2>
+        <h2>產業確認動能比例排名</h2>
         <span class="row-count" data-count-for="industry-confirmed"></span>
       </div>
+      <p class="section-note">顯示各產業中符合確認動能條件的股票比例，比例越高代表產業內部動能越一致。</p>
       <div class="table-wrap">
         <table data-table="industry-confirmed"></table>
       </div>
-      <p class="empty-state" data-empty-for="industry-confirmed" hidden>No industry signal rows.</p>
+      <p class="empty-state" data-empty-for="industry-confirmed" hidden>目前沒有產業訊號資料。</p>
     </section>
 
     <section class="dashboard-section">
       <div class="section-heading">
-        <h2>Industry Rotation Trend</h2>
+        <h2>Industry Breadth</h2>
+        <span class="row-count" id="breadth-status"></span>
+      </div>
+      <p class="section-note">產業廣度用來判斷動能是多數成分股一起轉強，還是少數領頭股拉高平均報酬。</p>
+      <div class="intelligence-grid">
+        <div class="intelligence-block">
+          <h3>依廣度分數排名的產業</h3>
+          <div class="table-wrap">
+            <table data-table="breadth-ranked"></table>
+          </div>
+          <p class="empty-state" data-empty-for="breadth-ranked" hidden>目前沒有產業廣度資料。</p>
+        </div>
+        <div class="intelligence-block">
+          <h3>高報酬但廣度偏弱</h3>
+          <div class="table-wrap">
+            <table data-table="breadth-high-return-weak"></table>
+          </div>
+          <p class="empty-state" data-empty-for="breadth-high-return-weak" hidden>目前沒有高報酬但廣度偏弱的產業。</p>
+        </div>
+        <div class="intelligence-block">
+          <h3>報酬中等但廣度改善</h3>
+          <div class="table-wrap">
+            <table data-table="breadth-moderate-improving"></table>
+          </div>
+          <p class="empty-state" data-empty-for="breadth-moderate-improving" hidden>目前沒有報酬中等但廣度改善的產業。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="section-heading">
+        <h2>產業輪動趨勢</h2>
         <span class="row-count" id="rotation-history-status"></span>
       </div>
+      <p class="section-note">比較歷史快照中的排名與平均報酬變化；至少需要兩個不同日期的快照才會出現完整趨勢。</p>
       <div class="rotation-grid">
         <div class="rotation-block">
-          <h3>Industries gaining rank over time</h3>
+          <h3>排名上升的產業</h3>
           <div class="table-wrap">
             <table data-table="rotation-gaining"></table>
           </div>
-          <p class="empty-state" data-empty-for="rotation-gaining" hidden>No gaining industries yet.</p>
+          <p class="empty-state" data-empty-for="rotation-gaining" hidden>目前沒有排名上升的產業。</p>
         </div>
         <div class="rotation-block">
-          <h3>Industries losing rank over time</h3>
+          <h3>排名下滑的產業</h3>
           <div class="table-wrap">
             <table data-table="rotation-losing"></table>
           </div>
-          <p class="empty-state" data-empty-for="rotation-losing" hidden>No losing industries yet.</p>
+          <p class="empty-state" data-empty-for="rotation-losing" hidden>目前沒有排名下滑的產業。</p>
         </div>
         <div class="rotation-block">
-          <h3>Strongest improving industries over last 5 trading days</h3>
+          <h3>近 5 個交易日改善最強</h3>
           <div class="table-wrap">
             <table data-table="rotation-improving-5d"></table>
           </div>
-          <p class="empty-state" data-empty-for="rotation-improving-5d" hidden>No 5 day improvement yet.</p>
+          <p class="empty-state" data-empty-for="rotation-improving-5d" hidden>目前沒有 5 日改善資料。</p>
         </div>
       </div>
     </section>
 
     <section class="dashboard-section">
       <div class="section-heading">
-        <h2>Industry Trend Intelligence</h2>
+        <h2>產業趨勢判讀</h2>
         <span class="row-count" id="trend-intelligence-status"></span>
       </div>
+      <p class="section-note">用排名變化、持續性、加速與衰竭警示輔助判斷產業動能品質。</p>
       <div class="intelligence-grid">
         <div class="intelligence-block">
-          <h3>Strongest improving industries</h3>
+          <h3>改善最強的產業</h3>
           <div class="table-wrap">
             <table data-table="trend-strongest-improving"></table>
           </div>
-          <p class="empty-state" data-empty-for="trend-strongest-improving" hidden>No improving industries yet.</p>
+          <p class="empty-state" data-empty-for="trend-strongest-improving" hidden>目前沒有改善中的產業。</p>
         </div>
         <div class="intelligence-block">
-          <h3>Strongest persistent industries</h3>
+          <h3>持續領先的產業</h3>
           <div class="table-wrap">
             <table data-table="trend-strongest-persistent"></table>
           </div>
-          <p class="empty-state" data-empty-for="trend-strongest-persistent" hidden>No persistent top 3 industries yet.</p>
+          <p class="empty-state" data-empty-for="trend-strongest-persistent" hidden>目前沒有持續維持前三名的產業。</p>
         </div>
         <div class="intelligence-block">
-          <h3>Possible momentum exhaustion industries</h3>
+          <h3>可能動能衰竭</h3>
           <div class="table-wrap">
             <table data-table="trend-momentum-exhaustion"></table>
           </div>
-          <p class="empty-state" data-empty-for="trend-momentum-exhaustion" hidden>No exhaustion warnings.</p>
+          <p class="empty-state" data-empty-for="trend-momentum-exhaustion" hidden>目前沒有衰竭警示。</p>
         </div>
         <div class="intelligence-block">
-          <h3>Newest momentum recovery industries</h3>
+          <h3>最新動能修復</h3>
           <div class="table-wrap">
             <table data-table="trend-momentum-recovery"></table>
           </div>
-          <p class="empty-state" data-empty-for="trend-momentum-recovery" hidden>No recovery industries yet.</p>
+          <p class="empty-state" data-empty-for="trend-momentum-recovery" hidden>目前沒有動能修復產業。</p>
         </div>
       </div>
     </section>
 
     <section class="dashboard-section">
       <div class="section-heading">
-        <h2>Top 10 stocks by relative_strength_vs_industry</h2>
+        <h2>相對產業強度前 10 名</h2>
         <span class="row-count" data-count-for="top-relative-strength"></span>
       </div>
+      <p class="section-note">相對強度 = 個股 10 日報酬減去所屬產業平均 10 日報酬；正值代表跑贏同產業。</p>
       <div class="table-wrap">
         <table data-table="top-relative-strength"></table>
       </div>
-      <p class="empty-state" data-empty-for="top-relative-strength" hidden>No ticker rows.</p>
+      <p class="empty-state" data-empty-for="top-relative-strength" hidden>目前沒有個股資料。</p>
     </section>
 
     <section class="dashboard-section">
       <div class="section-heading">
-        <h2>Early momentum candidates</h2>
+        <h2>早期動能候選</h2>
         <span class="row-count" data-count-for="early-candidates"></span>
       </div>
+      <p class="section-note">3 日與 5 日報酬轉強，且 5 日報酬已高於 10 日報酬的一半，適合當作早期觀察名單。</p>
       <div class="table-wrap">
         <table data-table="early-candidates"></table>
       </div>
-      <p class="empty-state" data-empty-for="early-candidates" hidden>No early momentum candidates.</p>
+      <p class="empty-state" data-empty-for="early-candidates" hidden>目前沒有早期動能候選。</p>
     </section>
 
     <section class="dashboard-section">
       <div class="section-heading">
-        <h2>Strong momentum candidates</h2>
+        <h2>強勢動能候選</h2>
         <span class="row-count" data-count-for="strong-candidates"></span>
       </div>
+      <p class="section-note">同時符合確認動能、跑贏同產業，且相對量大於 1.2，代表價格與量能一起支持。</p>
       <div class="table-wrap">
         <table data-table="strong-candidates"></table>
       </div>
-      <p class="empty-state" data-empty-for="strong-candidates" hidden>No strong momentum candidates.</p>
+      <p class="empty-state" data-empty-for="strong-candidates" hidden>目前沒有強勢動能候選。</p>
     </section>
 
     <section class="dashboard-section">
       <div class="section-heading">
-        <h2>Risk warning list</h2>
+        <h2>風險提醒名單</h2>
         <span class="row-count" data-count-for="risk-warnings"></span>
       </div>
+      <p class="section-note">風險提醒代表近期最大回撤較深，或價格已高出 20 日均線 15% 以上；可作為追高與波動風險檢查。</p>
       <div class="table-wrap">
         <table data-table="risk-warnings"></table>
       </div>
-      <p class="empty-state" data-empty-for="risk-warnings" hidden>No current risk warnings.</p>
+      <p class="empty-state" data-empty-for="risk-warnings" hidden>目前沒有風險提醒。</p>
     </section>
   </main>
 
-  <script id="dashboard-data" type="application/json">{"summary":{"latest_date":"2026-05-08","total_tickers":112,"tickers_with_data":112,"early_count":50,"confirmed_count":34,"strong_count":12,"risk_count":46},"industry_momentum":[{"industry_group":"Semiconductors","ticker_count":11,"tickers_with_data":11,"return_10d":0.1783194365,"return_5d":0.1405361395,"return_20d":0.4276416474,"relative_volume":1.2302915243},{"industry_group":"Cybersecurity","ticker_count":6,"tickers_with_data":6,"return_10d":0.1686548832,"return_5d":0.1419628698,"return_20d":0.3662413774,"relative_volume":1.338174601},{"industry_group":"Cloud Software","ticker_count":6,"tickers_with_data":6,"return_10d":0.1520620448,"return_5d":0.1064001256,"return_20d":0.3034623546,"relative_volume":1.1031294262},{"industry_group":"Energy Storage","ticker_count":5,"tickers_with_data":5,"return_10d":0.1496174944,"return_5d":0.1822744084,"return_20d":0.2369204525,"relative_volume":1.7259050513},{"industry_group":"Space","ticker_count":11,"tickers_with_data":11,"return_10d":0.1392685015,"return_5d":0.1079780096,"return_20d":0.1239794831,"relative_volume":1.4728374811},{"industry_group":"Adtech","ticker_count":6,"tickers_with_data":6,"return_10d":0.0588156685,"return_5d":0.0127519183,"return_20d":0.2026112103,"relative_volume":1.6498067703},{"industry_group":"AI Infrastructure","ticker_count":6,"tickers_with_data":6,"return_10d":0.0557430438,"return_5d":0.0736936927,"return_20d":0.2066102306,"relative_volume":1.2436484264},{"industry_group":"Renewables","ticker_count":5,"tickers_with_data":5,"return_10d":0.0414747868,"return_5d":0.0464856885,"return_20d":0.0900929508,"relative_volume":0.8033399988},{"industry_group":"Market ETFs","ticker_count":6,"tickers_with_data":6,"return_10d":0.0338846986,"return_5d":0.0238437819,"return_20d":0.0902137935,"relative_volume":0.8711867648},{"industry_group":"Nuclear","ticker_count":8,"tickers_with_data":8,"return_10d":0.0126920033,"return_5d":0.0200243908,"return_20d":0.1720475041,"relative_volume":0.9334802235},{"industry_group":"Defensive Staples","ticker_count":6,"tickers_with_data":6,"return_10d":0.0072506687,"return_5d":-0.0056514126,"return_20d":0.0163645594,"relative_volume":0.7711288822},{"industry_group":"Robotics Automation","ticker_count":6,"tickers_with_data":6,"return_10d":0.0013996762,"return_5d":0.0326286494,"return_20d":0.0568188569,"relative_volume":1.192310697},{"industry_group":"Defensive Healthcare","ticker_count":6,"tickers_with_data":6,"return_10d":-0.0136424758,"return_5d":-0.0166127276,"return_20d":-0.0169264399,"relative_volume":0.6961564293},{"industry_group":"Defense","ticker_count":7,"tickers_with_data":7,"return_10d":-0.032331428,"return_5d":-0.0465373795,"return_20d":-0.135867328,"relative_volume":0.8640723817},{"industry_group":"Consumer Platforms","ticker_count":6,"tickers_with_data":6,"return_10d":-0.0417175377,"return_5d":-0.0193143443,"return_20d":0.0293939777,"relative_volume":1.1216242484},{"industry_group":"Fintech","ticker_count":6,"tickers_with_data":6,"return_10d":-0.0468844352,"return_5d":-0.0090444746,"return_20d":0.1346688764,"relative_volume":1.2307133688},{"industry_group":"Defense Drones","ticker_count":5,"tickers_with_data":5,"return_10d":-0.1052944027,"return_5d":-0.064775594,"return_20d":-0.0812563739,"relative_volume":0.9482636447}],"industry_confirmed":[{"industry_group":"Cybersecurity","ticker_count":6,"tickers_with_data":6,"confirmed_count":5,"confirmed_signal_pct":0.8333333333},{"industry_group":"Market ETFs","ticker_count":6,"tickers_with_data":6,"confirmed_count":5,"confirmed_signal_pct":0.8333333333},{"industry_group":"Cloud Software","ticker_count":6,"tickers_with_data":6,"confirmed_count":4,"confirmed_signal_pct":0.6666666667},{"industry_group":"Semiconductors","ticker_count":11,"tickers_with_data":11,"confirmed_count":6,"confirmed_signal_pct":0.5454545455},{"industry_group":"Adtech","ticker_count":6,"tickers_with_data":6,"confirmed_count":3,"confirmed_signal_pct":0.5},{"industry_group":"Energy Storage","ticker_count":5,"tickers_with_data":5,"confirmed_count":2,"confirmed_signal_pct":0.4},{"industry_group":"AI Infrastructure","ticker_count":6,"tickers_with_data":6,"confirmed_count":2,"confirmed_signal_pct":0.3333333333},{"industry_group":"Renewables","ticker_count":5,"tickers_with_data":5,"confirmed_count":1,"confirmed_signal_pct":0.2},{"industry_group":"Space","ticker_count":11,"tickers_with_data":11,"confirmed_count":2,"confirmed_signal_pct":0.1818181818},{"industry_group":"Defensive Healthcare","ticker_count":6,"tickers_with_data":6,"confirmed_count":1,"confirmed_signal_pct":0.1666666667},{"industry_group":"Defensive Staples","ticker_count":6,"tickers_with_data":6,"confirmed_count":1,"confirmed_signal_pct":0.1666666667},{"industry_group":"Robotics Automation","ticker_count":6,"tickers_with_data":6,"confirmed_count":1,"confirmed_signal_pct":0.1666666667},{"industry_group":"Defense","ticker_count":7,"tickers_with_data":7,"confirmed_count":1,"confirmed_signal_pct":0.1428571429},{"industry_group":"Nuclear","ticker_count":8,"tickers_with_data":8,"confirmed_count":0,"confirmed_signal_pct":0.0},{"industry_group":"Consumer Platforms","ticker_count":6,"tickers_with_data":6,"confirmed_count":0,"confirmed_signal_pct":0.0},{"industry_group":"Fintech","ticker_count":6,"tickers_with_data":6,"confirmed_count":0,"confirmed_signal_pct":0.0},{"industry_group":"Defense Drones","ticker_count":5,"tickers_with_data":5,"confirmed_count":0,"confirmed_signal_pct":0.0}],"industry_trend_intelligence":{"strongest_improving":[{"industry_group":"Space","ticker_count":11,"tickers_with_data":11,"return_3d":0.1485461059,"return_5d":0.1079780096,"return_10d":0.1392685015,"relative_volume":1.4728374811,"rotation_score":9.0,"momentum_persistence":0,"momentum_acceleration":0.1379440096,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.1818181818},{"industry_group":"Cloud Software","ticker_count":6,"tickers_with_data":6,"return_3d":0.0879045762,"return_5d":0.1064001256,"return_10d":0.1520620448,"relative_volume":1.1031294262,"rotation_score":9.0,"momentum_persistence":2,"momentum_acceleration":-0.0450258744,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.6666666667},{"industry_group":"Cybersecurity","ticker_count":6,"tickers_with_data":6,"return_3d":0.116637971,"return_5d":0.1419628698,"return_10d":0.1686548832,"relative_volume":1.338174601,"rotation_score":8.0,"momentum_persistence":2,"momentum_acceleration":0.0070268698,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.8333333333},{"industry_group":"Energy Storage","ticker_count":5,"tickers_with_data":5,"return_3d":0.1456987612,"return_5d":0.1822744084,"return_10d":0.1496174944,"relative_volume":1.7259050513,"rotation_score":3.0,"momentum_persistence":0,"momentum_acceleration":0.1064024084,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.4},{"industry_group":"Adtech","ticker_count":6,"tickers_with_data":6,"return_3d":-0.000708692,"return_5d":0.0127519183,"return_10d":0.0588156685,"relative_volume":1.6498067703,"rotation_score":2.0,"momentum_persistence":0,"momentum_acceleration":-0.0412170817,"momentum_exhaustion_warning":true,"confirmed_signal_pct":0.5},{"industry_group":"Defense","ticker_count":7,"tickers_with_data":7,"return_3d":-0.014524418,"return_5d":-0.0465373795,"return_10d":-0.032331428,"relative_volume":0.8640723817,"rotation_score":1.0,"momentum_persistence":0,"momentum_acceleration":0.0049576205,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.1428571429},{"industry_group":"Semiconductors","ticker_count":11,"tickers_with_data":11,"return_3d":0.1028280227,"return_5d":0.1405361395,"return_10d":0.1783194365,"relative_volume":1.2302915243,"rotation_score":0.0,"momentum_persistence":3,"momentum_acceleration":0.0574831395,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.5454545455},{"industry_group":"Defense Drones","ticker_count":5,"tickers_with_data":5,"return_3d":0.0046744118,"return_5d":-0.064775594,"return_10d":-0.1052944027,"relative_volume":0.9482636447,"rotation_score":0.0,"momentum_persistence":0,"momentum_acceleration":0.034005406,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.0},{"industry_group":"Market ETFs","ticker_count":6,"tickers_with_data":6,"return_3d":0.0183901073,"return_5d":0.0238437819,"return_10d":0.0338846986,"relative_volume":0.8711867648,"rotation_score":-4.0,"momentum_persistence":0,"momentum_acceleration":0.0058837819,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.8333333333},{"industry_group":"AI Infrastructure","ticker_count":6,"tickers_with_data":6,"return_3d":0.0542693199,"return_5d":0.0736936927,"return_10d":0.0557430438,"relative_volume":1.2436484264,"rotation_score":-5.0,"momentum_persistence":0,"momentum_acceleration":0.0505306927,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.3333333333}],"strongest_persistent":[{"industry_group":"Semiconductors","ticker_count":11,"tickers_with_data":11,"return_3d":0.1028280227,"return_5d":0.1405361395,"return_10d":0.1783194365,"relative_volume":1.2302915243,"rotation_score":0.0,"momentum_persistence":3,"momentum_acceleration":0.0574831395,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.5454545455},{"industry_group":"Cybersecurity","ticker_count":6,"tickers_with_data":6,"return_3d":0.116637971,"return_5d":0.1419628698,"return_10d":0.1686548832,"relative_volume":1.338174601,"rotation_score":8.0,"momentum_persistence":2,"momentum_acceleration":0.0070268698,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.8333333333},{"industry_group":"Cloud Software","ticker_count":6,"tickers_with_data":6,"return_3d":0.0879045762,"return_5d":0.1064001256,"return_10d":0.1520620448,"relative_volume":1.1031294262,"rotation_score":9.0,"momentum_persistence":2,"momentum_acceleration":-0.0450258744,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.6666666667}],"momentum_exhaustion":[{"industry_group":"Adtech","ticker_count":6,"tickers_with_data":6,"return_3d":-0.000708692,"return_5d":0.0127519183,"return_10d":0.0588156685,"relative_volume":1.6498067703,"rotation_score":2.0,"momentum_persistence":0,"momentum_acceleration":-0.0412170817,"momentum_exhaustion_warning":true,"confirmed_signal_pct":0.5}],"momentum_recovery":[{"industry_group":"Space","ticker_count":11,"tickers_with_data":11,"return_3d":0.1485461059,"return_5d":0.1079780096,"return_10d":0.1392685015,"relative_volume":1.4728374811,"rotation_score":9.0,"momentum_persistence":0,"momentum_acceleration":0.1379440096,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.1818181818},{"industry_group":"Energy Storage","ticker_count":5,"tickers_with_data":5,"return_3d":0.1456987612,"return_5d":0.1822744084,"return_10d":0.1496174944,"relative_volume":1.7259050513,"rotation_score":3.0,"momentum_persistence":0,"momentum_acceleration":0.1064024084,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.4},{"industry_group":"Semiconductors","ticker_count":11,"tickers_with_data":11,"return_3d":0.1028280227,"return_5d":0.1405361395,"return_10d":0.1783194365,"relative_volume":1.2302915243,"rotation_score":0.0,"momentum_persistence":3,"momentum_acceleration":0.0574831395,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.5454545455},{"industry_group":"Cybersecurity","ticker_count":6,"tickers_with_data":6,"return_3d":0.116637971,"return_5d":0.1419628698,"return_10d":0.1686548832,"relative_volume":1.338174601,"rotation_score":8.0,"momentum_persistence":2,"momentum_acceleration":0.0070268698,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.8333333333}]},"top_relative_strength":[{"ticker":"FLNC","company_name":"Fluence Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.903861359,"return_5d":0.9819524757,"return_10d":0.8056800927,"return_20d":0.7532656252,"relative_volume":4.6171818118,"max_drawdown_10d":-0.114520941,"up_days_10d":7,"relative_strength_vs_industry":0.6560625983},{"ticker":"DDOG","company_name":"Datadog Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.3734990018,"return_5d":0.4243222472,"return_10d":0.5458758902,"return_20d":0.8995918994,"relative_volume":1.8568864792,"max_drawdown_10d":-0.0203149204,"up_days_10d":6,"relative_strength_vs_industry":0.3938138455},{"ticker":"INTC","company_name":"Intel Corporation","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1550623801,"return_5d":0.2539650143,"return_10d":0.5134479862,"return_20d":1.002564861,"relative_volume":1.5019305129,"max_drawdown_10d":-0.0385465154,"up_days_10d":6,"relative_strength_vs_industry":0.3351285497},{"ticker":"MU","company_name":"Micron Technology Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1665260595,"return_5d":0.377344511,"return_10d":0.5034828389,"return_20d":0.7756247273,"relative_volume":1.5037097828,"max_drawdown_10d":-0.0386418886,"up_days_10d":7,"relative_strength_vs_industry":0.3251634024},{"ticker":"QCOM","company_name":"Qualcomm Incorporated","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1744304088,"return_5d":0.2377266998,"return_10d":0.4718843625,"return_20d":0.7108386734,"relative_volume":1.5941353248,"max_drawdown_10d":-0.0623677293,"up_days_10d":7,"relative_strength_vs_industry":0.293564926},{"ticker":"CGNX","company_name":"Cognex Corporation","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.1160972568,"return_5d":0.1737576917,"return_10d":0.2100996258,"return_20d":0.2293578702,"relative_volume":1.7138315257,"max_drawdown_10d":-0.0284988145,"up_days_10d":7,"relative_strength_vs_industry":0.2086999496},{"ticker":"RKLB","company_name":"Rocket Lab USA Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.339131518,"return_5d":0.3382820009,"return_10d":0.323669689,"return_20d":0.5498897354,"relative_volume":3.0938334377,"max_drawdown_10d":-0.071707024,"up_days_10d":5,"relative_strength_vs_industry":0.1844011874},{"ticker":"FTNT","company_name":"Fortinet Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.2685720865,"return_5d":0.3219376345,"return_10d":0.3525018336,"return_20d":0.4872230017,"relative_volume":1.6223299214,"max_drawdown_10d":-0.0209035308,"up_days_10d":9,"relative_strength_vs_industry":0.1838469504},{"ticker":"SMCI","company_name":"Super Micro Computer Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2709306155,"return_5d":0.3056477937,"return_10d":0.2162998289,"return_20d":0.4002374747,"relative_volume":1.2934200561,"max_drawdown_10d":-0.0549371873,"up_days_10d":4,"relative_strength_vs_industry":0.1605567851},{"ticker":"DELL","company_name":"Dell Technologies Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2040494759,"return_5d":0.2392824557,"return_10d":0.2053310929,"return_20d":0.4694369784,"relative_volume":1.8532464854,"max_drawdown_10d":-0.0477381002,"up_days_10d":6,"relative_strength_vs_industry":0.1495880491}],"early_candidates":[{"ticker":"FLNC","company_name":"Fluence Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.903861359,"return_5d":0.9819524757,"return_10d":0.8056800927,"return_20d":0.7532656252,"relative_volume":4.6171818118,"max_drawdown_10d":-0.114520941,"up_days_10d":7,"relative_strength_vs_industry":0.6560625983},{"ticker":"DDOG","company_name":"Datadog Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.3734990018,"return_5d":0.4243222472,"return_10d":0.5458758902,"return_20d":0.8995918994,"relative_volume":1.8568864792,"max_drawdown_10d":-0.0203149204,"up_days_10d":6,"relative_strength_vs_industry":0.3938138455},{"ticker":"MU","company_name":"Micron Technology Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1665260595,"return_5d":0.377344511,"return_10d":0.5034828389,"return_20d":0.7756247273,"relative_volume":1.5037097828,"max_drawdown_10d":-0.0386418886,"up_days_10d":7,"relative_strength_vs_industry":0.3251634024},{"ticker":"RKLB","company_name":"Rocket Lab USA Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.339131518,"return_5d":0.3382820009,"return_10d":0.323669689,"return_20d":0.5498897354,"relative_volume":3.0938334377,"max_drawdown_10d":-0.071707024,"up_days_10d":5,"relative_strength_vs_industry":0.1844011874},{"ticker":"FTNT","company_name":"Fortinet Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.2685720865,"return_5d":0.3219376345,"return_10d":0.3525018336,"return_20d":0.4872230017,"relative_volume":1.6223299214,"max_drawdown_10d":-0.0209035308,"up_days_10d":9,"relative_strength_vs_industry":0.1838469504},{"ticker":"SMCI","company_name":"Super Micro Computer Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2709306155,"return_5d":0.3056477937,"return_10d":0.2162998289,"return_20d":0.4002374747,"relative_volume":1.2934200561,"max_drawdown_10d":-0.0549371873,"up_days_10d":4,"relative_strength_vs_industry":0.1605567851},{"ticker":"AMD","company_name":"Advanced Micro Devices Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.2812869164,"return_5d":0.2625228592,"return_10d":0.3087317951,"return_20d":0.8576151441,"relative_volume":1.2243649783,"max_drawdown_10d":-0.0526987284,"up_days_10d":6,"relative_strength_vs_industry":0.1304123585},{"ticker":"DELL","company_name":"Dell Technologies Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2040494759,"return_5d":0.2392824557,"return_10d":0.2053310929,"return_20d":0.4694369784,"relative_volume":1.8532464854,"max_drawdown_10d":-0.0477381002,"up_days_10d":6,"relative_strength_vs_industry":0.1495880491},{"ticker":"QCOM","company_name":"Qualcomm Incorporated","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1744304088,"return_5d":0.2377266998,"return_10d":0.4718843625,"return_20d":0.7108386734,"relative_volume":1.5941353248,"max_drawdown_10d":-0.0623677293,"up_days_10d":7,"relative_strength_vs_industry":0.293564926},{"ticker":"RDW","company_name":"Redwire Corporation","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.2738780471,"return_5d":0.1852247874,"return_10d":0.1435949737,"return_20d":0.1916038472,"relative_volume":1.9668316899,"max_drawdown_10d":-0.0782421809,"up_days_10d":5,"relative_strength_vs_industry":0.0043264722},{"ticker":"CGNX","company_name":"Cognex Corporation","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.1160972568,"return_5d":0.1737576917,"return_10d":0.2100996258,"return_20d":0.2293578702,"relative_volume":1.7138315257,"max_drawdown_10d":-0.0284988145,"up_days_10d":7,"relative_strength_vs_industry":0.2086999496},{"ticker":"NNE","company_name":"NANO Nuclear Energy Inc.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.2055336061,"return_5d":0.1725758625,"return_10d":0.1206368574,"return_20d":0.3222543574,"relative_volume":0.9061809274,"max_drawdown_10d":-0.1296583899,"up_days_10d":5,"relative_strength_vs_industry":0.1079448541},{"ticker":"CRWD","company_name":"CrowdStrike Holdings Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.1075273768,"return_5d":0.1583048077,"return_10d":0.1777163184,"return_20d":0.3924595927,"relative_volume":1.4125053776,"max_drawdown_10d":-0.0203081176,"up_days_10d":7,"relative_strength_vs_industry":0.0090614352},{"ticker":"PANW","company_name":"Palo Alto Networks Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.1299054773,"return_5d":0.1480008989,"return_10d":0.1643329937,"return_20d":0.3348745302,"relative_volume":1.7329774455,"max_drawdown_10d":-0.0195734647,"up_days_10d":6,"relative_strength_vs_industry":-0.0043218895},{"ticker":"MDB","company_name":"MongoDB Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.1229563876,"return_5d":0.1366811316,"return_10d":0.1809219825,"return_20d":0.3253817449,"relative_volume":1.1677780565,"max_drawdown_10d":-0.0512519964,"up_days_10d":7,"relative_strength_vs_industry":0.0288599378},{"ticker":"LUNR","company_name":"Intuitive Machines Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.1681451695,"return_5d":0.1307571571,"return_10d":0.1347433817,"return_20d":0.229104781,"relative_volume":1.2331991841,"max_drawdown_10d":-0.0843144444,"up_days_10d":6,"relative_strength_vs_industry":-0.0045251199},{"ticker":"AMAT","company_name":"Applied Materials Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0599289097,"return_5d":0.1191529183,"return_10d":0.0441204525,"return_20d":0.0899897697,"relative_volume":1.172199333,"max_drawdown_10d":-0.0586622557,"up_days_10d":6,"relative_strength_vs_industry":-0.134198984},{"ticker":"ASML","company_name":"ASML Holding N.V.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.103332112,"return_5d":0.1156255678,"return_10d":0.0945306985,"return_20d":0.079293,"relative_volume":1.2297192967,"max_drawdown_10d":-0.0366785243,"up_days_10d":5,"relative_strength_vs_industry":-0.0837887381},{"ticker":"ROK","company_name":"Rockwell Automation Inc.","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.0411993262,"return_5d":0.1140319142,"return_10d":0.1313874643,"return_20d":0.1461869057,"relative_volume":0.7451033253,"max_drawdown_10d":-0.0235115232,"up_days_10d":5,"relative_strength_vs_industry":0.1299877882},{"ticker":"BKSY","company_name":"BlackSky Technology Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0970523295,"return_5d":0.1097046866,"return_10d":0.1661247008,"return_20d":0.1555360711,"relative_volume":1.6468603322,"max_drawdown_10d":-0.2041470498,"up_days_10d":6,"relative_strength_vs_industry":0.0268561992},{"ticker":"SPCE","company_name":"Virgin Galactic Holdings Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.2,"return_5d":0.1094339439,"return_10d":0.1395349396,"return_20d":-0.0264900411,"relative_volume":1.9568668657,"max_drawdown_10d":-0.0826771816,"up_days_10d":4,"relative_strength_vs_industry":0.0002664381},{"ticker":"OKTA","company_name":"Okta Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.0790996981,"return_5d":0.1071523209,"return_10d":0.1042379287,"return_20d":0.3332274133,"relative_volume":1.0184189457,"max_drawdown_10d":-0.0334645082,"up_days_10d":7,"relative_strength_vs_industry":-0.0644169546},{"ticker":"HPE","company_name":"Hewlett Packard Enterprise Co.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.0436085029,"return_5d":0.0973048903,"return_10d":0.1132812696,"return_20d":0.2595420309,"relative_volume":1.0138468679,"max_drawdown_10d":-0.0234102046,"up_days_10d":7,"relative_strength_vs_industry":0.0575382258},{"ticker":"ARRY","company_name":"Array Technologies Inc.","industry_group":"Renewables","latest_date":"2026-05-08","return_3d":0.0476771852,"return_5d":0.0931121847,"return_10d":0.0567201057,"return_20d":0.1969273572,"relative_volume":0.8683963812,"max_drawdown_10d":-0.061480525,"up_days_10d":5,"relative_strength_vs_industry":0.015245319},{"ticker":"ZS","company_name":"Zscaler Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.0761884849,"return_5d":0.0881196448,"return_10d":0.1227306633,"return_20d":0.2886912406,"relative_volume":1.3049407891,"max_drawdown_10d":-0.03961207,"up_days_10d":4,"relative_strength_vs_industry":-0.0459242199},{"ticker":"NVDA","company_name":"NVIDIA Corporation","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0951653789,"return_5d":0.0844041333,"return_10d":0.0332740795,"return_20d":0.1408577182,"relative_volume":0.8906922957,"max_drawdown_10d":-0.0928396683,"up_days_10d":5,"relative_strength_vs_industry":-0.145045357},{"ticker":"SNOW","company_name":"Snowflake Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.0757885098,"return_5d":0.0812056521,"return_10d":0.0864451895,"return_20d":0.2587729847,"relative_volume":0.8748050469,"max_drawdown_10d":-0.0539341337,"up_days_10d":4,"relative_strength_vs_industry":-0.0656168553},{"ticker":"ENPH","company_name":"Enphase Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.0119378206,"return_5d":0.0768095246,"return_10d":0.0190103522,"return_20d":0.1686438005,"relative_volume":0.5190137862,"max_drawdown_10d":-0.1149262472,"up_days_10d":4,"relative_strength_vs_industry":-0.1306071423},{"ticker":"VSAT","company_name":"Viasat Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0677139311,"return_5d":0.0750921251,"return_10d":0.1293757096,"return_20d":0.2446222602,"relative_volume":1.0468780125,"max_drawdown_10d":-0.0317099659,"up_days_10d":5,"relative_strength_vs_industry":-0.0098927919},{"ticker":"ORA","company_name":"Ormat Technologies Inc.","industry_group":"Renewables","latest_date":"2026-05-08","return_3d":0.0548812384,"return_5d":0.0719823627,"return_10d":0.0733062589,"return_20d":0.0559798375,"relative_volume":0.7309835811,"max_drawdown_10d":-0.0328745508,"up_days_10d":5,"relative_strength_vs_industry":0.0318314721},{"ticker":"ASTS","company_name":"AST SpaceMobile Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.1750431236,"return_5d":0.058682518,"return_10d":-0.0176701367,"return_20d":-0.2091675253,"relative_volume":1.1907800337,"max_drawdown_10d":-0.1726683749,"up_days_10d":4,"relative_strength_vs_industry":-0.1569386383},{"ticker":"PL","company_name":"Planet Labs PBC","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0514408778,"return_5d":0.057994561,"return_10d":0.101580204,"return_20d":0.1260456584,"relative_volume":1.1533223246,"max_drawdown_10d":-0.1121188486,"up_days_10d":5,"relative_strength_vs_industry":-0.0376882976},{"ticker":"QQQ","company_name":"Invesco QQQ Trust","industry_group":"Market ETFs","latest_date":"2026-05-08","return_3d":0.043455929,"return_5d":0.0550025287,"return_10d":0.0713230934,"return_20d":0.1639091625,"relative_volume":1.0828038385,"max_drawdown_10d":-0.0100567467,"up_days_10d":7,"relative_strength_vs_industry":0.0374383948},{"ticker":"COIN","company_name":"Coinbase Global Inc.","industry_group":"Fintech","latest_date":"2026-05-08","return_3d":0.0172440135,"return_5d":0.0518170126,"return_10d":0.0069579985,"return_20d":0.1984509762,"relative_volume":1.273707625,"max_drawdown_10d":-0.0760117831,"up_days_10d":5,"relative_strength_vs_industry":0.0538424337},{"ticker":"IRDM","company_name":"Iridium Communications Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0568442408,"return_5d":0.0512170519,"return_10d":0.0641683793,"return_20d":0.2122806479,"relative_volume":0.8874951677,"max_drawdown_10d":-0.0270054036,"up_days_10d":5,"relative_strength_vs_industry":-0.0751001222},{"ticker":"NXT","company_name":"Nextracker Inc.","industry_group":"Renewables","latest_date":"2026-05-08","return_3d":0.0208367715,"return_5d":0.0498624476,"return_10d":0.0370644911,"return_20d":0.0673052671,"relative_volume":0.9591230084,"max_drawdown_10d":-0.0677925034,"up_days_10d":6,"relative_strength_vs_industry":-0.0044102957},{"ticker":"XYZ","company_name":"Block Inc.","industry_group":"Fintech","latest_date":"2026-05-08","return_3d":0.0505262944,"return_5d":0.042333951,"return_10d":0.0449532507,"return_20d":0.2033761665,"relative_volume":2.2112106741,"max_drawdown_10d":-0.025533105,"up_days_10d":4,"relative_strength_vs_industry":0.0918376858},{"ticker":"TER","company_name":"Teradyne Inc.","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.0074768492,"return_5d":0.0415435558,"return_10d":-0.1394709133,"return_20d":-0.0223375674,"relative_volume":0.932323594,"max_drawdown_10d":-0.237985108,"up_days_10d":5,"relative_strength_vs_industry":-0.1408705895},{"ticker":"TSM","company_name":"Taiwan Semiconductor Manufacturing Co. Ltd.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.043786894,"return_5d":0.0352301626,"return_10d":0.0229091125,"return_20d":0.1108472366,"relative_volume":1.2647925395,"max_drawdown_10d":-0.0312114532,"up_days_10d":6,"relative_strength_vs_industry":-0.155410324},{"ticker":"SMR","company_name":"NuScale Power Corporation","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.0572873051,"return_5d":0.0337726389,"return_10d":0.0493311163,"return_20d":0.3626493093,"relative_volume":0.8643836577,"max_drawdown_10d":-0.1051383371,"up_days_10d":4,"relative_strength_vs_industry":0.036639113},{"ticker":"DPRO","company_name":"Draganfly Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":0.0724070207,"return_5d":0.0320150806,"return_10d":-0.0664395015,"return_20d":0.0036630001,"relative_volume":1.348961828,"max_drawdown_10d":-0.107394309,"up_days_10d":3,"relative_strength_vs_industry":0.0388549012},{"ticker":"OKLO","company_name":"Oklo Inc.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.060397851,"return_5d":0.0299715989,"return_10d":0.0212676357,"return_20d":0.4429851171,"relative_volume":0.5969132122,"max_drawdown_10d":-0.1442117332,"up_days_10d":4,"relative_strength_vs_industry":0.0085756324},{"ticker":"TXN","company_name":"Texas Instruments Incorporated","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0241992448,"return_5d":0.0293300164,"return_10d":0.0437406583,"return_20d":0.3470978587,"relative_volume":0.9857551427,"max_drawdown_10d":-0.0166975252,"up_days_10d":5,"relative_strength_vs_industry":-0.1345787782},{"ticker":"SPY","company_name":"SPDR S&P 500 ETF Trust","industry_group":"Market ETFs","latest_date":"2026-05-08","return_3d":0.0191358791,"return_5d":0.0235481442,"return_10d":0.033168043,"return_20d":0.0855973439,"relative_volume":0.9111567192,"max_drawdown_10d":-0.0050197378,"up_days_10d":6,"relative_strength_vs_industry":-0.0007166556},{"ticker":"VOO","company_name":"Vanguard S&P 500 ETF","industry_group":"Market ETFs","latest_date":"2026-05-08","return_3d":0.0191492416,"return_5d":0.0234256446,"return_10d":0.0329362233,"return_20d":0.0855587649,"relative_volume":0.7289305524,"max_drawdown_10d":-0.0049581898,"up_days_10d":6,"relative_strength_vs_industry":-0.0009484753},{"ticker":"VTI","company_name":"Vanguard Total Stock Market ETF","industry_group":"Market ETFs","latest_date":"2026-05-08","return_3d":0.0164710637,"return_5d":0.021334646,"return_10d":0.0307342926,"return_20d":0.0830324081,"relative_volume":0.8532844584,"max_drawdown_10d":-0.006581021,"up_days_10d":6,"relative_strength_vs_industry":-0.003150406},{"ticker":"AVGO","company_name":"Broadcom Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0061774961,"return_5d":0.0206988256,"return_10d":0.0171255324,"return_20d":0.1573139931,"relative_volume":1.0893394493,"max_drawdown_10d":-0.043926411,"up_days_10d":5,"relative_strength_vs_industry":-0.1611939041},{"ticker":"IWM","company_name":"iShares Russell 2000 ETF","industry_group":"Market ETFs","latest_date":"2026-05-08","return_3d":0.0056979611,"return_5d":0.0175093622,"return_10d":0.0271824316,"return_20d":0.0875240211,"relative_volume":0.8276647165,"max_drawdown_10d":-0.0182580205,"up_days_10d":6,"relative_strength_vs_industry":-0.006702267},{"ticker":"RTX","company_name":"RTX Corporation","industry_group":"Defense","latest_date":"2026-05-08","return_3d":0.0186267213,"return_5d":0.0120696062,"return_10d":0.0105015602,"return_20d":-0.1263643656,"relative_volume":1.0991967706,"max_drawdown_10d":-0.0181746582,"up_days_10d":4,"relative_strength_vs_industry":0.0428329882},{"ticker":"ARM","company_name":"Arm Holdings plc","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0212124498,"return_5d":0.0098968258,"return_10d":-0.0917337145,"return_20d":0.4320151397,"relative_volume":1.0765681113,"max_drawdown_10d":-0.1012642161,"up_days_10d":5,"relative_strength_vs_industry":-0.2700531511}],"strong_candidates":[{"ticker":"FLNC","company_name":"Fluence Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.903861359,"return_5d":0.9819524757,"return_10d":0.8056800927,"return_20d":0.7532656252,"relative_volume":4.6171818118,"max_drawdown_10d":-0.114520941,"up_days_10d":7,"relative_strength_vs_industry":0.6560625983},{"ticker":"DDOG","company_name":"Datadog Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.3734990018,"return_5d":0.4243222472,"return_10d":0.5458758902,"return_20d":0.8995918994,"relative_volume":1.8568864792,"max_drawdown_10d":-0.0203149204,"up_days_10d":6,"relative_strength_vs_industry":0.3938138455},{"ticker":"INTC","company_name":"Intel Corporation","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1550623801,"return_5d":0.2539650143,"return_10d":0.5134479862,"return_20d":1.002564861,"relative_volume":1.5019305129,"max_drawdown_10d":-0.0385465154,"up_days_10d":6,"relative_strength_vs_industry":0.3351285497},{"ticker":"MU","company_name":"Micron Technology Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1665260595,"return_5d":0.377344511,"return_10d":0.5034828389,"return_20d":0.7756247273,"relative_volume":1.5037097828,"max_drawdown_10d":-0.0386418886,"up_days_10d":7,"relative_strength_vs_industry":0.3251634024},{"ticker":"QCOM","company_name":"Qualcomm Incorporated","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1744304088,"return_5d":0.2377266998,"return_10d":0.4718843625,"return_20d":0.7108386734,"relative_volume":1.5941353248,"max_drawdown_10d":-0.0623677293,"up_days_10d":7,"relative_strength_vs_industry":0.293564926},{"ticker":"CGNX","company_name":"Cognex Corporation","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.1160972568,"return_5d":0.1737576917,"return_10d":0.2100996258,"return_20d":0.2293578702,"relative_volume":1.7138315257,"max_drawdown_10d":-0.0284988145,"up_days_10d":7,"relative_strength_vs_industry":0.2086999496},{"ticker":"FTNT","company_name":"Fortinet Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.2685720865,"return_5d":0.3219376345,"return_10d":0.3525018336,"return_20d":0.4872230017,"relative_volume":1.6223299214,"max_drawdown_10d":-0.0209035308,"up_days_10d":9,"relative_strength_vs_industry":0.1838469504},{"ticker":"DELL","company_name":"Dell Technologies Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2040494759,"return_5d":0.2392824557,"return_10d":0.2053310929,"return_20d":0.4694369784,"relative_volume":1.8532464854,"max_drawdown_10d":-0.0477381002,"up_days_10d":6,"relative_strength_vs_industry":0.1495880491},{"ticker":"AMD","company_name":"Advanced Micro Devices Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.2812869164,"return_5d":0.2625228592,"return_10d":0.3087317951,"return_20d":0.8576151441,"relative_volume":1.2243649783,"max_drawdown_10d":-0.0526987284,"up_days_10d":6,"relative_strength_vs_industry":0.1304123585},{"ticker":"PUBM","company_name":"PubMatic Inc.","industry_group":"Adtech","latest_date":"2026-05-08","return_3d":0.0326923236,"return_5d":0.049853397,"return_10d":0.1164241059,"return_20d":0.2680046556,"relative_volume":2.4245913445,"max_drawdown_10d":-0.0249999312,"up_days_10d":8,"relative_strength_vs_industry":0.0576084374},{"ticker":"BKSY","company_name":"BlackSky Technology Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0970523295,"return_5d":0.1097046866,"return_10d":0.1661247008,"return_20d":0.1555360711,"relative_volume":1.6468603322,"max_drawdown_10d":-0.2041470498,"up_days_10d":6,"relative_strength_vs_industry":0.0268561992},{"ticker":"CRWD","company_name":"CrowdStrike Holdings Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.1075273768,"return_5d":0.1583048077,"return_10d":0.1777163184,"return_20d":0.3924595927,"relative_volume":1.4125053776,"max_drawdown_10d":-0.0203081176,"up_days_10d":7,"relative_strength_vs_industry":0.0090614352}],"risk_warnings":[{"ticker":"TER","company_name":"Teradyne Inc.","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.0074768492,"return_5d":0.0415435558,"return_10d":-0.1394709133,"return_20d":-0.0223375674,"relative_volume":0.932323594,"max_drawdown_10d":-0.237985108,"up_days_10d":5,"relative_strength_vs_industry":-0.1408705895},{"ticker":"STEM","company_name":"Stem Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":-0.1342155091,"return_5d":-0.148698917,"return_10d":-0.1971954452,"return_20d":-0.0276008733,"relative_volume":1.7974370932,"max_drawdown_10d":-0.2267493736,"up_days_10d":5,"relative_strength_vs_industry":-0.3468129397},{"ticker":"BKSY","company_name":"BlackSky Technology Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0970523295,"return_5d":0.1097046866,"return_10d":0.1661247008,"return_20d":0.1555360711,"relative_volume":1.6468603322,"max_drawdown_10d":-0.2041470498,"up_days_10d":6,"relative_strength_vs_industry":0.0268561992},{"ticker":"ONDS","company_name":"Ondas Holdings Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":-0.0289388538,"return_5d":-0.1220929566,"return_10d":-0.1412322032,"return_20d":-0.0076669982,"relative_volume":0.6178969994,"max_drawdown_10d":-0.1881278084,"up_days_10d":5,"relative_strength_vs_industry":-0.0359378005},{"ticker":"SEDG","company_name":"SolarEdge Technologies Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":-0.074820793,"return_5d":-0.0375204059,"return_10d":-0.0988436049,"return_20d":-0.0110153042,"relative_volume":0.9728449624,"max_drawdown_10d":-0.1850992035,"up_days_10d":5,"relative_strength_vs_industry":-0.2484610994},{"ticker":"ANET","company_name":"Arista Networks Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":-0.1671366276,"return_5d":-0.1790966602,"return_10d":-0.1986320652,"return_20d":-0.0378690302,"relative_volume":1.7235579219,"max_drawdown_10d":-0.1792600632,"up_days_10d":3,"relative_strength_vs_industry":-0.254375109},{"ticker":"ASTS","company_name":"AST SpaceMobile Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.1750431236,"return_5d":0.058682518,"return_10d":-0.0176701367,"return_20d":-0.2091675253,"relative_volume":1.1907800337,"max_drawdown_10d":-0.1726683749,"up_days_10d":4,"relative_strength_vs_industry":-0.1569386383},{"ticker":"SOFI","company_name":"SoFi Technologies Inc.","industry_group":"Fintech","latest_date":"2026-05-08","return_3d":-0.0168539607,"return_5d":-0.0413877232,"return_10d":-0.1458785497,"return_20d":-0.028976531,"relative_volume":0.7892214564,"max_drawdown_10d":-0.172441395,"up_days_10d":4,"relative_strength_vs_industry":-0.0989941145},{"ticker":"SPOT","company_name":"Spotify Technology S.A.","industry_group":"Consumer Platforms","latest_date":"2026-05-08","return_3d":-0.0040521827,"return_5d":-0.0536341706,"return_10d":-0.1933784043,"return_20d":-0.1221874511,"relative_volume":0.7554183528,"max_drawdown_10d":-0.1572950256,"up_days_10d":4,"relative_strength_vs_industry":-0.1516608666},{"ticker":"HOOD","company_name":"Robinhood Markets Inc.","industry_group":"Fintech","latest_date":"2026-05-08","return_3d":0.0,"return_5d":0.0457506781,"return_10d":-0.0906622641,"return_20d":0.1133111152,"relative_volume":0.5120194197,"max_drawdown_10d":-0.1518761223,"up_days_10d":6,"relative_strength_vs_industry":-0.0437778289},{"ticker":"AVAV","company_name":"AeroVironment Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":0.0095986011,"return_5d":-0.0901768277,"return_10d":-0.1426024336,"return_20d":-0.0635989754,"relative_volume":0.7790457653,"max_drawdown_10d":-0.1484111691,"up_days_10d":3,"relative_strength_vs_industry":-0.0373080309},{"ticker":"SYM","company_name":"Symbotic Inc.","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":-0.0996900953,"return_5d":-0.1120733324,"return_10d":-0.1195487211,"return_20d":-0.0286085986,"relative_volume":1.7519914845,"max_drawdown_10d":-0.1450294139,"up_days_10d":5,"relative_strength_vs_industry":-0.1209483973},{"ticker":"OKLO","company_name":"Oklo Inc.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.060397851,"return_5d":0.0299715989,"return_10d":0.0212676357,"return_20d":0.4429851171,"relative_volume":0.5969132122,"max_drawdown_10d":-0.1442117332,"up_days_10d":4,"relative_strength_vs_industry":0.0085756324},{"ticker":"HII","company_name":"Huntington Ingalls Industries Inc.","industry_group":"Defense","latest_date":"2026-05-08","return_3d":-0.0302026982,"return_5d":-0.1229062856,"return_10d":-0.119708338,"return_20d":-0.1980933652,"relative_volume":1.0840890246,"max_drawdown_10d":-0.1360729259,"up_days_10d":5,"relative_strength_vs_industry":-0.08737691},{"ticker":"LEU","company_name":"Centrus Energy Corp.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.0062609619,"return_5d":0.0033391524,"return_10d":0.0082672611,"return_20d":0.1074137404,"relative_volume":0.7292788464,"max_drawdown_10d":-0.1351473132,"up_days_10d":5,"relative_strength_vs_industry":-0.0044247421},{"ticker":"UEC","company_name":"Uranium Energy Corp.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.0455172309,"return_5d":0.0147255872,"return_10d":0.0790035332,"return_20d":0.1204730337,"relative_volume":0.8082420635,"max_drawdown_10d":-0.1297858546,"up_days_10d":4,"relative_strength_vs_industry":0.0663115299},{"ticker":"NNE","company_name":"NANO Nuclear Energy Inc.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.2055336061,"return_5d":0.1725758625,"return_10d":0.1206368574,"return_20d":0.3222543574,"relative_volume":0.9061809274,"max_drawdown_10d":-0.1296583899,"up_days_10d":5,"relative_strength_vs_industry":0.1079448541},{"ticker":"LDOS","company_name":"Leidos Holdings Inc.","industry_group":"Defense","latest_date":"2026-05-08","return_3d":-0.0516072724,"return_5d":-0.1281243427,"return_10d":-0.1092016789,"return_20d":-0.1489403686,"relative_volume":1.3326729763,"max_drawdown_10d":-0.1281243427,"up_days_10d":3,"relative_strength_vs_industry":-0.0768702509},{"ticker":"SPIR","company_name":"Spire Global Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.1233293317,"return_5d":0.0170516755,"return_10d":0.1199272874,"return_20d":-0.1423933103,"relative_volume":0.6952409236,"max_drawdown_10d":-0.1180327835,"up_days_10d":4,"relative_strength_vs_industry":-0.0193412142},{"ticker":"RCAT","company_name":"Red Cat Holdings Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":-0.0057526767,"return_5d":-0.0765805603,"return_10d":-0.1211864646,"return_20d":-0.161681489,"relative_volume":0.8891074712,"max_drawdown_10d":-0.1160410051,"up_days_10d":3,"relative_strength_vs_industry":-0.0158920618},{"ticker":"ENPH","company_name":"Enphase Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.0119378206,"return_5d":0.0768095246,"return_10d":0.0190103522,"return_20d":0.1686438005,"relative_volume":0.5190137862,"max_drawdown_10d":-0.1149262472,"up_days_10d":4,"relative_strength_vs_industry":-0.1306071423},{"ticker":"FLNC","company_name":"Fluence Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.903861359,"return_5d":0.9819524757,"return_10d":0.8056800927,"return_20d":0.7532656252,"relative_volume":4.6171818118,"max_drawdown_10d":-0.114520941,"up_days_10d":7,"relative_strength_vs_industry":0.6560625983},{"ticker":"VST","company_name":"Vistra Corp.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":-0.0789375438,"return_5d":-0.0486862289,"return_10d":-0.1011865182,"return_20d":-0.0453046901,"relative_volume":1.811622413,"max_drawdown_10d":-0.1132188762,"up_days_10d":3,"relative_strength_vs_industry":-0.1138785215},{"ticker":"PL","company_name":"Planet Labs PBC","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0514408778,"return_5d":0.057994561,"return_10d":0.101580204,"return_20d":0.1260456584,"relative_volume":1.1533223246,"max_drawdown_10d":-0.1121188486,"up_days_10d":5,"relative_strength_vs_industry":-0.0376882976},{"ticker":"PYPL","company_name":"PayPal Holdings Inc.","industry_group":"Fintech","latest_date":"2026-05-08","return_3d":-0.0240912606,"return_5d":-0.1005154606,"return_10d":-0.1012282222,"return_20d":0.0028735024,"relative_volume":0.905786051,"max_drawdown_10d":-0.1093443236,"up_days_10d":2,"relative_strength_vs_industry":-0.054343787},{"ticker":"DPRO","company_name":"Draganfly Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":0.0724070207,"return_5d":0.0320150806,"return_10d":-0.0664395015,"return_20d":0.0036630001,"relative_volume":1.348961828,"max_drawdown_10d":-0.107394309,"up_days_10d":3,"relative_strength_vs_industry":0.0388549012},{"ticker":"SMR","company_name":"NuScale Power Corporation","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.0572873051,"return_5d":0.0337726389,"return_10d":0.0493311163,"return_20d":0.3626493093,"relative_volume":0.8643836577,"max_drawdown_10d":-0.1051383371,"up_days_10d":4,"relative_strength_vs_industry":0.036639113},{"ticker":"ARM","company_name":"Arm Holdings plc","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0212124498,"return_5d":0.0098968258,"return_10d":-0.0917337145,"return_20d":0.4320151397,"relative_volume":1.0765681113,"max_drawdown_10d":-0.1012642161,"up_days_10d":5,"relative_strength_vs_industry":-0.2700531511},{"ticker":"KTOS","company_name":"Kratos Defense & Security Solutions Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":-0.0239420326,"return_5d":-0.0670427059,"return_10d":-0.0550114108,"return_20d":-0.1769974068,"relative_volume":1.1063061597,"max_drawdown_10d":-0.0975300802,"up_days_10d":4,"relative_strength_vs_industry":0.050282992},{"ticker":"NVDA","company_name":"NVIDIA Corporation","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0951653789,"return_5d":0.0844041333,"return_10d":0.0332740795,"return_20d":0.1408577182,"relative_volume":0.8906922957,"max_drawdown_10d":-0.0928396683,"up_days_10d":5,"relative_strength_vs_industry":-0.145045357},{"ticker":"LUNR","company_name":"Intuitive Machines Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.1681451695,"return_5d":0.1307571571,"return_10d":0.1347433817,"return_20d":0.229104781,"relative_volume":1.2331991841,"max_drawdown_10d":-0.0843144444,"up_days_10d":6,"relative_strength_vs_industry":-0.0045251199},{"ticker":"SPCE","company_name":"Virgin Galactic Holdings Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.2,"return_5d":0.1094339439,"return_10d":0.1395349396,"return_20d":-0.0264900411,"relative_volume":1.9568668657,"max_drawdown_10d":-0.0826771816,"up_days_10d":4,"relative_strength_vs_industry":0.0002664381},{"ticker":"MDT","company_name":"Medtronic plc","industry_group":"Defensive Healthcare","latest_date":"2026-05-08","return_3d":-0.0210823932,"return_5d":-0.0481249809,"return_10d":-0.0860537469,"return_20d":-0.1268202921,"relative_volume":0.7916822771,"max_drawdown_10d":-0.0816449203,"up_days_10d":2,"relative_strength_vs_industry":-0.0724112711},{"ticker":"RKLB","company_name":"Rocket Lab USA Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.339131518,"return_5d":0.3382820009,"return_10d":0.323669689,"return_20d":0.5498897354,"relative_volume":3.0938334377,"max_drawdown_10d":-0.071707024,"up_days_10d":5,"relative_strength_vs_industry":0.1844011874},{"ticker":"QCOM","company_name":"Qualcomm Incorporated","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1744304088,"return_5d":0.2377266998,"return_10d":0.4718843625,"return_20d":0.7108386734,"relative_volume":1.5941353248,"max_drawdown_10d":-0.0623677293,"up_days_10d":7,"relative_strength_vs_industry":0.293564926},{"ticker":"SMCI","company_name":"Super Micro Computer Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2709306155,"return_5d":0.3056477937,"return_10d":0.2162998289,"return_20d":0.4002374747,"relative_volume":1.2934200561,"max_drawdown_10d":-0.0549371873,"up_days_10d":4,"relative_strength_vs_industry":0.1605567851},{"ticker":"AMD","company_name":"Advanced Micro Devices Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.2812869164,"return_5d":0.2625228592,"return_10d":0.3087317951,"return_20d":0.8576151441,"relative_volume":1.2243649783,"max_drawdown_10d":-0.0526987284,"up_days_10d":6,"relative_strength_vs_industry":0.1304123585},{"ticker":"DELL","company_name":"Dell Technologies Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2040494759,"return_5d":0.2392824557,"return_10d":0.2053310929,"return_20d":0.4694369784,"relative_volume":1.8532464854,"max_drawdown_10d":-0.0477381002,"up_days_10d":6,"relative_strength_vs_industry":0.1495880491},{"ticker":"MU","company_name":"Micron Technology Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1665260595,"return_5d":0.377344511,"return_10d":0.5034828389,"return_20d":0.7756247273,"relative_volume":1.5037097828,"max_drawdown_10d":-0.0386418886,"up_days_10d":7,"relative_strength_vs_industry":0.3251634024},{"ticker":"INTC","company_name":"Intel Corporation","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1550623801,"return_5d":0.2539650143,"return_10d":0.5134479862,"return_20d":1.002564861,"relative_volume":1.5019305129,"max_drawdown_10d":-0.0385465154,"up_days_10d":6,"relative_strength_vs_industry":0.3351285497},{"ticker":"CGNX","company_name":"Cognex Corporation","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.1160972568,"return_5d":0.1737576917,"return_10d":0.2100996258,"return_20d":0.2293578702,"relative_volume":1.7138315257,"max_drawdown_10d":-0.0284988145,"up_days_10d":7,"relative_strength_vs_industry":0.2086999496},{"ticker":"FTNT","company_name":"Fortinet Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.2685720865,"return_5d":0.3219376345,"return_10d":0.3525018336,"return_20d":0.4872230017,"relative_volume":1.6223299214,"max_drawdown_10d":-0.0209035308,"up_days_10d":9,"relative_strength_vs_industry":0.1838469504},{"ticker":"DDOG","company_name":"Datadog Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.3734990018,"return_5d":0.4243222472,"return_10d":0.5458758902,"return_20d":0.8995918994,"relative_volume":1.8568864792,"max_drawdown_10d":-0.0203149204,"up_days_10d":6,"relative_strength_vs_industry":0.3938138455},{"ticker":"CRWD","company_name":"CrowdStrike Holdings Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.1075273768,"return_5d":0.1583048077,"return_10d":0.1777163184,"return_20d":0.3924595927,"relative_volume":1.4125053776,"max_drawdown_10d":-0.0203081176,"up_days_10d":7,"relative_strength_vs_industry":0.0090614352},{"ticker":"PANW","company_name":"Palo Alto Networks Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.1299054773,"return_5d":0.1480008989,"return_10d":0.1643329937,"return_20d":0.3348745302,"relative_volume":1.7329774455,"max_drawdown_10d":-0.0195734647,"up_days_10d":6,"relative_strength_vs_industry":-0.0043218895},{"ticker":"GNRC","company_name":"Generac Holdings Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.0217309282,"return_5d":0.0388293648,"return_10d":0.2194360775,"return_20d":0.3013090144,"relative_volume":0.7230476026,"max_drawdown_10d":-0.0144348974,"up_days_10d":6,"relative_strength_vs_industry":0.069818583}],"rotation_trend":{"date_count":3,"start_date":"2026-05-06","current_date":"2026-05-08","five_day_start_date":"2026-05-06","gaining_rank":[{"industry_group":"Cloud Software","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":12,"current_rank":3,"rank_change":9,"current_average_10d_return":0.152062,"average_10d_return_change":0.192532,"current_confirmed_signal_pct":0.6666666667,"confirmed_signal_pct_change":0.6666666667},{"industry_group":"Space","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":14,"current_rank":5,"rank_change":9,"current_average_10d_return":0.139269,"average_10d_return_change":0.190084,"current_confirmed_signal_pct":0.1818181818,"confirmed_signal_pct_change":0.1818181818},{"industry_group":"Cybersecurity","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":10,"current_rank":2,"rank_change":8,"current_average_10d_return":0.168655,"average_10d_return_change":0.162767,"current_confirmed_signal_pct":0.8333333333,"confirmed_signal_pct_change":0.5},{"industry_group":"Energy Storage","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":7,"current_rank":4,"rank_change":3,"current_average_10d_return":0.149617,"average_10d_return_change":0.120379,"current_confirmed_signal_pct":0.4,"confirmed_signal_pct_change":0.2},{"industry_group":"Adtech","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":8,"current_rank":6,"rank_change":2,"current_average_10d_return":0.058816,"average_10d_return_change":0.029643,"current_confirmed_signal_pct":0.5,"confirmed_signal_pct_change":0.0},{"industry_group":"Defense","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":15,"current_rank":14,"rank_change":1,"current_average_10d_return":-0.032331,"average_10d_return_change":0.023117,"current_confirmed_signal_pct":0.1428571429,"confirmed_signal_pct_change":0.0}],"losing_rank":[{"industry_group":"Nuclear","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":4,"current_rank":10,"rank_change":-6,"current_average_10d_return":0.012692,"average_10d_return_change":-0.035109,"current_confirmed_signal_pct":0.0,"confirmed_signal_pct_change":-0.125},{"industry_group":"Defensive Staples","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":6,"current_rank":11,"rank_change":-5,"current_average_10d_return":0.007251,"average_10d_return_change":-0.023372,"current_confirmed_signal_pct":0.1666666667,"confirmed_signal_pct_change":-0.1666666667},{"industry_group":"Renewables","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":3,"current_rank":8,"rank_change":-5,"current_average_10d_return":0.041475,"average_10d_return_change":-0.020995,"current_confirmed_signal_pct":0.2,"confirmed_signal_pct_change":0.0},{"industry_group":"AI Infrastructure","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":2,"current_rank":7,"rank_change":-5,"current_average_10d_return":0.055743,"average_10d_return_change":-0.008824,"current_confirmed_signal_pct":0.3333333333,"confirmed_signal_pct_change":-0.1666666667},{"industry_group":"Market ETFs","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":5,"current_rank":9,"rank_change":-4,"current_average_10d_return":0.033885,"average_10d_return_change":0.000233,"current_confirmed_signal_pct":0.8333333333,"confirmed_signal_pct_change":0.0},{"industry_group":"Robotics Automation","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":9,"current_rank":12,"rank_change":-3,"current_average_10d_return":0.0014,"average_10d_return_change":-0.02686,"current_confirmed_signal_pct":0.1666666667,"confirmed_signal_pct_change":0.0},{"industry_group":"Defensive Healthcare","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":11,"current_rank":13,"rank_change":-2,"current_average_10d_return":-0.013642,"average_10d_return_change":-0.010859,"current_confirmed_signal_pct":0.1666666667,"confirmed_signal_pct_change":0.0},{"industry_group":"Consumer Platforms","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":13,"current_rank":15,"rank_change":-2,"current_average_10d_return":-0.041718,"average_10d_return_change":0.00405,"current_confirmed_signal_pct":0.0,"confirmed_signal_pct_change":0.0}],"improving_5d":[{"industry_group":"Cloud Software","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":12,"current_rank":3,"rank_change":9,"current_average_10d_return":0.152062,"average_10d_return_change":0.192532,"current_confirmed_signal_pct":0.6666666667,"confirmed_signal_pct_change":0.6666666667},{"industry_group":"Space","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":14,"current_rank":5,"rank_change":9,"current_average_10d_return":0.139269,"average_10d_return_change":0.190084,"current_confirmed_signal_pct":0.1818181818,"confirmed_signal_pct_change":0.1818181818},{"industry_group":"Cybersecurity","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":10,"current_rank":2,"rank_change":8,"current_average_10d_return":0.168655,"average_10d_return_change":0.162767,"current_confirmed_signal_pct":0.8333333333,"confirmed_signal_pct_change":0.5},{"industry_group":"Energy Storage","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":7,"current_rank":4,"rank_change":3,"current_average_10d_return":0.149617,"average_10d_return_change":0.120379,"current_confirmed_signal_pct":0.4,"confirmed_signal_pct_change":0.2},{"industry_group":"Defense Drones","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":17,"current_rank":17,"rank_change":0,"current_average_10d_return":-0.105294,"average_10d_return_change":0.05671,"current_confirmed_signal_pct":0.0,"confirmed_signal_pct_change":0.0},{"industry_group":"Adtech","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":8,"current_rank":6,"rank_change":2,"current_average_10d_return":0.058816,"average_10d_return_change":0.029643,"current_confirmed_signal_pct":0.5,"confirmed_signal_pct_change":0.0},{"industry_group":"Fintech","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":16,"current_rank":16,"rank_change":0,"current_average_10d_return":-0.046884,"average_10d_return_change":0.02407,"current_confirmed_signal_pct":0.0,"confirmed_signal_pct_change":0.0},{"industry_group":"Defense","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":15,"current_rank":14,"rank_change":1,"current_average_10d_return":-0.032331,"average_10d_return_change":0.023117,"current_confirmed_signal_pct":0.1428571429,"confirmed_signal_pct_change":0.0},{"industry_group":"Consumer Platforms","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":13,"current_rank":15,"rank_change":-2,"current_average_10d_return":-0.041718,"average_10d_return_change":0.00405,"current_confirmed_signal_pct":0.0,"confirmed_signal_pct_change":0.0},{"industry_group":"Market ETFs","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":5,"current_rank":9,"rank_change":-4,"current_average_10d_return":0.033885,"average_10d_return_change":0.000233,"current_confirmed_signal_pct":0.8333333333,"confirmed_signal_pct_change":0.0}]}}</script>
+  <script id="dashboard-data" type="application/json">{"summary":{"latest_date":"2026-05-08","total_tickers":112,"tickers_with_data":112,"early_count":50,"confirmed_count":34,"strong_count":13,"risk_count":46},"industry_momentum":[{"industry_group":"Semiconductors","ticker_count":11,"tickers_with_data":11,"return_10d":0.1783194365,"return_5d":0.1405361395,"return_20d":0.4276416474,"relative_volume":1.2571335665},{"industry_group":"Cybersecurity","ticker_count":6,"tickers_with_data":6,"return_10d":0.1686548832,"return_5d":0.1419628698,"return_20d":0.3662413774,"relative_volume":1.3686658648},{"industry_group":"Cloud Software","ticker_count":6,"tickers_with_data":6,"return_10d":0.1520620448,"return_5d":0.1064001256,"return_20d":0.3034623546,"relative_volume":1.1506091479},{"industry_group":"Energy Storage","ticker_count":5,"tickers_with_data":5,"return_10d":0.1496174944,"return_5d":0.1822744084,"return_20d":0.2369204525,"relative_volume":1.7291368778},{"industry_group":"Space","ticker_count":11,"tickers_with_data":11,"return_10d":0.1392685015,"return_5d":0.1079780096,"return_20d":0.1239794831,"relative_volume":1.5149045442},{"industry_group":"Adtech","ticker_count":6,"tickers_with_data":6,"return_10d":0.0588156685,"return_5d":0.0127519183,"return_20d":0.2026112103,"relative_volume":1.6959995832},{"industry_group":"AI Infrastructure","ticker_count":6,"tickers_with_data":6,"return_10d":0.0561792788,"return_5d":0.0741282546,"return_20d":0.2070691131,"relative_volume":1.3284882748},{"industry_group":"Renewables","ticker_count":5,"tickers_with_data":5,"return_10d":0.0414747868,"return_5d":0.0464856885,"return_20d":0.0900929508,"relative_volume":0.8497894607},{"industry_group":"Market ETFs","ticker_count":6,"tickers_with_data":6,"return_10d":0.0338846986,"return_5d":0.0238437819,"return_20d":0.0902137935,"relative_volume":0.8839290872},{"industry_group":"Nuclear","ticker_count":8,"tickers_with_data":8,"return_10d":0.0126920033,"return_5d":0.0200243908,"return_20d":0.1720475041,"relative_volume":0.9561922545},{"industry_group":"Defensive Staples","ticker_count":6,"tickers_with_data":6,"return_10d":0.0075699839,"return_5d":-0.0053361684,"return_20d":0.0166918135,"relative_volume":0.8544098452},{"industry_group":"Robotics Automation","ticker_count":6,"tickers_with_data":6,"return_10d":0.0013996762,"return_5d":0.0326286494,"return_20d":0.0568188569,"relative_volume":1.2609154191},{"industry_group":"Defensive Healthcare","ticker_count":6,"tickers_with_data":6,"return_10d":-0.0110258552,"return_5d":-0.0139295212,"return_20d":-0.0143020421,"relative_volume":0.8251821777},{"industry_group":"Defense","ticker_count":7,"tickers_with_data":7,"return_10d":-0.032331428,"return_5d":-0.0465373795,"return_20d":-0.135867328,"relative_volume":0.9378691593},{"industry_group":"Consumer Platforms","ticker_count":6,"tickers_with_data":6,"return_10d":-0.0417175377,"return_5d":-0.0193143443,"return_20d":0.0293939777,"relative_volume":1.1582976753},{"industry_group":"Fintech","ticker_count":6,"tickers_with_data":6,"return_10d":-0.0468844352,"return_5d":-0.0090444746,"return_20d":0.1346688764,"relative_volume":1.2758529027},{"industry_group":"Defense Drones","ticker_count":5,"tickers_with_data":5,"return_10d":-0.1052944027,"return_5d":-0.064775594,"return_20d":-0.0812563739,"relative_volume":0.9587773912}],"industry_confirmed":[{"industry_group":"Cybersecurity","ticker_count":6,"tickers_with_data":6,"confirmed_count":5,"confirmed_signal_pct":0.8333333333},{"industry_group":"Market ETFs","ticker_count":6,"tickers_with_data":6,"confirmed_count":5,"confirmed_signal_pct":0.8333333333},{"industry_group":"Cloud Software","ticker_count":6,"tickers_with_data":6,"confirmed_count":4,"confirmed_signal_pct":0.6666666667},{"industry_group":"Semiconductors","ticker_count":11,"tickers_with_data":11,"confirmed_count":6,"confirmed_signal_pct":0.5454545455},{"industry_group":"Adtech","ticker_count":6,"tickers_with_data":6,"confirmed_count":3,"confirmed_signal_pct":0.5},{"industry_group":"Energy Storage","ticker_count":5,"tickers_with_data":5,"confirmed_count":2,"confirmed_signal_pct":0.4},{"industry_group":"AI Infrastructure","ticker_count":6,"tickers_with_data":6,"confirmed_count":2,"confirmed_signal_pct":0.3333333333},{"industry_group":"Renewables","ticker_count":5,"tickers_with_data":5,"confirmed_count":1,"confirmed_signal_pct":0.2},{"industry_group":"Space","ticker_count":11,"tickers_with_data":11,"confirmed_count":2,"confirmed_signal_pct":0.1818181818},{"industry_group":"Defensive Healthcare","ticker_count":6,"tickers_with_data":6,"confirmed_count":1,"confirmed_signal_pct":0.1666666667},{"industry_group":"Defensive Staples","ticker_count":6,"tickers_with_data":6,"confirmed_count":1,"confirmed_signal_pct":0.1666666667},{"industry_group":"Robotics Automation","ticker_count":6,"tickers_with_data":6,"confirmed_count":1,"confirmed_signal_pct":0.1666666667},{"industry_group":"Defense","ticker_count":7,"tickers_with_data":7,"confirmed_count":1,"confirmed_signal_pct":0.1428571429},{"industry_group":"Nuclear","ticker_count":8,"tickers_with_data":8,"confirmed_count":0,"confirmed_signal_pct":0.0},{"industry_group":"Consumer Platforms","ticker_count":6,"tickers_with_data":6,"confirmed_count":0,"confirmed_signal_pct":0.0},{"industry_group":"Fintech","ticker_count":6,"tickers_with_data":6,"confirmed_count":0,"confirmed_signal_pct":0.0},{"industry_group":"Defense Drones","ticker_count":5,"tickers_with_data":5,"confirmed_count":0,"confirmed_signal_pct":0.0}],"industry_breadth":{"ranked":[{"industry_group":"Cybersecurity","ticker_count":6,"tickers_with_data":6,"return_5d":0.1419628698,"return_10d":0.1686548832,"positive_5d_pct":1.0,"positive_10d_pct":1.0,"confirmed_signal_pct":0.8333333333,"strong_signal_pct":0.3333333333,"high_relative_volume_pct":0.6666666667,"breadth_score":0.7916666667},{"industry_group":"Semiconductors","ticker_count":11,"tickers_with_data":11,"return_5d":0.1405361395,"return_10d":0.1783194365,"positive_5d_pct":1.0,"positive_10d_pct":0.9090909091,"confirmed_signal_pct":0.5454545455,"strong_signal_pct":0.3636363636,"high_relative_volume_pct":0.6363636364,"breadth_score":0.7},{"industry_group":"Market ETFs","ticker_count":6,"tickers_with_data":6,"return_5d":0.0238437819,"return_10d":0.0338846986,"positive_5d_pct":1.0,"positive_10d_pct":1.0,"confirmed_signal_pct":0.8333333333,"strong_signal_pct":0.0,"high_relative_volume_pct":0.0,"breadth_score":0.6583333333},{"industry_group":"Cloud Software","ticker_count":6,"tickers_with_data":6,"return_5d":0.1064001256,"return_10d":0.1520620448,"positive_5d_pct":0.8333333333,"positive_10d_pct":1.0,"confirmed_signal_pct":0.6666666667,"strong_signal_pct":0.1666666667,"high_relative_volume_pct":0.1666666667,"breadth_score":0.6333333333},{"industry_group":"Adtech","ticker_count":6,"tickers_with_data":6,"return_5d":0.0127519183,"return_10d":0.0588156685,"positive_5d_pct":0.6666666667,"positive_10d_pct":0.8333333333,"confirmed_signal_pct":0.5,"strong_signal_pct":0.1666666667,"high_relative_volume_pct":0.8333333333,"breadth_score":0.5833333333},{"industry_group":"Space","ticker_count":11,"tickers_with_data":11,"return_5d":0.1079780096,"return_10d":0.1392685015,"positive_5d_pct":1.0,"positive_10d_pct":0.9090909091,"confirmed_signal_pct":0.1818181818,"strong_signal_pct":0.0909090909,"high_relative_volume_pct":0.6363636364,"breadth_score":0.5545454545},{"industry_group":"AI Infrastructure","ticker_count":6,"tickers_with_data":6,"return_5d":0.0741282546,"return_10d":0.0561792788,"positive_5d_pct":0.6666666667,"positive_10d_pct":0.6666666667,"confirmed_signal_pct":0.3333333333,"strong_signal_pct":0.3333333333,"high_relative_volume_pct":0.6666666667,"breadth_score":0.5166666667},{"industry_group":"Energy Storage","ticker_count":5,"tickers_with_data":5,"return_5d":0.1822744084,"return_10d":0.1496174944,"positive_5d_pct":0.6,"positive_10d_pct":0.6,"confirmed_signal_pct":0.4,"strong_signal_pct":0.2,"high_relative_volume_pct":0.4,"breadth_score":0.45},{"industry_group":"Renewables","ticker_count":5,"tickers_with_data":5,"return_5d":0.0464856885,"return_10d":0.0414747868,"positive_5d_pct":0.8,"positive_10d_pct":0.8,"confirmed_signal_pct":0.2,"strong_signal_pct":0.0,"high_relative_volume_pct":0.0,"breadth_score":0.41},{"industry_group":"Nuclear","ticker_count":8,"tickers_with_data":8,"return_5d":0.0200243908,"return_10d":0.0126920033,"positive_5d_pct":0.625,"positive_10d_pct":0.625,"confirmed_signal_pct":0.0,"strong_signal_pct":0.0,"high_relative_volume_pct":0.125,"breadth_score":0.29375},{"industry_group":"Robotics Automation","ticker_count":6,"tickers_with_data":6,"return_5d":0.0326286494,"return_10d":0.0013996762,"positive_5d_pct":0.5,"positive_10d_pct":0.3333333333,"confirmed_signal_pct":0.1666666667,"strong_signal_pct":0.1666666667,"high_relative_volume_pct":0.3333333333,"breadth_score":0.2916666667},{"industry_group":"Fintech","ticker_count":6,"tickers_with_data":6,"return_5d":-0.0090444746,"return_10d":-0.0468844352,"positive_5d_pct":0.5,"positive_10d_pct":0.5,"confirmed_signal_pct":0.0,"strong_signal_pct":0.0,"high_relative_volume_pct":0.5,"breadth_score":0.275},{"industry_group":"Defensive Staples","ticker_count":6,"tickers_with_data":6,"return_5d":-0.0053361684,"return_10d":0.0075699839,"positive_5d_pct":0.1666666667,"positive_10d_pct":0.5,"confirmed_signal_pct":0.1666666667,"strong_signal_pct":0.0,"high_relative_volume_pct":0.0,"breadth_score":0.2},{"industry_group":"Consumer Platforms","ticker_count":6,"tickers_with_data":6,"return_5d":-0.0193143443,"return_10d":-0.0417175377,"positive_5d_pct":0.3333333333,"positive_10d_pct":0.3333333333,"confirmed_signal_pct":0.0,"strong_signal_pct":0.0,"high_relative_volume_pct":0.3333333333,"breadth_score":0.1833333333},{"industry_group":"Defense","ticker_count":7,"tickers_with_data":7,"return_5d":-0.0465373795,"return_10d":-0.032331428,"positive_5d_pct":0.2857142857,"positive_10d_pct":0.2857142857,"confirmed_signal_pct":0.1428571429,"strong_signal_pct":0.0,"high_relative_volume_pct":0.1428571429,"breadth_score":0.1785714286},{"industry_group":"Defensive Healthcare","ticker_count":6,"tickers_with_data":6,"return_5d":-0.0139295212,"return_10d":-0.0110258552,"positive_5d_pct":0.1666666667,"positive_10d_pct":0.3333333333,"confirmed_signal_pct":0.1666666667,"strong_signal_pct":0.0,"high_relative_volume_pct":0.0,"breadth_score":0.1583333333},{"industry_group":"Defense Drones","ticker_count":5,"tickers_with_data":5,"return_5d":-0.064775594,"return_10d":-0.1052944027,"positive_5d_pct":0.2,"positive_10d_pct":0.0,"confirmed_signal_pct":0.0,"strong_signal_pct":0.0,"high_relative_volume_pct":0.2,"breadth_score":0.06}],"high_return_weak_breadth":[],"moderate_return_improving_breadth":[{"industry_group":"Robotics Automation","ticker_count":6,"tickers_with_data":6,"return_5d":0.0326286494,"return_10d":0.0013996762,"positive_5d_pct":0.5,"positive_10d_pct":0.3333333333,"confirmed_signal_pct":0.1666666667,"strong_signal_pct":0.1666666667,"high_relative_volume_pct":0.3333333333,"breadth_score":0.2916666667}]},"industry_trend_intelligence":{"strongest_improving":[{"industry_group":"Space","ticker_count":11,"tickers_with_data":11,"return_3d":0.1485461059,"return_5d":0.1079780096,"return_10d":0.1392685015,"relative_volume":1.5149045442,"rotation_score":9.0,"momentum_persistence":0,"momentum_acceleration":0.1379440096,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.1818181818},{"industry_group":"Cloud Software","ticker_count":6,"tickers_with_data":6,"return_3d":0.0879045762,"return_5d":0.1064001256,"return_10d":0.1520620448,"relative_volume":1.1506091479,"rotation_score":9.0,"momentum_persistence":2,"momentum_acceleration":-0.0450258744,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.6666666667},{"industry_group":"Cybersecurity","ticker_count":6,"tickers_with_data":6,"return_3d":0.116637971,"return_5d":0.1419628698,"return_10d":0.1686548832,"relative_volume":1.3686658648,"rotation_score":8.0,"momentum_persistence":2,"momentum_acceleration":0.0070268698,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.8333333333},{"industry_group":"Energy Storage","ticker_count":5,"tickers_with_data":5,"return_3d":0.1456987612,"return_5d":0.1822744084,"return_10d":0.1496174944,"relative_volume":1.7291368778,"rotation_score":3.0,"momentum_persistence":0,"momentum_acceleration":0.1064024084,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.4},{"industry_group":"Adtech","ticker_count":6,"tickers_with_data":6,"return_3d":-0.000708692,"return_5d":0.0127519183,"return_10d":0.0588156685,"relative_volume":1.6959995832,"rotation_score":2.0,"momentum_persistence":0,"momentum_acceleration":-0.0412170817,"momentum_exhaustion_warning":true,"confirmed_signal_pct":0.5},{"industry_group":"Defense","ticker_count":7,"tickers_with_data":7,"return_3d":-0.014524418,"return_5d":-0.0465373795,"return_10d":-0.032331428,"relative_volume":0.9378691593,"rotation_score":1.0,"momentum_persistence":0,"momentum_acceleration":0.0049576205,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.1428571429},{"industry_group":"Semiconductors","ticker_count":11,"tickers_with_data":11,"return_3d":0.1028280227,"return_5d":0.1405361395,"return_10d":0.1783194365,"relative_volume":1.2571335665,"rotation_score":0.0,"momentum_persistence":3,"momentum_acceleration":0.0574831395,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.5454545455},{"industry_group":"Defense Drones","ticker_count":5,"tickers_with_data":5,"return_3d":0.0046744118,"return_5d":-0.064775594,"return_10d":-0.1052944027,"relative_volume":0.9587773912,"rotation_score":0.0,"momentum_persistence":0,"momentum_acceleration":0.034005406,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.0},{"industry_group":"Defensive Healthcare","ticker_count":6,"tickers_with_data":6,"return_3d":-0.0077358072,"return_5d":-0.0139295212,"return_10d":-0.0110258552,"relative_volume":0.8251821777,"rotation_score":-2.0,"momentum_persistence":0,"momentum_acceleration":0.0013224788,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.1666666667},{"industry_group":"Market ETFs","ticker_count":6,"tickers_with_data":6,"return_3d":0.0183901073,"return_5d":0.0238437819,"return_10d":0.0338846986,"relative_volume":0.8839290872,"rotation_score":-4.0,"momentum_persistence":0,"momentum_acceleration":0.0058837819,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.8333333333}],"strongest_persistent":[{"industry_group":"Semiconductors","ticker_count":11,"tickers_with_data":11,"return_3d":0.1028280227,"return_5d":0.1405361395,"return_10d":0.1783194365,"relative_volume":1.2571335665,"rotation_score":0.0,"momentum_persistence":3,"momentum_acceleration":0.0574831395,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.5454545455},{"industry_group":"Cybersecurity","ticker_count":6,"tickers_with_data":6,"return_3d":0.116637971,"return_5d":0.1419628698,"return_10d":0.1686548832,"relative_volume":1.3686658648,"rotation_score":8.0,"momentum_persistence":2,"momentum_acceleration":0.0070268698,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.8333333333},{"industry_group":"Cloud Software","ticker_count":6,"tickers_with_data":6,"return_3d":0.0879045762,"return_5d":0.1064001256,"return_10d":0.1520620448,"relative_volume":1.1506091479,"rotation_score":9.0,"momentum_persistence":2,"momentum_acceleration":-0.0450258744,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.6666666667}],"momentum_exhaustion":[{"industry_group":"Adtech","ticker_count":6,"tickers_with_data":6,"return_3d":-0.000708692,"return_5d":0.0127519183,"return_10d":0.0588156685,"relative_volume":1.6959995832,"rotation_score":2.0,"momentum_persistence":0,"momentum_acceleration":-0.0412170817,"momentum_exhaustion_warning":true,"confirmed_signal_pct":0.5}],"momentum_recovery":[{"industry_group":"Space","ticker_count":11,"tickers_with_data":11,"return_3d":0.1485461059,"return_5d":0.1079780096,"return_10d":0.1392685015,"relative_volume":1.5149045442,"rotation_score":9.0,"momentum_persistence":0,"momentum_acceleration":0.1379440096,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.1818181818},{"industry_group":"Energy Storage","ticker_count":5,"tickers_with_data":5,"return_3d":0.1456987612,"return_5d":0.1822744084,"return_10d":0.1496174944,"relative_volume":1.7291368778,"rotation_score":3.0,"momentum_persistence":0,"momentum_acceleration":0.1064024084,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.4},{"industry_group":"Semiconductors","ticker_count":11,"tickers_with_data":11,"return_3d":0.1028280227,"return_5d":0.1405361395,"return_10d":0.1783194365,"relative_volume":1.2571335665,"rotation_score":0.0,"momentum_persistence":3,"momentum_acceleration":0.0574831395,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.5454545455},{"industry_group":"Cybersecurity","ticker_count":6,"tickers_with_data":6,"return_3d":0.116637971,"return_5d":0.1419628698,"return_10d":0.1686548832,"relative_volume":1.3686658648,"rotation_score":8.0,"momentum_persistence":2,"momentum_acceleration":0.0070268698,"momentum_exhaustion_warning":false,"confirmed_signal_pct":0.8333333333}]},"top_relative_strength":[{"ticker":"FLNC","company_name":"Fluence Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.903861359,"return_5d":0.9819524757,"return_10d":0.8056800927,"return_20d":0.7532656252,"relative_volume":4.6313738299,"max_drawdown_10d":-0.114520941,"up_days_10d":7,"relative_strength_vs_industry":0.6560625983},{"ticker":"DDOG","company_name":"Datadog Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.3734990018,"return_5d":0.4243222472,"return_10d":0.5458758902,"return_20d":0.8995918994,"relative_volume":1.8591255874,"max_drawdown_10d":-0.0203149204,"up_days_10d":6,"relative_strength_vs_industry":0.3938138455},{"ticker":"INTC","company_name":"Intel Corporation","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1550623801,"return_5d":0.2539650143,"return_10d":0.5134479862,"return_20d":1.002564861,"relative_volume":1.5261350079,"max_drawdown_10d":-0.0385465154,"up_days_10d":6,"relative_strength_vs_industry":0.3351285497},{"ticker":"MU","company_name":"Micron Technology Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1665260595,"return_5d":0.377344511,"return_10d":0.5034828389,"return_20d":0.7756247273,"relative_volume":1.5103145689,"max_drawdown_10d":-0.0386418886,"up_days_10d":7,"relative_strength_vs_industry":0.3251634024},{"ticker":"QCOM","company_name":"Qualcomm Incorporated","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1744304088,"return_5d":0.2377266998,"return_10d":0.4718843625,"return_20d":0.7108386734,"relative_volume":1.5961208122,"max_drawdown_10d":-0.0623677293,"up_days_10d":7,"relative_strength_vs_industry":0.293564926},{"ticker":"CGNX","company_name":"Cognex Corporation","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.1160972568,"return_5d":0.1737576917,"return_10d":0.2100996258,"return_20d":0.2293578702,"relative_volume":1.7148866897,"max_drawdown_10d":-0.0284988145,"up_days_10d":7,"relative_strength_vs_industry":0.2086999496},{"ticker":"RKLB","company_name":"Rocket Lab USA Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.339131518,"return_5d":0.3382820009,"return_10d":0.323669689,"return_20d":0.5498897354,"relative_volume":3.2132729708,"max_drawdown_10d":-0.071707024,"up_days_10d":5,"relative_strength_vs_industry":0.1844011874},{"ticker":"FTNT","company_name":"Fortinet Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.2685720865,"return_5d":0.3219376345,"return_10d":0.3525018336,"return_20d":0.4872230017,"relative_volume":1.6233561853,"max_drawdown_10d":-0.0209035308,"up_days_10d":9,"relative_strength_vs_industry":0.1838469504},{"ticker":"SMCI","company_name":"Super Micro Computer Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2709306155,"return_5d":0.3056477937,"return_10d":0.2162998289,"return_20d":0.4002374747,"relative_volume":1.3250540421,"max_drawdown_10d":-0.0549371873,"up_days_10d":4,"relative_strength_vs_industry":0.1601205501},{"ticker":"DELL","company_name":"Dell Technologies Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2040494759,"return_5d":0.2392824557,"return_10d":0.2053310929,"return_20d":0.4694369784,"relative_volume":1.8637110522,"max_drawdown_10d":-0.0477381002,"up_days_10d":6,"relative_strength_vs_industry":0.1491518141}],"early_candidates":[{"ticker":"FLNC","company_name":"Fluence Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.903861359,"return_5d":0.9819524757,"return_10d":0.8056800927,"return_20d":0.7532656252,"relative_volume":4.6313738299,"max_drawdown_10d":-0.114520941,"up_days_10d":7,"relative_strength_vs_industry":0.6560625983},{"ticker":"DDOG","company_name":"Datadog Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.3734990018,"return_5d":0.4243222472,"return_10d":0.5458758902,"return_20d":0.8995918994,"relative_volume":1.8591255874,"max_drawdown_10d":-0.0203149204,"up_days_10d":6,"relative_strength_vs_industry":0.3938138455},{"ticker":"MU","company_name":"Micron Technology Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1665260595,"return_5d":0.377344511,"return_10d":0.5034828389,"return_20d":0.7756247273,"relative_volume":1.5103145689,"max_drawdown_10d":-0.0386418886,"up_days_10d":7,"relative_strength_vs_industry":0.3251634024},{"ticker":"RKLB","company_name":"Rocket Lab USA Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.339131518,"return_5d":0.3382820009,"return_10d":0.323669689,"return_20d":0.5498897354,"relative_volume":3.2132729708,"max_drawdown_10d":-0.071707024,"up_days_10d":5,"relative_strength_vs_industry":0.1844011874},{"ticker":"FTNT","company_name":"Fortinet Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.2685720865,"return_5d":0.3219376345,"return_10d":0.3525018336,"return_20d":0.4872230017,"relative_volume":1.6233561853,"max_drawdown_10d":-0.0209035308,"up_days_10d":9,"relative_strength_vs_industry":0.1838469504},{"ticker":"SMCI","company_name":"Super Micro Computer Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2709306155,"return_5d":0.3056477937,"return_10d":0.2162998289,"return_20d":0.4002374747,"relative_volume":1.3250540421,"max_drawdown_10d":-0.0549371873,"up_days_10d":4,"relative_strength_vs_industry":0.1601205501},{"ticker":"AMD","company_name":"Advanced Micro Devices Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.2812869164,"return_5d":0.2625228592,"return_10d":0.3087317951,"return_20d":0.8576151441,"relative_volume":1.2351446892,"max_drawdown_10d":-0.0526987284,"up_days_10d":6,"relative_strength_vs_industry":0.1304123585},{"ticker":"DELL","company_name":"Dell Technologies Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2040494759,"return_5d":0.2392824557,"return_10d":0.2053310929,"return_20d":0.4694369784,"relative_volume":1.8637110522,"max_drawdown_10d":-0.0477381002,"up_days_10d":6,"relative_strength_vs_industry":0.1491518141},{"ticker":"QCOM","company_name":"Qualcomm Incorporated","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1744304088,"return_5d":0.2377266998,"return_10d":0.4718843625,"return_20d":0.7108386734,"relative_volume":1.5961208122,"max_drawdown_10d":-0.0623677293,"up_days_10d":7,"relative_strength_vs_industry":0.293564926},{"ticker":"RDW","company_name":"Redwire Corporation","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.2738780471,"return_5d":0.1852247874,"return_10d":0.1435949737,"return_20d":0.1916038472,"relative_volume":2.0436582722,"max_drawdown_10d":-0.0782421809,"up_days_10d":5,"relative_strength_vs_industry":0.0043264722},{"ticker":"CGNX","company_name":"Cognex Corporation","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.1160972568,"return_5d":0.1737576917,"return_10d":0.2100996258,"return_20d":0.2293578702,"relative_volume":1.7148866897,"max_drawdown_10d":-0.0284988145,"up_days_10d":7,"relative_strength_vs_industry":0.2086999496},{"ticker":"NNE","company_name":"NANO Nuclear Energy Inc.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.2055336061,"return_5d":0.1725758625,"return_10d":0.1206368574,"return_20d":0.3222543574,"relative_volume":0.9085828789,"max_drawdown_10d":-0.1296583899,"up_days_10d":5,"relative_strength_vs_industry":0.1079448541},{"ticker":"CRWD","company_name":"CrowdStrike Holdings Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.1075273768,"return_5d":0.1583048077,"return_10d":0.1777163184,"return_20d":0.3924595927,"relative_volume":1.4135185107,"max_drawdown_10d":-0.0203081176,"up_days_10d":7,"relative_strength_vs_industry":0.0090614352},{"ticker":"PANW","company_name":"Palo Alto Networks Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.1299054773,"return_5d":0.1480008989,"return_10d":0.1643329937,"return_20d":0.3348745302,"relative_volume":1.7345703071,"max_drawdown_10d":-0.0195734647,"up_days_10d":6,"relative_strength_vs_industry":-0.0043218895},{"ticker":"MDB","company_name":"MongoDB Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.1229563876,"return_5d":0.1366811316,"return_10d":0.1809219825,"return_20d":0.3253817449,"relative_volume":1.1680992514,"max_drawdown_10d":-0.0512519964,"up_days_10d":7,"relative_strength_vs_industry":0.0288599378},{"ticker":"LUNR","company_name":"Intuitive Machines Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.1681451695,"return_5d":0.1307571571,"return_10d":0.1347433817,"return_20d":0.229104781,"relative_volume":1.2574113735,"max_drawdown_10d":-0.0843144444,"up_days_10d":6,"relative_strength_vs_industry":-0.0045251199},{"ticker":"AMAT","company_name":"Applied Materials Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0599289097,"return_5d":0.1191529183,"return_10d":0.0441204525,"return_20d":0.0899897697,"relative_volume":1.3599054709,"max_drawdown_10d":-0.0586622557,"up_days_10d":6,"relative_strength_vs_industry":-0.134198984},{"ticker":"ASML","company_name":"ASML Holding N.V.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.103332112,"return_5d":0.1156255678,"return_10d":0.0945306985,"return_20d":0.079293,"relative_volume":1.2318969467,"max_drawdown_10d":-0.0366785243,"up_days_10d":5,"relative_strength_vs_industry":-0.0837887381},{"ticker":"ROK","company_name":"Rockwell Automation Inc.","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.0411993262,"return_5d":0.1140319142,"return_10d":0.1313874643,"return_20d":0.1461869057,"relative_volume":1.1406264877,"max_drawdown_10d":-0.0235115232,"up_days_10d":5,"relative_strength_vs_industry":0.1299877882},{"ticker":"BKSY","company_name":"BlackSky Technology Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0970523295,"return_5d":0.1097046866,"return_10d":0.1661247008,"return_20d":0.1555360711,"relative_volume":1.6485104294,"max_drawdown_10d":-0.2041470498,"up_days_10d":6,"relative_strength_vs_industry":0.0268561992},{"ticker":"SPCE","company_name":"Virgin Galactic Holdings Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.2,"return_5d":0.1094339439,"return_10d":0.1395349396,"return_20d":-0.0264900411,"relative_volume":1.9901823849,"max_drawdown_10d":-0.0826771816,"up_days_10d":4,"relative_strength_vs_industry":0.0002664381},{"ticker":"OKTA","company_name":"Okta Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.0790996981,"return_5d":0.1071523209,"return_10d":0.1042379287,"return_20d":0.3332274133,"relative_volume":1.0690095135,"max_drawdown_10d":-0.0334645082,"up_days_10d":7,"relative_strength_vs_industry":-0.0644169546},{"ticker":"HPE","company_name":"Hewlett Packard Enterprise Co.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.0436085029,"return_5d":0.0973048903,"return_10d":0.1132812696,"return_20d":0.2595420309,"relative_volume":1.224627549,"max_drawdown_10d":-0.0234102046,"up_days_10d":7,"relative_strength_vs_industry":0.0571019908},{"ticker":"ARRY","company_name":"Array Technologies Inc.","industry_group":"Renewables","latest_date":"2026-05-08","return_3d":0.0476771852,"return_5d":0.0931121847,"return_10d":0.0567201057,"return_20d":0.1969273572,"relative_volume":0.8691155055,"max_drawdown_10d":-0.061480525,"up_days_10d":5,"relative_strength_vs_industry":0.015245319},{"ticker":"ZS","company_name":"Zscaler Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.0761884849,"return_5d":0.0881196448,"return_10d":0.1227306633,"return_20d":0.2886912406,"relative_volume":1.3330125758,"max_drawdown_10d":-0.03961207,"up_days_10d":4,"relative_strength_vs_industry":-0.0459242199},{"ticker":"NVDA","company_name":"NVIDIA Corporation","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0951653789,"return_5d":0.0844041333,"return_10d":0.0332740795,"return_20d":0.1408577182,"relative_volume":0.9032012309,"max_drawdown_10d":-0.0928396683,"up_days_10d":5,"relative_strength_vs_industry":-0.145045357},{"ticker":"SNOW","company_name":"Snowflake Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.0757885098,"return_5d":0.0812056521,"return_10d":0.0864451895,"return_20d":0.2587729847,"relative_volume":0.948127921,"max_drawdown_10d":-0.0539341337,"up_days_10d":4,"relative_strength_vs_industry":-0.0656168553},{"ticker":"ENPH","company_name":"Enphase Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.0119378206,"return_5d":0.0768095246,"return_10d":0.0190103522,"return_20d":0.1686438005,"relative_volume":0.5193497652,"max_drawdown_10d":-0.1149262472,"up_days_10d":4,"relative_strength_vs_industry":-0.1306071423},{"ticker":"VSAT","company_name":"Viasat Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0677139311,"return_5d":0.0750921251,"return_10d":0.1293757096,"return_20d":0.2446222602,"relative_volume":1.0601720185,"max_drawdown_10d":-0.0317099659,"up_days_10d":5,"relative_strength_vs_industry":-0.0098927919},{"ticker":"ORA","company_name":"Ormat Technologies Inc.","industry_group":"Renewables","latest_date":"2026-05-08","return_3d":0.0548812384,"return_5d":0.0719823627,"return_10d":0.0733062589,"return_20d":0.0559798375,"relative_volume":0.9368068543,"max_drawdown_10d":-0.0328745508,"up_days_10d":5,"relative_strength_vs_industry":0.0318314721},{"ticker":"ASTS","company_name":"AST SpaceMobile Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.1750431236,"return_5d":0.058682518,"return_10d":-0.0176701367,"return_20d":-0.2091675253,"relative_volume":1.1977253064,"max_drawdown_10d":-0.1726683749,"up_days_10d":4,"relative_strength_vs_industry":-0.1569386383},{"ticker":"PL","company_name":"Planet Labs PBC","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0514408778,"return_5d":0.057994561,"return_10d":0.101580204,"return_20d":0.1260456584,"relative_volume":1.2244310367,"max_drawdown_10d":-0.1121188486,"up_days_10d":5,"relative_strength_vs_industry":-0.0376882976},{"ticker":"QQQ","company_name":"Invesco QQQ Trust","industry_group":"Market ETFs","latest_date":"2026-05-08","return_3d":0.043455929,"return_5d":0.0550025287,"return_10d":0.0713230934,"return_20d":0.1639091625,"relative_volume":1.0964115899,"max_drawdown_10d":-0.0100567467,"up_days_10d":7,"relative_strength_vs_industry":0.0374383948},{"ticker":"COIN","company_name":"Coinbase Global Inc.","industry_group":"Fintech","latest_date":"2026-05-08","return_3d":0.0172440135,"return_5d":0.0518170126,"return_10d":0.0069579985,"return_20d":0.1984509762,"relative_volume":1.2762283016,"max_drawdown_10d":-0.0760117831,"up_days_10d":5,"relative_strength_vs_industry":0.0538424337},{"ticker":"IRDM","company_name":"Iridium Communications Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0568442408,"return_5d":0.0512170519,"return_10d":0.0641683793,"return_20d":0.2122806479,"relative_volume":0.9526050196,"max_drawdown_10d":-0.0270054036,"up_days_10d":5,"relative_strength_vs_industry":-0.0751001222},{"ticker":"NXT","company_name":"Nextracker Inc.","industry_group":"Renewables","latest_date":"2026-05-08","return_3d":0.0208367715,"return_5d":0.0498624476,"return_10d":0.0370644911,"return_20d":0.0673052671,"relative_volume":0.9744275303,"max_drawdown_10d":-0.0677925034,"up_days_10d":6,"relative_strength_vs_industry":-0.0044102957},{"ticker":"XYZ","company_name":"Block Inc.","industry_group":"Fintech","latest_date":"2026-05-08","return_3d":0.0505262944,"return_5d":0.042333951,"return_10d":0.0449532507,"return_20d":0.2033761665,"relative_volume":2.3718020765,"max_drawdown_10d":-0.025533105,"up_days_10d":4,"relative_strength_vs_industry":0.0918376858},{"ticker":"TER","company_name":"Teradyne Inc.","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.0074768492,"return_5d":0.0415435558,"return_10d":-0.1394709133,"return_20d":-0.0223375674,"relative_volume":0.9330601093,"max_drawdown_10d":-0.237985108,"up_days_10d":5,"relative_strength_vs_industry":-0.1408705895},{"ticker":"TSM","company_name":"Taiwan Semiconductor Manufacturing Co. Ltd.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.043786894,"return_5d":0.0352301626,"return_10d":0.0229091125,"return_20d":0.1108472366,"relative_volume":1.2645315522,"max_drawdown_10d":-0.0312114532,"up_days_10d":6,"relative_strength_vs_industry":-0.155410324},{"ticker":"SMR","company_name":"NuScale Power Corporation","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.0572873051,"return_5d":0.0337726389,"return_10d":0.0493311163,"return_20d":0.3626493093,"relative_volume":0.9496419049,"max_drawdown_10d":-0.1051383371,"up_days_10d":4,"relative_strength_vs_industry":0.036639113},{"ticker":"DPRO","company_name":"Draganfly Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":0.0724070207,"return_5d":0.0320150806,"return_10d":-0.0664395015,"return_20d":0.0036630001,"relative_volume":1.36511442,"max_drawdown_10d":-0.107394309,"up_days_10d":3,"relative_strength_vs_industry":0.0388549012},{"ticker":"OKLO","company_name":"Oklo Inc.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.060397851,"return_5d":0.0299715989,"return_10d":0.0212676357,"return_20d":0.4429851171,"relative_volume":0.5986018944,"max_drawdown_10d":-0.1442117332,"up_days_10d":4,"relative_strength_vs_industry":0.0085756324},{"ticker":"TXN","company_name":"Texas Instruments Incorporated","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0241992448,"return_5d":0.0293300164,"return_10d":0.0437406583,"return_20d":0.3470978587,"relative_volume":1.0262883366,"max_drawdown_10d":-0.0166975252,"up_days_10d":5,"relative_strength_vs_industry":-0.1345787782},{"ticker":"SPY","company_name":"SPDR S&P 500 ETF Trust","industry_group":"Market ETFs","latest_date":"2026-05-08","return_3d":0.0191358791,"return_5d":0.0235481442,"return_10d":0.033168043,"return_20d":0.0855973439,"relative_volume":0.9319197228,"max_drawdown_10d":-0.0050197378,"up_days_10d":6,"relative_strength_vs_industry":-0.0007166556},{"ticker":"VOO","company_name":"Vanguard S&P 500 ETF","industry_group":"Market ETFs","latest_date":"2026-05-08","return_3d":0.0191492416,"return_5d":0.0234256446,"return_10d":0.0329362233,"return_20d":0.0855587649,"relative_volume":0.743740441,"max_drawdown_10d":-0.0049581898,"up_days_10d":6,"relative_strength_vs_industry":-0.0009484753},{"ticker":"VTI","company_name":"Vanguard Total Stock Market ETF","industry_group":"Market ETFs","latest_date":"2026-05-08","return_3d":0.0164710637,"return_5d":0.021334646,"return_10d":0.0307342926,"return_20d":0.0830324081,"relative_volume":0.8550687434,"max_drawdown_10d":-0.006581021,"up_days_10d":6,"relative_strength_vs_industry":-0.003150406},{"ticker":"AVGO","company_name":"Broadcom Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0061774961,"return_5d":0.0206988256,"return_10d":0.0171255324,"return_20d":0.1573139931,"relative_volume":1.0953314514,"max_drawdown_10d":-0.043926411,"up_days_10d":5,"relative_strength_vs_industry":-0.1611939041},{"ticker":"IWM","company_name":"iShares Russell 2000 ETF","industry_group":"Market ETFs","latest_date":"2026-05-08","return_3d":0.0056979611,"return_5d":0.0175093622,"return_10d":0.0271824316,"return_20d":0.0875240211,"relative_volume":0.8318003042,"max_drawdown_10d":-0.0182580205,"up_days_10d":6,"relative_strength_vs_industry":-0.006702267},{"ticker":"RTX","company_name":"RTX Corporation","industry_group":"Defense","latest_date":"2026-05-08","return_3d":0.0186267213,"return_5d":0.0120696062,"return_10d":0.0105015602,"return_20d":-0.1263643656,"relative_volume":1.1014559404,"max_drawdown_10d":-0.0181746582,"up_days_10d":4,"relative_strength_vs_industry":0.0428329882},{"ticker":"ARM","company_name":"Arm Holdings plc","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0212124498,"return_5d":0.0098968258,"return_10d":-0.0917337145,"return_20d":0.4320151397,"relative_volume":1.0795991645,"max_drawdown_10d":-0.1012642161,"up_days_10d":5,"relative_strength_vs_industry":-0.2700531511}],"strong_candidates":[{"ticker":"FLNC","company_name":"Fluence Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.903861359,"return_5d":0.9819524757,"return_10d":0.8056800927,"return_20d":0.7532656252,"relative_volume":4.6313738299,"max_drawdown_10d":-0.114520941,"up_days_10d":7,"relative_strength_vs_industry":0.6560625983},{"ticker":"DDOG","company_name":"Datadog Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.3734990018,"return_5d":0.4243222472,"return_10d":0.5458758902,"return_20d":0.8995918994,"relative_volume":1.8591255874,"max_drawdown_10d":-0.0203149204,"up_days_10d":6,"relative_strength_vs_industry":0.3938138455},{"ticker":"INTC","company_name":"Intel Corporation","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1550623801,"return_5d":0.2539650143,"return_10d":0.5134479862,"return_20d":1.002564861,"relative_volume":1.5261350079,"max_drawdown_10d":-0.0385465154,"up_days_10d":6,"relative_strength_vs_industry":0.3351285497},{"ticker":"MU","company_name":"Micron Technology Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1665260595,"return_5d":0.377344511,"return_10d":0.5034828389,"return_20d":0.7756247273,"relative_volume":1.5103145689,"max_drawdown_10d":-0.0386418886,"up_days_10d":7,"relative_strength_vs_industry":0.3251634024},{"ticker":"QCOM","company_name":"Qualcomm Incorporated","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1744304088,"return_5d":0.2377266998,"return_10d":0.4718843625,"return_20d":0.7108386734,"relative_volume":1.5961208122,"max_drawdown_10d":-0.0623677293,"up_days_10d":7,"relative_strength_vs_industry":0.293564926},{"ticker":"CGNX","company_name":"Cognex Corporation","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.1160972568,"return_5d":0.1737576917,"return_10d":0.2100996258,"return_20d":0.2293578702,"relative_volume":1.7148866897,"max_drawdown_10d":-0.0284988145,"up_days_10d":7,"relative_strength_vs_industry":0.2086999496},{"ticker":"FTNT","company_name":"Fortinet Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.2685720865,"return_5d":0.3219376345,"return_10d":0.3525018336,"return_20d":0.4872230017,"relative_volume":1.6233561853,"max_drawdown_10d":-0.0209035308,"up_days_10d":9,"relative_strength_vs_industry":0.1838469504},{"ticker":"DELL","company_name":"Dell Technologies Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2040494759,"return_5d":0.2392824557,"return_10d":0.2053310929,"return_20d":0.4694369784,"relative_volume":1.8637110522,"max_drawdown_10d":-0.0477381002,"up_days_10d":6,"relative_strength_vs_industry":0.1491518141},{"ticker":"AMD","company_name":"Advanced Micro Devices Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.2812869164,"return_5d":0.2625228592,"return_10d":0.3087317951,"return_20d":0.8576151441,"relative_volume":1.2351446892,"max_drawdown_10d":-0.0526987284,"up_days_10d":6,"relative_strength_vs_industry":0.1304123585},{"ticker":"PUBM","company_name":"PubMatic Inc.","industry_group":"Adtech","latest_date":"2026-05-08","return_3d":0.0326923236,"return_5d":0.049853397,"return_10d":0.1164241059,"return_20d":0.2680046556,"relative_volume":2.4647396039,"max_drawdown_10d":-0.0249999312,"up_days_10d":8,"relative_strength_vs_industry":0.0576084374},{"ticker":"HPE","company_name":"Hewlett Packard Enterprise Co.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.0436085029,"return_5d":0.0973048903,"return_10d":0.1132812696,"return_20d":0.2595420309,"relative_volume":1.224627549,"max_drawdown_10d":-0.0234102046,"up_days_10d":7,"relative_strength_vs_industry":0.0571019908},{"ticker":"BKSY","company_name":"BlackSky Technology Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0970523295,"return_5d":0.1097046866,"return_10d":0.1661247008,"return_20d":0.1555360711,"relative_volume":1.6485104294,"max_drawdown_10d":-0.2041470498,"up_days_10d":6,"relative_strength_vs_industry":0.0268561992},{"ticker":"CRWD","company_name":"CrowdStrike Holdings Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.1075273768,"return_5d":0.1583048077,"return_10d":0.1777163184,"return_20d":0.3924595927,"relative_volume":1.4135185107,"max_drawdown_10d":-0.0203081176,"up_days_10d":7,"relative_strength_vs_industry":0.0090614352}],"risk_warnings":[{"ticker":"TER","company_name":"Teradyne Inc.","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.0074768492,"return_5d":0.0415435558,"return_10d":-0.1394709133,"return_20d":-0.0223375674,"relative_volume":0.9330601093,"max_drawdown_10d":-0.237985108,"up_days_10d":5,"relative_strength_vs_industry":-0.1408705895},{"ticker":"STEM","company_name":"Stem Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":-0.1342155091,"return_5d":-0.148698917,"return_10d":-0.1971954452,"return_20d":-0.0276008733,"relative_volume":1.7988073125,"max_drawdown_10d":-0.2267493736,"up_days_10d":5,"relative_strength_vs_industry":-0.3468129397},{"ticker":"BKSY","company_name":"BlackSky Technology Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0970523295,"return_5d":0.1097046866,"return_10d":0.1661247008,"return_20d":0.1555360711,"relative_volume":1.6485104294,"max_drawdown_10d":-0.2041470498,"up_days_10d":6,"relative_strength_vs_industry":0.0268561992},{"ticker":"ONDS","company_name":"Ondas Holdings Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":-0.0289388538,"return_5d":-0.1220929566,"return_10d":-0.1412322032,"return_20d":-0.0076669982,"relative_volume":0.6283497285,"max_drawdown_10d":-0.1881278084,"up_days_10d":5,"relative_strength_vs_industry":-0.0359378005},{"ticker":"SEDG","company_name":"SolarEdge Technologies Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":-0.074820793,"return_5d":-0.0375204059,"return_10d":-0.0988436049,"return_20d":-0.0110153042,"relative_volume":0.9729102876,"max_drawdown_10d":-0.1850992035,"up_days_10d":5,"relative_strength_vs_industry":-0.2484610994},{"ticker":"ANET","company_name":"Arista Networks Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":-0.1671366276,"return_5d":-0.1790966602,"return_10d":-0.1986320652,"return_20d":-0.0378690302,"relative_volume":1.9751714636,"max_drawdown_10d":-0.1792600632,"up_days_10d":3,"relative_strength_vs_industry":-0.254811344},{"ticker":"ASTS","company_name":"AST SpaceMobile Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.1750431236,"return_5d":0.058682518,"return_10d":-0.0176701367,"return_20d":-0.2091675253,"relative_volume":1.1977253064,"max_drawdown_10d":-0.1726683749,"up_days_10d":4,"relative_strength_vs_industry":-0.1569386383},{"ticker":"SOFI","company_name":"SoFi Technologies Inc.","industry_group":"Fintech","latest_date":"2026-05-08","return_3d":-0.0168539607,"return_5d":-0.0413877232,"return_10d":-0.1458785497,"return_20d":-0.028976531,"relative_volume":0.8113432403,"max_drawdown_10d":-0.172441395,"up_days_10d":4,"relative_strength_vs_industry":-0.0989941145},{"ticker":"SPOT","company_name":"Spotify Technology S.A.","industry_group":"Consumer Platforms","latest_date":"2026-05-08","return_3d":-0.0040521827,"return_5d":-0.0536341706,"return_10d":-0.1933784043,"return_20d":-0.1221874511,"relative_volume":0.7560157626,"max_drawdown_10d":-0.1572950256,"up_days_10d":4,"relative_strength_vs_industry":-0.1516608666},{"ticker":"HOOD","company_name":"Robinhood Markets Inc.","industry_group":"Fintech","latest_date":"2026-05-08","return_3d":0.0,"return_5d":0.0457506781,"return_10d":-0.0906622641,"return_20d":0.1133111152,"relative_volume":0.5141437822,"max_drawdown_10d":-0.1518761223,"up_days_10d":6,"relative_strength_vs_industry":-0.0437778289},{"ticker":"AVAV","company_name":"AeroVironment Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":0.0095986011,"return_5d":-0.0901768277,"return_10d":-0.1426024336,"return_20d":-0.0635989754,"relative_volume":0.7804246328,"max_drawdown_10d":-0.1484111691,"up_days_10d":3,"relative_strength_vs_industry":-0.0373080309},{"ticker":"SYM","company_name":"Symbotic Inc.","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":-0.0996900953,"return_5d":-0.1120733324,"return_10d":-0.1195487211,"return_20d":-0.0286085986,"relative_volume":1.7546164997,"max_drawdown_10d":-0.1450294139,"up_days_10d":5,"relative_strength_vs_industry":-0.1209483973},{"ticker":"OKLO","company_name":"Oklo Inc.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.060397851,"return_5d":0.0299715989,"return_10d":0.0212676357,"return_20d":0.4429851171,"relative_volume":0.5986018944,"max_drawdown_10d":-0.1442117332,"up_days_10d":4,"relative_strength_vs_industry":0.0085756324},{"ticker":"HII","company_name":"Huntington Ingalls Industries Inc.","industry_group":"Defense","latest_date":"2026-05-08","return_3d":-0.0302026982,"return_5d":-0.1229062856,"return_10d":-0.119708338,"return_20d":-0.1980933652,"relative_volume":1.084372384,"max_drawdown_10d":-0.1360729259,"up_days_10d":5,"relative_strength_vs_industry":-0.08737691},{"ticker":"LEU","company_name":"Centrus Energy Corp.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.0062609619,"return_5d":0.0033391524,"return_10d":0.0082672611,"return_20d":0.1074137404,"relative_volume":0.777166474,"max_drawdown_10d":-0.1351473132,"up_days_10d":5,"relative_strength_vs_industry":-0.0044247421},{"ticker":"UEC","company_name":"Uranium Energy Corp.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.0455172309,"return_5d":0.0147255872,"return_10d":0.0790035332,"return_20d":0.1204730337,"relative_volume":0.8119851201,"max_drawdown_10d":-0.1297858546,"up_days_10d":4,"relative_strength_vs_industry":0.0663115299},{"ticker":"NNE","company_name":"NANO Nuclear Energy Inc.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.2055336061,"return_5d":0.1725758625,"return_10d":0.1206368574,"return_20d":0.3222543574,"relative_volume":0.9085828789,"max_drawdown_10d":-0.1296583899,"up_days_10d":5,"relative_strength_vs_industry":0.1079448541},{"ticker":"LDOS","company_name":"Leidos Holdings Inc.","industry_group":"Defense","latest_date":"2026-05-08","return_3d":-0.0516072724,"return_5d":-0.1281243427,"return_10d":-0.1092016789,"return_20d":-0.1489403686,"relative_volume":1.3438598513,"max_drawdown_10d":-0.1281243427,"up_days_10d":3,"relative_strength_vs_industry":-0.0768702509},{"ticker":"SPIR","company_name":"Spire Global Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.1233293317,"return_5d":0.0170516755,"return_10d":0.1199272874,"return_20d":-0.1423933103,"relative_volume":0.7384339598,"max_drawdown_10d":-0.1180327835,"up_days_10d":4,"relative_strength_vs_industry":-0.0193412142},{"ticker":"RCAT","company_name":"Red Cat Holdings Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":-0.0057526767,"return_5d":-0.0765805603,"return_10d":-0.1211864646,"return_20d":-0.161681489,"relative_volume":0.8970191252,"max_drawdown_10d":-0.1160410051,"up_days_10d":3,"relative_strength_vs_industry":-0.0158920618},{"ticker":"ENPH","company_name":"Enphase Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.0119378206,"return_5d":0.0768095246,"return_10d":0.0190103522,"return_20d":0.1686438005,"relative_volume":0.5193497652,"max_drawdown_10d":-0.1149262472,"up_days_10d":4,"relative_strength_vs_industry":-0.1306071423},{"ticker":"FLNC","company_name":"Fluence Energy Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.903861359,"return_5d":0.9819524757,"return_10d":0.8056800927,"return_20d":0.7532656252,"relative_volume":4.6313738299,"max_drawdown_10d":-0.114520941,"up_days_10d":7,"relative_strength_vs_industry":0.6560625983},{"ticker":"VST","company_name":"Vistra Corp.","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":-0.0789375438,"return_5d":-0.0486862289,"return_10d":-0.1011865182,"return_20d":-0.0453046901,"relative_volume":1.821419768,"max_drawdown_10d":-0.1132188762,"up_days_10d":3,"relative_strength_vs_industry":-0.1138785215},{"ticker":"PL","company_name":"Planet Labs PBC","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.0514408778,"return_5d":0.057994561,"return_10d":0.101580204,"return_20d":0.1260456584,"relative_volume":1.2244310367,"max_drawdown_10d":-0.1121188486,"up_days_10d":5,"relative_strength_vs_industry":-0.0376882976},{"ticker":"PYPL","company_name":"PayPal Holdings Inc.","industry_group":"Fintech","latest_date":"2026-05-08","return_3d":-0.0240912606,"return_5d":-0.1005154606,"return_10d":-0.1012282222,"return_20d":0.0028735024,"relative_volume":0.9873038166,"max_drawdown_10d":-0.1093443236,"up_days_10d":2,"relative_strength_vs_industry":-0.054343787},{"ticker":"DPRO","company_name":"Draganfly Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":0.0724070207,"return_5d":0.0320150806,"return_10d":-0.0664395015,"return_20d":0.0036630001,"relative_volume":1.36511442,"max_drawdown_10d":-0.107394309,"up_days_10d":3,"relative_strength_vs_industry":0.0388549012},{"ticker":"SMR","company_name":"NuScale Power Corporation","industry_group":"Nuclear","latest_date":"2026-05-08","return_3d":0.0572873051,"return_5d":0.0337726389,"return_10d":0.0493311163,"return_20d":0.3626493093,"relative_volume":0.9496419049,"max_drawdown_10d":-0.1051383371,"up_days_10d":4,"relative_strength_vs_industry":0.036639113},{"ticker":"ARM","company_name":"Arm Holdings plc","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0212124498,"return_5d":0.0098968258,"return_10d":-0.0917337145,"return_20d":0.4320151397,"relative_volume":1.0795991645,"max_drawdown_10d":-0.1012642161,"up_days_10d":5,"relative_strength_vs_industry":-0.2700531511},{"ticker":"KTOS","company_name":"Kratos Defense & Security Solutions Inc.","industry_group":"Defense Drones","latest_date":"2026-05-08","return_3d":-0.0239420326,"return_5d":-0.0670427059,"return_10d":-0.0550114108,"return_20d":-0.1769974068,"relative_volume":1.1229790493,"max_drawdown_10d":-0.0975300802,"up_days_10d":4,"relative_strength_vs_industry":0.050282992},{"ticker":"NVDA","company_name":"NVIDIA Corporation","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.0951653789,"return_5d":0.0844041333,"return_10d":0.0332740795,"return_20d":0.1408577182,"relative_volume":0.9032012309,"max_drawdown_10d":-0.0928396683,"up_days_10d":5,"relative_strength_vs_industry":-0.145045357},{"ticker":"LUNR","company_name":"Intuitive Machines Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.1681451695,"return_5d":0.1307571571,"return_10d":0.1347433817,"return_20d":0.229104781,"relative_volume":1.2574113735,"max_drawdown_10d":-0.0843144444,"up_days_10d":6,"relative_strength_vs_industry":-0.0045251199},{"ticker":"SPCE","company_name":"Virgin Galactic Holdings Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.2,"return_5d":0.1094339439,"return_10d":0.1395349396,"return_20d":-0.0264900411,"relative_volume":1.9901823849,"max_drawdown_10d":-0.0826771816,"up_days_10d":4,"relative_strength_vs_industry":0.0002664381},{"ticker":"MDT","company_name":"Medtronic plc","industry_group":"Defensive Healthcare","latest_date":"2026-05-08","return_3d":-0.0210823932,"return_5d":-0.0481249809,"return_10d":-0.0860537469,"return_20d":-0.1268202921,"relative_volume":1.0752809498,"max_drawdown_10d":-0.0816449203,"up_days_10d":2,"relative_strength_vs_industry":-0.0750278918},{"ticker":"RKLB","company_name":"Rocket Lab USA Inc.","industry_group":"Space","latest_date":"2026-05-08","return_3d":0.339131518,"return_5d":0.3382820009,"return_10d":0.323669689,"return_20d":0.5498897354,"relative_volume":3.2132729708,"max_drawdown_10d":-0.071707024,"up_days_10d":5,"relative_strength_vs_industry":0.1844011874},{"ticker":"QCOM","company_name":"Qualcomm Incorporated","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1744304088,"return_5d":0.2377266998,"return_10d":0.4718843625,"return_20d":0.7108386734,"relative_volume":1.5961208122,"max_drawdown_10d":-0.0623677293,"up_days_10d":7,"relative_strength_vs_industry":0.293564926},{"ticker":"SMCI","company_name":"Super Micro Computer Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2709306155,"return_5d":0.3056477937,"return_10d":0.2162998289,"return_20d":0.4002374747,"relative_volume":1.3250540421,"max_drawdown_10d":-0.0549371873,"up_days_10d":4,"relative_strength_vs_industry":0.1601205501},{"ticker":"AMD","company_name":"Advanced Micro Devices Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.2812869164,"return_5d":0.2625228592,"return_10d":0.3087317951,"return_20d":0.8576151441,"relative_volume":1.2351446892,"max_drawdown_10d":-0.0526987284,"up_days_10d":6,"relative_strength_vs_industry":0.1304123585},{"ticker":"DELL","company_name":"Dell Technologies Inc.","industry_group":"AI Infrastructure","latest_date":"2026-05-08","return_3d":0.2040494759,"return_5d":0.2392824557,"return_10d":0.2053310929,"return_20d":0.4694369784,"relative_volume":1.8637110522,"max_drawdown_10d":-0.0477381002,"up_days_10d":6,"relative_strength_vs_industry":0.1491518141},{"ticker":"MU","company_name":"Micron Technology Inc.","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1665260595,"return_5d":0.377344511,"return_10d":0.5034828389,"return_20d":0.7756247273,"relative_volume":1.5103145689,"max_drawdown_10d":-0.0386418886,"up_days_10d":7,"relative_strength_vs_industry":0.3251634024},{"ticker":"INTC","company_name":"Intel Corporation","industry_group":"Semiconductors","latest_date":"2026-05-08","return_3d":0.1550623801,"return_5d":0.2539650143,"return_10d":0.5134479862,"return_20d":1.002564861,"relative_volume":1.5261350079,"max_drawdown_10d":-0.0385465154,"up_days_10d":6,"relative_strength_vs_industry":0.3351285497},{"ticker":"CGNX","company_name":"Cognex Corporation","industry_group":"Robotics Automation","latest_date":"2026-05-08","return_3d":0.1160972568,"return_5d":0.1737576917,"return_10d":0.2100996258,"return_20d":0.2293578702,"relative_volume":1.7148866897,"max_drawdown_10d":-0.0284988145,"up_days_10d":7,"relative_strength_vs_industry":0.2086999496},{"ticker":"FTNT","company_name":"Fortinet Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.2685720865,"return_5d":0.3219376345,"return_10d":0.3525018336,"return_20d":0.4872230017,"relative_volume":1.6233561853,"max_drawdown_10d":-0.0209035308,"up_days_10d":9,"relative_strength_vs_industry":0.1838469504},{"ticker":"DDOG","company_name":"Datadog Inc.","industry_group":"Cloud Software","latest_date":"2026-05-08","return_3d":0.3734990018,"return_5d":0.4243222472,"return_10d":0.5458758902,"return_20d":0.8995918994,"relative_volume":1.8591255874,"max_drawdown_10d":-0.0203149204,"up_days_10d":6,"relative_strength_vs_industry":0.3938138455},{"ticker":"CRWD","company_name":"CrowdStrike Holdings Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.1075273768,"return_5d":0.1583048077,"return_10d":0.1777163184,"return_20d":0.3924595927,"relative_volume":1.4135185107,"max_drawdown_10d":-0.0203081176,"up_days_10d":7,"relative_strength_vs_industry":0.0090614352},{"ticker":"PANW","company_name":"Palo Alto Networks Inc.","industry_group":"Cybersecurity","latest_date":"2026-05-08","return_3d":0.1299054773,"return_5d":0.1480008989,"return_10d":0.1643329937,"return_20d":0.3348745302,"relative_volume":1.7345703071,"max_drawdown_10d":-0.0195734647,"up_days_10d":6,"relative_strength_vs_industry":-0.0043218895},{"ticker":"GNRC","company_name":"Generac Holdings Inc.","industry_group":"Energy Storage","latest_date":"2026-05-08","return_3d":0.0217309282,"return_5d":0.0388293648,"return_10d":0.2194360775,"return_20d":0.3013090144,"relative_volume":0.7232431939,"max_drawdown_10d":-0.0144348974,"up_days_10d":6,"relative_strength_vs_industry":0.069818583}],"rotation_trend":{"date_count":3,"start_date":"2026-05-06","current_date":"2026-05-08","five_day_start_date":"2026-05-06","gaining_rank":[{"industry_group":"Cloud Software","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":12,"current_rank":3,"rank_change":9,"current_average_10d_return":0.152062,"average_10d_return_change":0.192532,"current_confirmed_signal_pct":0.6666666667,"confirmed_signal_pct_change":0.6666666667},{"industry_group":"Space","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":14,"current_rank":5,"rank_change":9,"current_average_10d_return":0.139269,"average_10d_return_change":0.190084,"current_confirmed_signal_pct":0.1818181818,"confirmed_signal_pct_change":0.1818181818},{"industry_group":"Cybersecurity","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":10,"current_rank":2,"rank_change":8,"current_average_10d_return":0.168655,"average_10d_return_change":0.162767,"current_confirmed_signal_pct":0.8333333333,"confirmed_signal_pct_change":0.5},{"industry_group":"Energy Storage","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":7,"current_rank":4,"rank_change":3,"current_average_10d_return":0.149617,"average_10d_return_change":0.120379,"current_confirmed_signal_pct":0.4,"confirmed_signal_pct_change":0.2},{"industry_group":"Adtech","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":8,"current_rank":6,"rank_change":2,"current_average_10d_return":0.058816,"average_10d_return_change":0.029643,"current_confirmed_signal_pct":0.5,"confirmed_signal_pct_change":0.0},{"industry_group":"Defense","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":15,"current_rank":14,"rank_change":1,"current_average_10d_return":-0.032331,"average_10d_return_change":0.023117,"current_confirmed_signal_pct":0.1428571429,"confirmed_signal_pct_change":0.0}],"losing_rank":[{"industry_group":"Nuclear","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":4,"current_rank":10,"rank_change":-6,"current_average_10d_return":0.012692,"average_10d_return_change":-0.035109,"current_confirmed_signal_pct":0.0,"confirmed_signal_pct_change":-0.125},{"industry_group":"Defensive Staples","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":6,"current_rank":11,"rank_change":-5,"current_average_10d_return":0.00757,"average_10d_return_change":-0.023053,"current_confirmed_signal_pct":0.1666666667,"confirmed_signal_pct_change":-0.1666666667},{"industry_group":"Renewables","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":3,"current_rank":8,"rank_change":-5,"current_average_10d_return":0.041475,"average_10d_return_change":-0.020995,"current_confirmed_signal_pct":0.2,"confirmed_signal_pct_change":0.0},{"industry_group":"AI Infrastructure","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":2,"current_rank":7,"rank_change":-5,"current_average_10d_return":0.056179,"average_10d_return_change":-0.008388,"current_confirmed_signal_pct":0.3333333333,"confirmed_signal_pct_change":-0.1666666667},{"industry_group":"Market ETFs","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":5,"current_rank":9,"rank_change":-4,"current_average_10d_return":0.033885,"average_10d_return_change":0.000233,"current_confirmed_signal_pct":0.8333333333,"confirmed_signal_pct_change":0.0},{"industry_group":"Robotics Automation","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":9,"current_rank":12,"rank_change":-3,"current_average_10d_return":0.0014,"average_10d_return_change":-0.02686,"current_confirmed_signal_pct":0.1666666667,"confirmed_signal_pct_change":0.0},{"industry_group":"Defensive Healthcare","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":11,"current_rank":13,"rank_change":-2,"current_average_10d_return":-0.011026,"average_10d_return_change":-0.008243,"current_confirmed_signal_pct":0.1666666667,"confirmed_signal_pct_change":0.0},{"industry_group":"Consumer Platforms","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":13,"current_rank":15,"rank_change":-2,"current_average_10d_return":-0.041718,"average_10d_return_change":0.00405,"current_confirmed_signal_pct":0.0,"confirmed_signal_pct_change":0.0}],"improving_5d":[{"industry_group":"Cloud Software","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":12,"current_rank":3,"rank_change":9,"current_average_10d_return":0.152062,"average_10d_return_change":0.192532,"current_confirmed_signal_pct":0.6666666667,"confirmed_signal_pct_change":0.6666666667},{"industry_group":"Space","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":14,"current_rank":5,"rank_change":9,"current_average_10d_return":0.139269,"average_10d_return_change":0.190084,"current_confirmed_signal_pct":0.1818181818,"confirmed_signal_pct_change":0.1818181818},{"industry_group":"Cybersecurity","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":10,"current_rank":2,"rank_change":8,"current_average_10d_return":0.168655,"average_10d_return_change":0.162767,"current_confirmed_signal_pct":0.8333333333,"confirmed_signal_pct_change":0.5},{"industry_group":"Energy Storage","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":7,"current_rank":4,"rank_change":3,"current_average_10d_return":0.149617,"average_10d_return_change":0.120379,"current_confirmed_signal_pct":0.4,"confirmed_signal_pct_change":0.2},{"industry_group":"Defense Drones","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":17,"current_rank":17,"rank_change":0,"current_average_10d_return":-0.105294,"average_10d_return_change":0.05671,"current_confirmed_signal_pct":0.0,"confirmed_signal_pct_change":0.0},{"industry_group":"Adtech","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":8,"current_rank":6,"rank_change":2,"current_average_10d_return":0.058816,"average_10d_return_change":0.029643,"current_confirmed_signal_pct":0.5,"confirmed_signal_pct_change":0.0},{"industry_group":"Fintech","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":16,"current_rank":16,"rank_change":0,"current_average_10d_return":-0.046884,"average_10d_return_change":0.02407,"current_confirmed_signal_pct":0.0,"confirmed_signal_pct_change":0.0},{"industry_group":"Defense","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":15,"current_rank":14,"rank_change":1,"current_average_10d_return":-0.032331,"average_10d_return_change":0.023117,"current_confirmed_signal_pct":0.1428571429,"confirmed_signal_pct_change":0.0},{"industry_group":"Consumer Platforms","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":13,"current_rank":15,"rank_change":-2,"current_average_10d_return":-0.041718,"average_10d_return_change":0.00405,"current_confirmed_signal_pct":0.0,"confirmed_signal_pct_change":0.0},{"industry_group":"Market ETFs","start_date":"2026-05-06","current_date":"2026-05-08","start_rank":5,"current_rank":9,"rank_change":-4,"current_average_10d_return":0.033885,"average_10d_return_change":0.000233,"current_confirmed_signal_pct":0.8333333333,"confirmed_signal_pct_change":0.0}]}}</script>
   <script>
     const dashboardData = JSON.parse(document.getElementById("dashboard-data").textContent);
+
+    const industryLabels = {
+      "AI Infrastructure": "AI 基礎設施",
+      "Semiconductors": "半導體",
+      "Defense": "國防",
+      "Defense Drones": "國防無人機",
+      "Space": "太空與衛星",
+      "Cybersecurity": "資安",
+      "Cloud Software": "雲端軟體",
+      "Adtech": "廣告科技",
+      "Nuclear": "核能",
+      "Renewables": "再生能源",
+      "Energy Storage": "儲能",
+      "Robotics Automation": "機器人與自動化",
+      "Fintech": "金融科技",
+      "Consumer Platforms": "消費平台",
+      "Defensive Healthcare": "防禦型醫療",
+      "Defensive Staples": "防禦型必需消費",
+      "Market ETFs": "市場 ETF"
+    };
+
+    const explanations = {
+      return3d: "最近 3 個交易日的報酬率。",
+      return5d: "最近 5 個交易日的報酬率，用來觀察短線動能。",
+      return10d: "最近 10 個交易日的報酬率，這是主要排名依據。",
+      return20d: "最近 20 個交易日的報酬率，用來對照較長週期趨勢。",
+      relativeVolume: "最新成交量 / 20 日平均成交量；大於 1 代表量能高於近期平均。",
+      relativeStrength: "個股 10 日報酬減去所屬產業平均 10 日報酬；正值代表跑贏同產業。",
+      maxDrawdown: "最近 10 個交易日從高點回落的最大幅度；數值越負代表回撤越深。",
+      upDays: "最近 10 個交易日中，上漲日的天數。",
+      rotation: "目前產業排名相對近 5 個歷史交易日的變化；正值代表排名上升。",
+      acceleration: "目前平均 5 日報酬減去前一個快照的平均 5 日報酬。",
+      persistence: "產業連續維持在前三名的歷史交易日數。",
+      confirmedPct: "產業內符合確認動能訊號的股票比例。",
+      breadthScore: "廣度分數 = 5 日正報酬比例 20% + 10 日正報酬比例 25% + 確認比例 25% + 強勢比例 20% + 高相對量比例 10%。",
+      positive5dPct: "產業內 5 日報酬大於 0 的股票比例。",
+      positive10dPct: "產業內 10 日報酬大於 0 的股票比例。",
+      strongPct: "產業內符合強勢動能訊號的股票比例。",
+      highRelativeVolumePct: "產業內相對量大於 1.2 的股票比例。"
+    };
 
     const tableConfigs = {
       "industry-momentum": {
         rows: dashboardData.industry_momentum,
         columns: [
-          { key: "__rank", label: "Rank", type: "rank" },
-          { key: "industry_group", label: "Industry" },
-          { key: "return_10d", label: "Avg 10D", type: "percent" },
-          { key: "return_5d", label: "Avg 5D", type: "percent" },
-          { key: "return_20d", label: "Avg 20D", type: "percent" },
-          { key: "relative_volume", label: "Rel Vol", type: "number", digits: 2 },
-          { key: "tickers_with_data", label: "With Data", type: "integer" },
-          { key: "ticker_count", label: "Tickers", type: "integer" }
+          { key: "__rank", label: "排名", type: "rank" },
+          { key: "industry_group", label: "產業" },
+          { key: "return_5d", label: "平均 5日", type: "percent", description: explanations.return5d },
+          { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
+          { key: "return_20d", label: "平均 20日", type: "percent", description: explanations.return20d },
+          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
+          { key: "tickers_with_data", label: "有資料", type: "integer" },
+          { key: "ticker_count", label: "檔數", type: "integer" }
         ]
       },
       "industry-confirmed": {
         rows: dashboardData.industry_confirmed,
         columns: [
-          { key: "__rank", label: "Rank", type: "rank" },
-          { key: "industry_group", label: "Industry" },
-          { key: "confirmed_signal_pct", label: "Confirmed %", type: "percent" },
-          { key: "confirmed_count", label: "Confirmed", type: "integer" },
-          { key: "tickers_with_data", label: "With Data", type: "integer" },
-          { key: "ticker_count", label: "Tickers", type: "integer" }
+          { key: "__rank", label: "排名", type: "rank" },
+          { key: "industry_group", label: "產業" },
+          { key: "confirmed_signal_pct", label: "確認比例", type: "percent", description: explanations.confirmedPct },
+          { key: "confirmed_count", label: "確認檔數", type: "integer" },
+          { key: "tickers_with_data", label: "有資料", type: "integer" },
+          { key: "ticker_count", label: "檔數", type: "integer" }
+        ]
+      },
+      "breadth-ranked": {
+        rows: dashboardData.industry_breadth.ranked,
+        columns: [
+          { key: "__rank", label: "排名", type: "rank" },
+          { key: "industry_group", label: "產業" },
+          { key: "breadth_score", label: "廣度分數", type: "percent", description: explanations.breadthScore },
+          { key: "positive_5d_pct", label: "5日正報酬", type: "percent", description: explanations.positive5dPct },
+          { key: "positive_10d_pct", label: "10日正報酬", type: "percent", description: explanations.positive10dPct },
+          { key: "confirmed_signal_pct", label: "確認比例", type: "percent", description: explanations.confirmedPct },
+          { key: "strong_signal_pct", label: "強勢比例", type: "percent", description: explanations.strongPct },
+          { key: "high_relative_volume_pct", label: "高相對量", type: "percent", description: explanations.highRelativeVolumePct },
+          { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d }
+        ]
+      },
+      "breadth-high-return-weak": {
+        rows: dashboardData.industry_breadth.high_return_weak_breadth,
+        columns: [
+          { key: "industry_group", label: "產業" },
+          { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
+          { key: "breadth_score", label: "廣度分數", type: "percent", description: explanations.breadthScore },
+          { key: "positive_10d_pct", label: "10日正報酬", type: "percent", description: explanations.positive10dPct },
+          { key: "confirmed_signal_pct", label: "確認比例", type: "percent", description: explanations.confirmedPct },
+          { key: "strong_signal_pct", label: "強勢比例", type: "percent", description: explanations.strongPct },
+          { key: "high_relative_volume_pct", label: "高相對量", type: "percent", description: explanations.highRelativeVolumePct }
+        ]
+      },
+      "breadth-moderate-improving": {
+        rows: dashboardData.industry_breadth.moderate_return_improving_breadth,
+        columns: [
+          { key: "industry_group", label: "產業" },
+          { key: "return_5d", label: "平均 5日", type: "percent", description: explanations.return5d },
+          { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
+          { key: "positive_5d_pct", label: "5日正報酬", type: "percent", description: explanations.positive5dPct },
+          { key: "positive_10d_pct", label: "10日正報酬", type: "percent", description: explanations.positive10dPct },
+          { key: "breadth_score", label: "廣度分數", type: "percent", description: explanations.breadthScore },
+          { key: "high_relative_volume_pct", label: "高相對量", type: "percent", description: explanations.highRelativeVolumePct }
         ]
       },
       "rotation-gaining": {
         rows: dashboardData.rotation_trend.gaining_rank,
         columns: [
-          { key: "industry_group", label: "Industry" },
-          { key: "start_rank", label: "From", type: "integer" },
-          { key: "current_rank", label: "Now", type: "integer" },
-          { key: "rank_change", label: "Rank Chg", type: "signedInteger" },
-          { key: "current_average_10d_return", label: "Avg 10D", type: "percent" },
-          { key: "average_10d_return_change", label: "10D Chg", type: "signedPercent" }
+          { key: "industry_group", label: "產業" },
+          { key: "start_rank", label: "起始排名", type: "integer" },
+          { key: "current_rank", label: "目前排名", type: "integer" },
+          { key: "rank_change", label: "排名變化", type: "signedInteger", description: explanations.rotation },
+          { key: "current_average_10d_return", label: "目前 10日", type: "percent", description: explanations.return10d },
+          { key: "average_10d_return_change", label: "10日變化", type: "signedPercent" }
         ]
       },
       "rotation-losing": {
         rows: dashboardData.rotation_trend.losing_rank,
         columns: [
-          { key: "industry_group", label: "Industry" },
-          { key: "start_rank", label: "From", type: "integer" },
-          { key: "current_rank", label: "Now", type: "integer" },
-          { key: "rank_change", label: "Rank Chg", type: "signedInteger" },
-          { key: "current_average_10d_return", label: "Avg 10D", type: "percent" },
-          { key: "average_10d_return_change", label: "10D Chg", type: "signedPercent" }
+          { key: "industry_group", label: "產業" },
+          { key: "start_rank", label: "起始排名", type: "integer" },
+          { key: "current_rank", label: "目前排名", type: "integer" },
+          { key: "rank_change", label: "排名變化", type: "signedInteger", description: explanations.rotation },
+          { key: "current_average_10d_return", label: "目前 10日", type: "percent", description: explanations.return10d },
+          { key: "average_10d_return_change", label: "10日變化", type: "signedPercent" }
         ]
       },
       "rotation-improving-5d": {
         rows: dashboardData.rotation_trend.improving_5d,
         columns: [
-          { key: "industry_group", label: "Industry" },
-          { key: "average_10d_return_change", label: "10D Chg", type: "signedPercent" },
-          { key: "current_average_10d_return", label: "Avg 10D", type: "percent" },
-          { key: "rank_change", label: "Rank Chg", type: "signedInteger" },
-          { key: "current_rank", label: "Rank", type: "integer" },
-          { key: "current_confirmed_signal_pct", label: "Confirmed", type: "percent" }
+          { key: "industry_group", label: "產業" },
+          { key: "average_10d_return_change", label: "10日變化", type: "signedPercent" },
+          { key: "current_average_10d_return", label: "目前 10日", type: "percent", description: explanations.return10d },
+          { key: "rank_change", label: "排名變化", type: "signedInteger", description: explanations.rotation },
+          { key: "current_rank", label: "目前排名", type: "integer" },
+          { key: "current_confirmed_signal_pct", label: "確認比例", type: "percent", description: explanations.confirmedPct }
         ]
       },
       "trend-strongest-improving": {
         rows: dashboardData.industry_trend_intelligence.strongest_improving,
         columns: [
-          { key: "industry_group", label: "Industry" },
-          { key: "rotation_score", label: "Rotation", type: "signedInteger" },
-          { key: "momentum_acceleration", label: "Accel", type: "signedPercent" },
-          { key: "return_10d", label: "Avg 10D", type: "percent" },
-          { key: "return_5d", label: "Avg 5D", type: "percent" },
-          { key: "relative_volume", label: "Rel Vol", type: "number", digits: 2 }
+          { key: "industry_group", label: "產業" },
+          { key: "rotation_score", label: "輪動分數", type: "signedInteger", description: explanations.rotation },
+          { key: "momentum_acceleration", label: "動能加速", type: "signedPercent", description: explanations.acceleration },
+          { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
+          { key: "return_5d", label: "平均 5日", type: "percent", description: explanations.return5d },
+          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume }
         ]
       },
       "trend-strongest-persistent": {
         rows: dashboardData.industry_trend_intelligence.strongest_persistent,
         columns: [
-          { key: "industry_group", label: "Industry" },
-          { key: "momentum_persistence", label: "Top 3 Days", type: "integer" },
-          { key: "return_10d", label: "Avg 10D", type: "percent" },
-          { key: "confirmed_signal_pct", label: "Confirmed", type: "percent" },
-          { key: "rotation_score", label: "Rotation", type: "signedInteger" },
-          { key: "momentum_acceleration", label: "Accel", type: "signedPercent" }
+          { key: "industry_group", label: "產業" },
+          { key: "momentum_persistence", label: "前三持續天數", type: "integer", description: explanations.persistence },
+          { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
+          { key: "confirmed_signal_pct", label: "確認比例", type: "percent", description: explanations.confirmedPct },
+          { key: "rotation_score", label: "輪動分數", type: "signedInteger", description: explanations.rotation },
+          { key: "momentum_acceleration", label: "動能加速", type: "signedPercent", description: explanations.acceleration }
         ]
       },
       "trend-momentum-exhaustion": {
         rows: dashboardData.industry_trend_intelligence.momentum_exhaustion,
         columns: [
-          { key: "industry_group", label: "Industry" },
-          { key: "return_10d", label: "Avg 10D", type: "percent" },
-          { key: "return_3d", label: "Avg 3D", type: "percent" },
-          { key: "relative_volume", label: "Rel Vol", type: "number", digits: 2 },
-          { key: "momentum_acceleration", label: "Accel", type: "signedPercent" },
-          { key: "momentum_persistence", label: "Top 3 Days", type: "integer" }
+          { key: "industry_group", label: "產業" },
+          { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
+          { key: "return_3d", label: "平均 3日", type: "percent", description: explanations.return3d },
+          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
+          { key: "momentum_acceleration", label: "動能加速", type: "signedPercent", description: explanations.acceleration },
+          { key: "momentum_persistence", label: "前三持續天數", type: "integer", description: explanations.persistence }
         ]
       },
       "trend-momentum-recovery": {
         rows: dashboardData.industry_trend_intelligence.momentum_recovery,
         columns: [
-          { key: "industry_group", label: "Industry" },
-          { key: "momentum_acceleration", label: "Accel", type: "signedPercent" },
-          { key: "rotation_score", label: "Rotation", type: "signedInteger" },
-          { key: "return_5d", label: "Avg 5D", type: "percent" },
-          { key: "return_10d", label: "Avg 10D", type: "percent" },
-          { key: "relative_volume", label: "Rel Vol", type: "number", digits: 2 }
+          { key: "industry_group", label: "產業" },
+          { key: "momentum_acceleration", label: "動能加速", type: "signedPercent", description: explanations.acceleration },
+          { key: "rotation_score", label: "輪動分數", type: "signedInteger", description: explanations.rotation },
+          { key: "return_5d", label: "平均 5日", type: "percent", description: explanations.return5d },
+          { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
+          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume }
         ]
       },
       "top-relative-strength": {
         rows: dashboardData.top_relative_strength,
         columns: [
-          { key: "__rank", label: "Rank", type: "rank" },
-          { key: "ticker", label: "Ticker", type: "ticker" },
-          { key: "company_name", label: "Company", type: "company" },
-          { key: "industry_group", label: "Industry" },
-          { key: "relative_strength_vs_industry", label: "Rel Strength", type: "percent" },
-          { key: "return_10d", label: "10D", type: "percent" },
-          { key: "relative_volume", label: "Rel Vol", type: "number", digits: 2 },
-          { key: "up_days_10d", label: "Up Days", type: "integer" }
+          { key: "__rank", label: "排名", type: "rank" },
+          { key: "ticker", label: "代號", type: "ticker" },
+          { key: "company_name", label: "公司", type: "company" },
+          { key: "industry_group", label: "產業" },
+          { key: "relative_strength_vs_industry", label: "相對強度", type: "percent", description: explanations.relativeStrength },
+          { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d },
+          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
+          { key: "up_days_10d", label: "上漲天數", type: "integer", description: explanations.upDays }
         ]
       },
       "early-candidates": {
         rows: dashboardData.early_candidates,
         columns: [
-          { key: "ticker", label: "Ticker", type: "ticker" },
-          { key: "company_name", label: "Company", type: "company" },
-          { key: "industry_group", label: "Industry" },
-          { key: "return_3d", label: "3D", type: "percent" },
-          { key: "return_5d", label: "5D", type: "percent" },
-          { key: "return_10d", label: "10D", type: "percent" },
-          { key: "relative_strength_vs_industry", label: "Rel Strength", type: "percent" },
-          { key: "relative_volume", label: "Rel Vol", type: "number", digits: 2 }
+          { key: "ticker", label: "代號", type: "ticker" },
+          { key: "company_name", label: "公司", type: "company" },
+          { key: "industry_group", label: "產業" },
+          { key: "return_3d", label: "3日", type: "percent", description: explanations.return3d },
+          { key: "return_5d", label: "5日", type: "percent", description: explanations.return5d },
+          { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d },
+          { key: "relative_strength_vs_industry", label: "相對強度", type: "percent", description: explanations.relativeStrength },
+          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume }
         ]
       },
       "strong-candidates": {
         rows: dashboardData.strong_candidates,
         columns: [
-          { key: "ticker", label: "Ticker", type: "ticker" },
-          { key: "company_name", label: "Company", type: "company" },
-          { key: "industry_group", label: "Industry" },
-          { key: "relative_strength_vs_industry", label: "Rel Strength", type: "percent" },
-          { key: "return_10d", label: "10D", type: "percent" },
-          { key: "relative_volume", label: "Rel Vol", type: "number", digits: 2 },
-          { key: "up_days_10d", label: "Up Days", type: "integer" },
-          { key: "max_drawdown_10d", label: "Max DD", type: "percent" }
+          { key: "ticker", label: "代號", type: "ticker" },
+          { key: "company_name", label: "公司", type: "company" },
+          { key: "industry_group", label: "產業" },
+          { key: "relative_strength_vs_industry", label: "相對強度", type: "percent", description: explanations.relativeStrength },
+          { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d },
+          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
+          { key: "up_days_10d", label: "上漲天數", type: "integer", description: explanations.upDays },
+          { key: "max_drawdown_10d", label: "最大回撤", type: "percent", description: explanations.maxDrawdown }
         ]
       },
       "risk-warnings": {
         rows: dashboardData.risk_warnings,
         columns: [
-          { key: "ticker", label: "Ticker", type: "ticker" },
-          { key: "company_name", label: "Company", type: "company" },
-          { key: "industry_group", label: "Industry" },
-          { key: "max_drawdown_10d", label: "Max DD", type: "warningPercent" },
-          { key: "return_10d", label: "10D", type: "percent" },
-          { key: "return_20d", label: "20D", type: "percent" },
-          { key: "relative_volume", label: "Rel Vol", type: "number", digits: 2 },
-          { key: "up_days_10d", label: "Up Days", type: "integer" }
+          { key: "ticker", label: "代號", type: "ticker" },
+          { key: "company_name", label: "公司", type: "company" },
+          { key: "industry_group", label: "產業" },
+          { key: "max_drawdown_10d", label: "最大回撤", type: "warningPercent", description: explanations.maxDrawdown },
+          { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d },
+          { key: "return_20d", label: "20日", type: "percent", description: explanations.return20d },
+          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
+          { key: "up_days_10d", label: "上漲天數", type: "integer", description: explanations.upDays }
         ]
       }
     };
 
     function isMissing(value) {
       return value === null || value === undefined || Number.isNaN(value);
+    }
+
+    function displayText(value) {
+      if (isMissing(value)) return "";
+      const text = String(value);
+      return industryLabels[text] || text;
     }
 
     function formatPercent(value) {
@@ -644,6 +877,7 @@
       if (column.type === "number") return formatNumber(value, column.digits ?? 2);
       if (column.type === "integer") return formatInteger(value);
       if (column.type === "signedInteger") return formatSignedInteger(value);
+      if (column.key === "industry_group") return displayText(value);
       return isMissing(value) ? "" : String(value);
     }
 
@@ -662,23 +896,133 @@
       return classes.join(" ");
     }
 
+    function valueForColumn(row, column, rowIndex) {
+      return column.key === "__rank" ? rowIndex : row[column.key];
+    }
+
+    function isMobileIdentityColumn(column) {
+      return ["ticker", "company_name", "industry_group"].includes(column.key);
+    }
+
+    function mobileTitleForRow(row, config, rowIndex) {
+      if (!isMissing(row.ticker)) return String(row.ticker);
+      if (!isMissing(row.industry_group)) return displayText(row.industry_group);
+
+      const titleColumn = config.columns.find((column) => column.key !== "__rank" && !isMobileIdentityColumn(column));
+      if (titleColumn) return formatCell(valueForColumn(row, titleColumn, rowIndex), titleColumn, rowIndex);
+      return `第 ${rowIndex + 1} 筆`;
+    }
+
+    function mobileSubtitleForRow(row) {
+      const parts = [];
+      if (!isMissing(row.company_name)) parts.push(String(row.company_name));
+      if (!isMissing(row.ticker) && !isMissing(row.industry_group)) parts.push(displayText(row.industry_group));
+      return parts.join(" / ");
+    }
+
+    function ensureMobileCardList(id, tableWrap) {
+      const existing = tableWrap.parentElement.querySelector(`[data-mobile-card-list="${id}"]`);
+      if (existing) return existing;
+
+      const list = document.createElement("div");
+      list.className = "mobile-card-list";
+      list.dataset.mobileCardList = id;
+      tableWrap.insertAdjacentElement("afterend", list);
+      return list;
+    }
+
+    function renderMobileCards(id, config, rows, tableWrap) {
+      const list = ensureMobileCardList(id, tableWrap);
+      list.replaceChildren();
+
+      if (!rows.length) {
+        list.hidden = true;
+        return;
+      }
+
+      list.hidden = false;
+      rows.forEach((row, rowIndex) => {
+        const card = document.createElement("article");
+        card.className = "mobile-row-card";
+
+        const header = document.createElement("div");
+        header.className = "mobile-card-header";
+
+        const title = document.createElement("div");
+        title.className = "mobile-card-title";
+        title.textContent = mobileTitleForRow(row, config, rowIndex);
+        header.appendChild(title);
+
+        if (config.columns.some((column) => column.key === "__rank")) {
+          const rank = document.createElement("div");
+          rank.className = "mobile-card-rank";
+          rank.textContent = `第 ${rowIndex + 1} 名`;
+          header.appendChild(rank);
+        }
+
+        card.appendChild(header);
+
+        const subtitleText = mobileSubtitleForRow(row);
+        if (subtitleText) {
+          const subtitle = document.createElement("div");
+          subtitle.className = "mobile-card-subtitle";
+          subtitle.textContent = subtitleText;
+          card.appendChild(subtitle);
+        }
+
+        const metrics = document.createElement("div");
+        metrics.className = "mobile-metrics";
+        for (const column of config.columns) {
+          if (isMobileIdentityColumn(column)) continue;
+
+          const value = valueForColumn(row, column, rowIndex);
+          const metric = document.createElement("div");
+          metric.className = "mobile-metric";
+
+          const label = document.createElement("div");
+          label.className = "mobile-metric-label";
+          label.textContent = column.label;
+
+          const metricValue = document.createElement("div");
+          metricValue.className = `mobile-metric-value ${classForCell(value, column)}`.trim();
+          metricValue.textContent = formatCell(value, column, rowIndex);
+
+          if (column.description) {
+            metric.title = column.description;
+          }
+
+          metric.append(label, metricValue);
+          if (column.description) {
+            const hint = document.createElement("div");
+            hint.className = "mobile-metric-hint";
+            hint.textContent = column.description;
+            metric.appendChild(hint);
+          }
+          metrics.appendChild(metric);
+        }
+
+        card.appendChild(metrics);
+        list.appendChild(card);
+      });
+    }
+
     function renderSummary() {
       const summary = dashboardData.summary;
       const grid = document.getElementById("summary-grid");
       const tiles = [
-        ["Tickers", summary.total_tickers],
-        ["With Data", summary.tickers_with_data],
-        ["Early", summary.early_count],
-        ["Confirmed", summary.confirmed_count],
-        ["Strong", summary.strong_count],
-        ["Risk", summary.risk_count]
+        ["追蹤檔數", summary.total_tickers, "目前觀察清單內的全部標的。"],
+        ["有資料", summary.tickers_with_data, "成功取得近 6 個月日線資料的標的。"],
+        ["早期", summary.early_count, "3 日與 5 日轉強，偏早期觀察名單。"],
+        ["確認", summary.confirmed_count, "5 日/10 日轉正，且均線與上漲天數支持。"],
+        ["強勢", summary.strong_count, "確認動能、跑贏同產業，且量能放大。"],
+        ["風險", summary.risk_count, "近期回撤過深，或價格偏離 20 日均線過多。"]
       ];
 
       document.getElementById("generated-date").textContent = summary.latest_date
-        ? `Latest market date: ${summary.latest_date}`
-        : "Latest market date unavailable";
+        ? `最新市場日期：${summary.latest_date}`
+        : "最新市場日期無法取得";
 
-      for (const [label, value] of tiles) {
+      for (const [label, value, description] of tiles) {
         const tile = document.createElement("div");
         tile.className = "summary-tile";
 
@@ -690,7 +1034,11 @@
         valueEl.className = "summary-value";
         valueEl.textContent = formatInteger(value);
 
-        tile.append(labelEl, valueEl);
+        const descriptionEl = document.createElement("div");
+        descriptionEl.className = "summary-description";
+        descriptionEl.textContent = description;
+
+        tile.append(labelEl, valueEl, descriptionEl);
         grid.appendChild(tile);
       }
     }
@@ -698,23 +1046,31 @@
     function renderTable(id, config) {
       const rows = config.rows || [];
       const table = document.querySelector(`[data-table="${id}"]`);
+      const tableWrap = table.parentElement;
       const empty = document.querySelector(`[data-empty-for="${id}"]`);
       const count = document.querySelector(`[data-count-for="${id}"]`);
       if (count) {
-        count.textContent = `${rows.length} row${rows.length === 1 ? "" : "s"}`;
+        count.textContent = `${rows.length} 筆`;
       }
 
       if (!rows.length) {
-        table.parentElement.hidden = true;
+        tableWrap.hidden = true;
+        renderMobileCards(id, config, rows, tableWrap);
         empty.hidden = false;
         return;
       }
 
+      tableWrap.hidden = false;
+      empty.hidden = true;
       const thead = document.createElement("thead");
       const headerRow = document.createElement("tr");
       for (const column of config.columns) {
         const th = document.createElement("th");
         th.textContent = column.label;
+        if (column.description) {
+          th.title = column.description;
+          th.setAttribute("aria-label", `${column.label}：${column.description}`);
+        }
         if (["rank", "number", "integer", "signedInteger", "percent", "signedPercent", "warningPercent"].includes(column.type)) {
           th.className = "numeric";
         }
@@ -726,7 +1082,7 @@
       rows.forEach((row, rowIndex) => {
         const tr = document.createElement("tr");
         for (const column of config.columns) {
-          const value = column.key === "__rank" ? rowIndex : row[column.key];
+          const value = valueForColumn(row, column, rowIndex);
           const td = document.createElement("td");
           td.className = classForCell(value, column);
           td.textContent = formatCell(value, column, rowIndex);
@@ -736,15 +1092,20 @@
       });
 
       table.replaceChildren(thead, tbody);
+      renderMobileCards(id, config, rows, tableWrap);
     }
 
     renderSummary();
+    const breadthRows = Object.values(dashboardData.industry_breadth)
+      .reduce((total, rows) => total + rows.length, 0);
+    document.getElementById("breadth-status").textContent =
+      `${breadthRows} 筆觀察`;
     document.getElementById("rotation-history-status").textContent =
-      `${dashboardData.rotation_trend.date_count} historical date${dashboardData.rotation_trend.date_count === 1 ? "" : "s"}`;
+      `${dashboardData.rotation_trend.date_count} 個歷史日期`;
     const intelligenceRows = Object.values(dashboardData.industry_trend_intelligence)
       .reduce((total, rows) => total + rows.length, 0);
     document.getElementById("trend-intelligence-status").textContent =
-      `${intelligenceRows} signal row${intelligenceRows === 1 ? "" : "s"}`;
+      `${intelligenceRows} 筆訊號`;
     for (const [id, config] of Object.entries(tableConfigs)) {
       renderTable(id, config);
     }
