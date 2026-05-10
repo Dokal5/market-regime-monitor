@@ -19,6 +19,8 @@ The script creates:
 - `outputs/history/YYYY-MM-DD/ticker_momentum.csv`
 - `outputs/history/YYYY-MM-DD/industry_momentum.csv`
 - `outputs/history/industry_rotation_history.csv`
+- `outputs/journal/YYYY-MM-DD.md`
+- `outputs/journal/latest.md`
 
 Open `outputs/index.html` in a browser to view the static dashboard. The dashboard has embedded data from the Python run and does not require a server, framework, or build step.
 
@@ -85,6 +87,7 @@ Industry output also includes trend intelligence fields:
 - `signals.py`: ticker momentum signals, risk warning, and relative strength
 - `industry.py`: industry-level aggregation and confirmed signal percentages
 - `history.py`: dated snapshots, rotation history, and trend intelligence fields
+- `journal.py`: deterministic daily Markdown journal generation
 - `dashboard.py`: static HTML dashboard generation
 - `io_utils.py`: shared CSV writing helpers
 
@@ -93,6 +96,15 @@ Industry output also includes trend intelligence fields:
 Each run saves a dated copy of the current ticker and industry outputs under `outputs/history/YYYY-MM-DD/`, using the latest market date in the downloaded data. The script rebuilds `outputs/history/industry_rotation_history.csv` from all dated snapshots.
 
 `industry_rotation_history.csv` tracks each industry's daily rank by average 10 day return, average 10 day return, and confirmed signal percentage. The dashboard uses this file for the `Industry Rotation Trend` section. Trend tables populate once there are at least two historical snapshot dates.
+
+## Daily journal
+
+Each run writes a deterministic Markdown journal under `outputs/journal/`, using the latest market date from the generated ticker data:
+
+- `outputs/journal/YYYY-MM-DD.md`: dated journal for that market date
+- `outputs/journal/latest.md`: copy of the latest generated journal
+
+The journal summarizes the current snapshot, leading industries, breadth leaders, relative strength stocks, early momentum candidates, and risk warnings. Its system interpretation is rule based, uses only generated output data, and does not call any AI API.
 
 ## GitHub Pages
 

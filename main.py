@@ -19,6 +19,7 @@ from src.history import (
 )
 from src.industry import add_breadth_columns, build_industry_output
 from src.io_utils import write_csv
+from src.journal import write_journal
 from src.metrics import build_ticker_output
 from src.signals import add_signal_columns
 
@@ -42,12 +43,15 @@ def main() -> None:
     rotation_history = build_industry_rotation_history()
     write_csv(rotation_history, INDUSTRY_ROTATION_HISTORY_PATH)
     write_dashboard(ticker_output, industry_output, rotation_history, DASHBOARD_OUTPUT_PATH)
+    journal_path, latest_journal_path = write_journal(ticker_output, industry_output, snapshot_date)
 
     print(f"Wrote {TICKER_OUTPUT_PATH}")
     print(f"Wrote {INDUSTRY_OUTPUT_PATH}")
     print(f"Wrote {snapshot_dir}")
     print(f"Wrote {INDUSTRY_ROTATION_HISTORY_PATH}")
     print(f"Wrote {DASHBOARD_OUTPUT_PATH}")
+    print(f"Wrote {journal_path}")
+    print(f"Wrote {latest_journal_path}")
 
 
 if __name__ == "__main__":
