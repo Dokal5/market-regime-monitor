@@ -491,6 +491,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>股票動能追蹤</title>
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
     :root {
       color-scheme: light;
       --bg: #f6f7f4;
@@ -569,11 +573,120 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       padding: 22px 0 40px;
     }
 
+    .dashboard-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin: -8px 0 18px;
+      padding: 8px 0;
+      background: linear-gradient(180deg, rgba(246, 248, 247, 0.98), rgba(246, 248, 247, 0.92));
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      padding: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .nav-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .nav-title {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .nav-hint {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section-nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .section-nav-links a {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: rgba(238, 244, 242, 0.62);
+      padding: 6px 8px;
+      font-size: 12px;
+      font-weight: 720;
+      line-height: 1;
+      text-decoration: none;
+    }
+
+    .section-nav-links a:hover,
+    .section-nav-links a:focus-visible {
+      border-color: rgba(0, 122, 85, 0.38);
+      background: rgba(235, 249, 243, 0.92);
+      color: var(--green);
+      outline: none;
+    }
+
+    .section-nav-select {
+      display: none;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--ink);
+      padding: 9px 10px;
+      font: inherit;
+    }
+
+    .reading-flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .reading-step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(250, 252, 251, 0.9);
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .reading-step strong {
+      display: block;
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .reading-step span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
     .summary-grid {
       display: grid;
       grid-template-columns: repeat(6, minmax(130px, 1fr));
       gap: 10px;
       margin-bottom: 22px;
+    }
+
+    .summary-grid,
+    .dashboard-section {
+      scroll-margin-top: 170px;
     }
 
     .summary-tile {
@@ -1140,6 +1253,15 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .reading-flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .summary-grid,
+      .dashboard-section {
+        scroll-margin-top: 220px;
+      }
+
       .section-heading {
         align-items: start;
         flex-direction: column;
@@ -1187,6 +1309,33 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     }
 
     @media (max-width: 640px) {
+      .dashboard-nav {
+        margin-top: -10px;
+      }
+
+      .nav-heading {
+        align-items: start;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .section-nav-links {
+        display: none;
+      }
+
+      .section-nav-select {
+        display: block;
+      }
+
+      .reading-flow {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid,
+      .dashboard-section {
+        scroll-margin-top: 320px;
+      }
+
       .field-help {
         display: none;
       }
@@ -1224,22 +1373,71 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
   </header>
 
   <main>
-    <section class="summary-grid" id="summary-grid" aria-label="動能摘要"></section>
+    <nav class="dashboard-nav" aria-label="Dashboard 區塊導覽">
+      <div class="nav-panel">
+        <div class="nav-heading">
+          <div>
+            <div class="nav-title">閱讀導覽</div>
+            <div class="nav-hint">先確認資料，再看產業主線、輪動、個股候選，最後檢查風險。</div>
+          </div>
+        </div>
+        <div class="section-nav-links">
+          <a href="#overview">總覽</a>
+          <a href="#update-health">更新健康</a>
+          <a href="#data-quality">資料品質</a>
+          <a href="#industry-momentum">產業動能</a>
+          <a href="#industry-confirmed">確認比例</a>
+          <a href="#industry-breadth">產業廣度</a>
+          <a href="#rotation-trend">輪動趨勢</a>
+          <a href="#trend-intelligence">趨勢判讀</a>
+          <a href="#leader-filter">領導股篩選</a>
+          <a href="#relative-strength">相對強度</a>
+          <a href="#early-momentum">早期動能</a>
+          <a href="#strong-momentum">強勢動能</a>
+          <a href="#risk-warning">風險提醒</a>
+        </div>
+        <select class="section-nav-select" id="section-jump" aria-label="跳到 dashboard 區塊">
+          <option value="">跳到區塊</option>
+          <option value="#overview">總覽</option>
+          <option value="#update-health">更新健康</option>
+          <option value="#data-quality">資料品質</option>
+          <option value="#industry-momentum">產業動能</option>
+          <option value="#industry-confirmed">確認比例</option>
+          <option value="#industry-breadth">產業廣度</option>
+          <option value="#rotation-trend">輪動趨勢</option>
+          <option value="#trend-intelligence">趨勢判讀</option>
+          <option value="#leader-filter">領導股篩選</option>
+          <option value="#relative-strength">相對強度</option>
+          <option value="#early-momentum">早期動能</option>
+          <option value="#strong-momentum">強勢動能</option>
+          <option value="#risk-warning">風險提醒</option>
+        </select>
+        <div class="reading-flow" aria-label="建議閱讀順序">
+          <div class="reading-step"><strong>1. 資料是否可信</strong><span>更新健康狀態、資料來源與品質</span></div>
+          <div class="reading-step"><strong>2. 市場主線在哪</strong><span>產業動能、確認比例、產業廣度</span></div>
+          <div class="reading-step"><strong>3. 主線是否輪動</strong><span>產業輪動趨勢、產業趨勢判讀</span></div>
+          <div class="reading-step"><strong>4. 哪些個股值得研究</strong><span>相對強度、早期與強勢動能、領導股篩選</span></div>
+          <div class="reading-step"><strong>5. 哪裡需要小心</strong><span>風險提醒名單</span></div>
+        </div>
+      </div>
+    </nav>
 
-    <section class="dashboard-section update-health-section">
+    <section class="summary-grid" id="overview" data-summary-grid aria-label="動能摘要"></section>
+
+    <section class="dashboard-section update-health-section" id="update-health">
       <div class="section-heading">
         <h2>更新健康狀態</h2>
       </div>
-      <p class="section-note">檢查本次輸出是否由排程正常產生、資料是否新鮮，以及 GitHub Actions run 是否可追溯；這不是投資訊號。</p>
+      <p class="section-note">這張表回答：排程是否有跑、資料是否新鮮、這次輸出是否可追溯？這不是投資訊號。</p>
       <div class="quality-grid" id="update-health-grid"></div>
     </section>
 
-    <section class="dashboard-section data-quality-section">
+    <section class="dashboard-section data-quality-section" id="data-quality">
       <div class="section-heading">
         <h2>資料來源與品質</h2>
         <span class="row-count" data-count-for="data-quality-issues"></span>
       </div>
-      <p class="section-note">資料來自 Yahoo Finance via yfinance，適合研究與觀察，不是機構級資料源，也不是正式交易或投資建議。</p>
+      <p class="section-note">這張表回答：資料從哪裡來、這次抓得完整嗎、哪些 ticker 需要注意？資料來自 Yahoo Finance via yfinance，適合研究與觀察，不是機構級資料源，也不是正式交易或投資建議。</p>
       <div class="quality-grid" id="data-quality-grid"></div>
       <div class="table-wrap">
         <table data-table="data-quality-issues"></table>
@@ -1247,36 +1445,36 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       <p class="empty-state" data-empty-for="data-quality-issues" hidden>目前沒有缺資料或資料落後的 ticker。</p>
     </section>
 
-    <section class="dashboard-section">
+    <section class="dashboard-section" id="industry-momentum">
       <div class="section-heading">
         <h2>產業動能排名：依平均 10 日報酬排序</h2>
         <span class="row-count" data-count-for="industry-momentum"></span>
       </div>
-      <p class="section-note">排序仍依平均 10 日報酬；欄位按 5 日、10 日、20 日排列，方便比較短中期動能。</p>
+      <p class="section-note">這張表回答：現在價格動能集中在哪些產業？排序仍依平均 10 日報酬；欄位按 5 日、10 日、20 日排列，方便比較短中期動能。</p>
       <div class="table-wrap">
         <table data-table="industry-momentum"></table>
       </div>
       <p class="empty-state" data-empty-for="industry-momentum" hidden>目前沒有產業資料。</p>
     </section>
 
-    <section class="dashboard-section">
+    <section class="dashboard-section" id="industry-confirmed">
       <div class="section-heading">
         <h2>產業確認動能比例排名</h2>
         <span class="row-count" data-count-for="industry-confirmed"></span>
       </div>
-      <p class="section-note">顯示各產業中符合確認動能條件的股票比例，比例越高代表產業內部動能越一致。</p>
+      <p class="section-note">這張表回答：產業內部有多少股票已經符合確認動能？比例越高代表產業內部動能越一致。</p>
       <div class="table-wrap">
         <table data-table="industry-confirmed"></table>
       </div>
       <p class="empty-state" data-empty-for="industry-confirmed" hidden>目前沒有產業訊號資料。</p>
     </section>
 
-    <section class="dashboard-section">
+    <section class="dashboard-section" id="industry-breadth">
       <div class="section-heading">
-        <h2>Industry Breadth</h2>
+        <h2>產業廣度</h2>
         <span class="row-count" id="breadth-status"></span>
       </div>
-      <p class="section-note">產業廣度用來判斷動能是多數成分股一起轉強，還是少數領頭股拉高平均報酬。</p>
+      <p class="section-note">這張表回答：產業是多數股票一起轉強，還是少數股票拉高平均？廣度越高，產業動能越不依賴單一領頭股。</p>
       <div class="intelligence-grid">
         <div class="intelligence-block">
           <h3>依廣度分數排名的產業</h3>
@@ -1302,12 +1500,12 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       </div>
     </section>
 
-    <section class="dashboard-section">
+    <section class="dashboard-section" id="rotation-trend">
       <div class="section-heading">
         <h2>產業輪動趨勢</h2>
         <span class="row-count" id="rotation-history-status"></span>
       </div>
-      <p class="section-note">比較歷史快照中的排名與平均報酬變化；至少需要兩個不同日期的快照才會出現完整趨勢。</p>
+      <p class="section-note">這張表回答：哪些產業正在上升或退場？比較歷史快照中的排名與平均報酬變化；至少需要兩個不同日期的快照才會出現完整趨勢。</p>
       <div class="rotation-grid">
         <div class="rotation-block">
           <h3>排名上升的產業</h3>
@@ -1333,12 +1531,12 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       </div>
     </section>
 
-    <section class="dashboard-section">
+    <section class="dashboard-section" id="trend-intelligence">
       <div class="section-heading">
         <h2>產業趨勢判讀</h2>
         <span class="row-count" id="trend-intelligence-status"></span>
       </div>
-      <p class="section-note">用排名變化、持續性、加速與衰竭警示輔助判斷產業動能品質。</p>
+      <p class="section-note">這張表回答：動能是否持續、加速、或出現衰竭？用排名變化、持續性、加速與衰竭警示輔助判斷產業動能品質。</p>
       <div class="intelligence-grid">
         <div class="intelligence-block">
           <h3>改善最強的產業</h3>
@@ -1371,12 +1569,12 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       </div>
     </section>
 
-    <section class="dashboard-section">
+    <section class="dashboard-section" id="leader-filter">
       <div class="section-heading">
-        <h2>Leader Accumulation Filter</h2>
+        <h2>領導股累積篩選</h2>
         <span class="row-count" id="leader-accumulation-status"></span>
       </div>
-      <p class="section-note">這是確定性研究篩選器，只在產業處於動能領先或早期修復時評估個股領導品質；研究候選需要先補上 curated leader_type 與 industry_quality_score。</p>
+      <p class="section-note">這張表回答：在領先或修復產業中，哪些標的適合進一步研究？這是確定性研究篩選器；研究候選需要先補上 curated leader_type 與 industry_quality_score。</p>
       <div class="intelligence-grid">
         <div class="intelligence-block">
           <h3>研究候選</h3>
@@ -1409,48 +1607,48 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       </div>
     </section>
 
-    <section class="dashboard-section">
+    <section class="dashboard-section" id="relative-strength">
       <div class="section-heading">
         <h2>相對產業強度前 10 名</h2>
         <span class="row-count" data-count-for="top-relative-strength"></span>
       </div>
-      <p class="section-note">相對強度 = 個股 10 日報酬減去所屬產業平均 10 日報酬；正值代表跑贏同產業。</p>
+      <p class="section-note">這張表回答：哪些個股跑贏同產業？相對強度 = 個股 10 日報酬減去所屬產業平均 10 日報酬；正值代表跑贏同產業。</p>
       <div class="table-wrap">
         <table data-table="top-relative-strength"></table>
       </div>
       <p class="empty-state" data-empty-for="top-relative-strength" hidden>目前沒有個股資料。</p>
     </section>
 
-    <section class="dashboard-section">
+    <section class="dashboard-section" id="early-momentum">
       <div class="section-heading">
         <h2>早期動能候選</h2>
         <span class="row-count" data-count-for="early-candidates"></span>
       </div>
-      <p class="section-note">3 日與 5 日報酬轉強，且 5 日報酬已高於 10 日報酬的一半，適合當作早期觀察名單。標示「動能+風險」代表同時出現在風險提醒名單，判斷時不要只依賴單一候選名單。</p>
+      <p class="section-note">這張表回答：哪些股票剛開始轉強、但仍需確認？3 日與 5 日報酬轉強，且 5 日報酬已高於 10 日報酬的一半。標示「動能+風險」代表同時出現在風險提醒名單。</p>
       <div class="table-wrap">
         <table data-table="early-candidates"></table>
       </div>
       <p class="empty-state" data-empty-for="early-candidates" hidden>目前沒有早期動能候選。</p>
     </section>
 
-    <section class="dashboard-section">
+    <section class="dashboard-section" id="strong-momentum">
       <div class="section-heading">
         <h2>強勢動能候選</h2>
         <span class="row-count" data-count-for="strong-candidates"></span>
       </div>
-      <p class="section-note">同時符合確認動能、跑贏同產業，且相對量大於 1.2，代表價格與量能一起支持。</p>
+      <p class="section-note">這張表回答：哪些股票同時有確認動能、相對強度與量能？同時符合確認動能、跑贏同產業，且相對量大於 1.2。</p>
       <div class="table-wrap">
         <table data-table="strong-candidates"></table>
       </div>
       <p class="empty-state" data-empty-for="strong-candidates" hidden>目前沒有強勢動能候選。</p>
     </section>
 
-    <section class="dashboard-section">
+    <section class="dashboard-section" id="risk-warning">
       <div class="section-heading">
         <h2>風險提醒名單</h2>
         <span class="row-count" data-count-for="risk-warnings"></span>
       </div>
-      <p class="section-note">風險提醒代表近期最大回撤較深，或價格已高出 20 日均線 15% 以上；可作為追高與波動風險檢查。標示「動能+風險」代表同時符合早期動能與風險條件。</p>
+      <p class="section-note">這張表回答：哪些股票有回撤或延伸風險，不能只看動能？風險提醒代表近期最大回撤較深，或價格已高出 20 日均線 15% 以上。</p>
       <div class="table-wrap">
         <table data-table="risk-warnings"></table>
       </div>
@@ -2165,7 +2363,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
     function renderSummary() {
       const summary = dashboardData.summary;
-      const grid = document.getElementById("summary-grid");
+      const grid = document.querySelector("[data-summary-grid]");
       const tiles = [
         ["追蹤檔數", summary.total_tickers, "目前觀察清單內的全部標的。"],
         ["有資料", summary.tickers_with_data, "成功取得近 1 年日線資料的標的。"],
@@ -2429,6 +2627,19 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     document.querySelectorAll("[data-close-industry-modal]").forEach((element) => {
       element.addEventListener("click", closeIndustryModal);
     });
+
+    const sectionJump = document.getElementById("section-jump");
+    if (sectionJump) {
+      sectionJump.addEventListener("change", (event) => {
+        const target = event.target.value;
+        if (!target) return;
+        const section = document.querySelector(target);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        event.target.value = "";
+      });
+    }
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && !document.getElementById("industry-modal").hidden) {
