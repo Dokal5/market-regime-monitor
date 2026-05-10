@@ -11,6 +11,8 @@ from src.config import (
     EARLY_MOMENTUM_MIN_RETURN_5D,
     INPUT_COLUMNS,
     METRIC_COLUMNS,
+    OPTIONAL_TICKER_COLUMNS,
+    PRICE_POSITION_COLUMNS,
     RISK_DRAWDOWN_THRESHOLD,
     RISK_EXTENSION_MULTIPLE,
     SIGNAL_COLUMNS,
@@ -21,7 +23,12 @@ from src.config import (
 def add_signal_columns(ticker_output: pd.DataFrame, industry_output: pd.DataFrame) -> pd.DataFrame:
     if ticker_output.empty:
         return pd.DataFrame(
-            columns=INPUT_COLUMNS + ["latest_date", "data_points"] + METRIC_COLUMNS + SIGNAL_COLUMNS
+            columns=INPUT_COLUMNS
+            + ["latest_date", "data_points"]
+            + METRIC_COLUMNS
+            + SIGNAL_COLUMNS
+            + OPTIONAL_TICKER_COLUMNS
+            + PRICE_POSITION_COLUMNS
         )
 
     signals = ticker_output.copy()
@@ -72,5 +79,12 @@ def add_signal_columns(ticker_output: pd.DataFrame, industry_output: pd.DataFram
         | (signals["latest_price"] > signals["ma_20d"] * RISK_EXTENSION_MULTIPLE)
     ).fillna(False)
 
-    output_columns = INPUT_COLUMNS + ["latest_date", "data_points"] + METRIC_COLUMNS + SIGNAL_COLUMNS
+    output_columns = (
+        INPUT_COLUMNS
+        + ["latest_date", "data_points"]
+        + METRIC_COLUMNS
+        + SIGNAL_COLUMNS
+        + OPTIONAL_TICKER_COLUMNS
+        + PRICE_POSITION_COLUMNS
+    )
     return signals[output_columns]

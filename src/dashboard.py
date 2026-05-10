@@ -7,7 +7,7 @@ from typing import Any
 
 import pandas as pd
 
-from src.config import BREADTH_COLUMNS, INDUSTRY_TREND_COLUMNS, METRIC_COLUMNS
+from src.config import BREADTH_COLUMNS, INDUSTRY_REGIME_COLUMN, INDUSTRY_TREND_COLUMNS, METRIC_COLUMNS
 from src.industry import calculate_confirmed_by_industry
 
 
@@ -140,6 +140,10 @@ def build_dashboard_data(
         "max_drawdown_10d",
         "up_days_10d",
         "relative_strength_vs_industry",
+        "industry_quality_score",
+        "distance_from_20d_ma",
+        "distance_from_52w_high",
+        "position_in_52w_range",
     ]
     for column in ticker_numeric_columns:
         if column in tickers.columns:
@@ -148,6 +152,18 @@ def build_dashboard_data(
     for column in ["early_momentum_signal", "confirmed_momentum_signal", "strong_momentum_signal", "risk_warning"]:
         if column in tickers.columns:
             tickers[column] = tickers[column].fillna(False).astype(bool)
+    for column, default in [
+        ("leader_type", "non_leader"),
+        (INDUSTRY_REGIME_COLUMN, "neutral"),
+        ("short_term_price_zone", "neutral"),
+        ("long_term_price_zone", "neutral"),
+        ("price_zone", "neutral"),
+        ("current_state", "sideways_base"),
+        ("watch_status", "avoid_for_now"),
+    ]:
+        if column not in tickers.columns:
+            tickers[column] = default
+        tickers[column] = tickers[column].fillna(default).astype(str)
 
     for column in INDUSTRY_TREND_COLUMNS:
         if column not in industries.columns:
@@ -155,6 +171,9 @@ def build_dashboard_data(
     for column in BREADTH_COLUMNS:
         if column not in industries.columns:
             industries[column] = math.nan
+    if INDUSTRY_REGIME_COLUMN not in industries.columns:
+        industries[INDUSTRY_REGIME_COLUMN] = "neutral"
+    industries[INDUSTRY_REGIME_COLUMN] = industries[INDUSTRY_REGIME_COLUMN].fillna("neutral").astype(str)
 
     numeric_industry_columns = [
         "ticker_count",
@@ -230,6 +249,40 @@ def build_dashboard_data(
         "max_drawdown_10d",
         "up_days_10d",
         "relative_strength_vs_industry",
+        "early_momentum_signal",
+        "risk_warning",
+    ]
+    leader_stock_columns = [
+        "ticker",
+        "company_name",
+        "industry_group",
+        INDUSTRY_REGIME_COLUMN,
+        "leader_type",
+        "industry_quality_score",
+        "watch_status",
+        "current_state",
+        "short_term_price_zone",
+        "long_term_price_zone",
+        "price_zone",
+        "return_5d",
+        "return_10d",
+        "relative_strength_vs_industry",
+        "relative_volume",
+        "max_drawdown_10d",
+        "distance_from_20d_ma",
+        "distance_from_52w_high",
+        "position_in_52w_range",
+        "risk_warning",
+    ]
+    leader_industry_columns = [
+        "industry_group",
+        INDUSTRY_REGIME_COLUMN,
+        "return_5d",
+        "return_10d",
+        "breadth_score",
+        "confirmed_signal_pct",
+        "momentum_persistence",
+        "momentum_exhaustion_warning",
     ]
 
     tradable_tickers = tickers[tickers["data_points"] > 0] if "data_points" in tickers.columns else tickers
@@ -279,6 +332,28 @@ def build_dashboard_data(
         & (industries_with_trend_history["return_10d"] > 0)
         & (industries_with_trend_history["rotation_score"] >= 0)
     ].sort_values(["momentum_acceleration", "return_5d", "rotation_score"], ascending=[False, False, False])
+    leader_research_candidates = tradable_tickers[
+        tradable_tickers["watch_status"] == "research_candidate"
+    ].sort_values(
+        ["industry_quality_score", "relative_strength_vs_industry", "return_10d"],
+        ascending=[False, False, False],
+        na_position="last",
+    )
+    leader_wait_for_stabilization = tradable_tickers[
+        tradable_tickers["watch_status"] == "wait_for_stabilization"
+    ].sort_values(
+        ["industry_quality_score", "return_5d", "relative_volume"],
+        ascending=[False, False, False],
+        na_position="last",
+    )
+    leader_too_extended = tradable_tickers[tradable_tickers["watch_status"] == "too_extended"].sort_values(
+        ["distance_from_20d_ma", "position_in_52w_range", "return_10d"],
+        ascending=[False, False, False],
+        na_position="last",
+    )
+    not_eligible_industries = industries[
+        industries[INDUSTRY_REGIME_COLUMN].isin(["neutral", "weak", "exhaustion"])
+    ].sort_values(["return_10d", "breadth_score"], ascending=[False, False], na_position="last")
 
     return {
         "summary": {
@@ -310,6 +385,12 @@ def build_dashboard_data(
             "strongest_persistent": dataframe_records(strongest_persistent[industry_trend_columns].head(10)),
             "momentum_exhaustion": dataframe_records(exhaustion[industry_trend_columns].head(10)),
             "momentum_recovery": dataframe_records(momentum_recovery[industry_trend_columns].head(10)),
+        },
+        "leader_accumulation": {
+            "research_candidates": dataframe_records(leader_research_candidates[leader_stock_columns].head(20)),
+            "wait_for_stabilization": dataframe_records(leader_wait_for_stabilization[leader_stock_columns].head(20)),
+            "too_extended_leaders": dataframe_records(leader_too_extended[leader_stock_columns].head(20)),
+            "not_eligible_industries": dataframe_records(not_eligible_industries[leader_industry_columns]),
         },
         "top_relative_strength": sorted_records(
             tradable_tickers[stock_columns], "relative_strength_vs_industry", limit=10
@@ -481,6 +562,49 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       line-height: 1.4;
     }
 
+    .field-help {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: start;
+      gap: 6px 8px;
+      margin: -2px 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .field-help[hidden] {
+      display: none;
+    }
+
+    .field-help-intro {
+      padding: 5px 0;
+      color: var(--ink);
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .field-help-item {
+      display: inline-flex;
+      gap: 5px;
+      max-width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.72);
+      padding: 4px 7px;
+    }
+
+    .field-help-term {
+      color: var(--ink);
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .field-help-description {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
     h2 {
       font-size: 18px;
       font-weight: 740;
@@ -524,14 +648,6 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
-    }
-
-    .rotation-block table {
-      min-width: 620px;
-    }
-
-    .intelligence-block table {
-      min-width: 720px;
     }
 
     table {
@@ -585,6 +701,82 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       max-width: 280px;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .mixed-signal-row td {
+      background: #fff7ed;
+    }
+
+    .mixed-signal-row:hover td {
+      background: #ffedd5;
+    }
+
+    .mixed-signal-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      border: 1px solid rgba(180, 83, 9, 0.35);
+      border-radius: 999px;
+      background: #ffedd5;
+      color: var(--amber);
+      font-size: 11px;
+      font-weight: 780;
+      line-height: 1;
+      margin-left: 7px;
+      padding: 3px 6px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .mixed-signal-card {
+      border-color: rgba(180, 83, 9, 0.42);
+      background: linear-gradient(0deg, rgba(255, 237, 213, 0.58), rgba(255, 255, 255, 0.96));
+    }
+
+    .rotation-block .table-wrap,
+    .intelligence-block .table-wrap {
+      overflow-x: visible;
+    }
+
+    .rotation-block table,
+    .intelligence-block table {
+      width: 100%;
+      min-width: 0;
+      table-layout: fixed;
+    }
+
+    .rotation-block th,
+    .rotation-block td,
+    .intelligence-block th,
+    .intelligence-block td {
+      padding: 8px 7px;
+      font-size: 12px;
+      line-height: 1.3;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .rotation-block th,
+    .intelligence-block th {
+      font-size: 11px;
+    }
+
+    .rotation-block .rank,
+    .intelligence-block .rank {
+      width: auto;
+    }
+
+    .rotation-block .field-help,
+    .intelligence-block .field-help {
+      margin: -2px 0 8px;
+      font-size: 11px;
+      gap: 5px;
+    }
+
+    .rotation-block .field-help-item,
+    .intelligence-block .field-help-item {
+      flex: 1 1 150px;
+      padding: 4px 6px;
     }
 
     .mobile-row-card {
@@ -726,6 +918,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     }
 
     @media (max-width: 640px) {
+      .field-help {
+        display: none;
+      }
+
       .table-wrap {
         display: none;
       }
@@ -887,6 +1083,44 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
     <section class="dashboard-section">
       <div class="section-heading">
+        <h2>Leader Accumulation Filter</h2>
+        <span class="row-count" id="leader-accumulation-status"></span>
+      </div>
+      <p class="section-note">這是確定性研究篩選器，只在產業處於動能領先或早期修復時評估個股領導品質；研究候選需要先補上 curated leader_type 與 industry_quality_score。</p>
+      <div class="intelligence-grid">
+        <div class="intelligence-block">
+          <h3>研究候選</h3>
+          <div class="table-wrap">
+            <table data-table="leader-research-candidates"></table>
+          </div>
+          <p class="empty-state" data-empty-for="leader-research-candidates" hidden>目前沒有研究候選。這是預期情況：需要先在 tickers.csv 補上 curated leader_type 與 industry_quality_score 後，研究候選輸出才有意義。</p>
+        </div>
+        <div class="intelligence-block">
+          <h3>等待穩定</h3>
+          <div class="table-wrap">
+            <table data-table="leader-wait-for-stabilization"></table>
+          </div>
+          <p class="empty-state" data-empty-for="leader-wait-for-stabilization" hidden>目前沒有等待穩定名單。</p>
+        </div>
+        <div class="intelligence-block">
+          <h3>延伸偏高領導股</h3>
+          <div class="table-wrap">
+            <table data-table="leader-too-extended"></table>
+          </div>
+          <p class="empty-state" data-empty-for="leader-too-extended" hidden>目前沒有延伸偏高的領導股。</p>
+        </div>
+        <div class="intelligence-block">
+          <h3>產業不符合</h3>
+          <div class="table-wrap">
+            <table data-table="leader-not-eligible-industries"></table>
+          </div>
+          <p class="empty-state" data-empty-for="leader-not-eligible-industries" hidden>目前沒有產業不符合資料。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="section-heading">
         <h2>相對產業強度前 10 名</h2>
         <span class="row-count" data-count-for="top-relative-strength"></span>
       </div>
@@ -902,7 +1136,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         <h2>早期動能候選</h2>
         <span class="row-count" data-count-for="early-candidates"></span>
       </div>
-      <p class="section-note">3 日與 5 日報酬轉強，且 5 日報酬已高於 10 日報酬的一半，適合當作早期觀察名單。</p>
+      <p class="section-note">3 日與 5 日報酬轉強，且 5 日報酬已高於 10 日報酬的一半，適合當作早期觀察名單。標示「動能+風險」代表同時出現在風險提醒名單，判斷時不要只依賴單一候選名單。</p>
       <div class="table-wrap">
         <table data-table="early-candidates"></table>
       </div>
@@ -926,7 +1160,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         <h2>風險提醒名單</h2>
         <span class="row-count" data-count-for="risk-warnings"></span>
       </div>
-      <p class="section-note">風險提醒代表近期最大回撤較深，或價格已高出 20 日均線 15% 以上；可作為追高與波動風險檢查。</p>
+      <p class="section-note">風險提醒代表近期最大回撤較深，或價格已高出 20 日均線 15% 以上；可作為追高與波動風險檢查。標示「動能+風險」代表同時符合早期動能與風險條件。</p>
       <div class="table-wrap">
         <table data-table="risk-warnings"></table>
       </div>
@@ -958,6 +1192,48 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       "Market ETFs": "市場 ETF"
     };
 
+    const regimeLabels = {
+      momentum_leader: "動能領先",
+      early_recovery: "早期修復",
+      neutral: "中性",
+      weak: "偏弱",
+      exhaustion: "可能衰竭"
+    };
+
+    const leaderTypeLabels = {
+      core_leader: "核心領導",
+      challenger: "挑戰者",
+      infrastructure_leader: "基礎設施領導",
+      emerging_leader: "新興領導",
+      specialist: "專門型",
+      non_leader: "未標註領導"
+    };
+
+    const priceZoneLabels = {
+      deep_pullback: "深度回落",
+      reasonable_pullback: "合理回落",
+      neutral: "中性",
+      extended: "偏高",
+      very_extended: "明顯偏高"
+    };
+
+    const currentStateLabels = {
+      strong_uptrend: "強勢上行",
+      early_recovery: "早期修復",
+      pullback_in_uptrend: "趨勢內回落",
+      sideways_base: "橫向整理",
+      falling_knife: "急跌中",
+      overextended: "延伸偏高"
+    };
+
+    const watchStatusLabels = {
+      research_candidate: "研究候選",
+      wait_for_stabilization: "等待穩定",
+      too_extended: "延伸偏高",
+      avoid_for_now: "暫不列入",
+      not_eligible_industry: "產業不符合"
+    };
+
     const explanations = {
       return3d: "最近 3 個交易日的報酬率。",
       return5d: "最近 5 個交易日的報酬率，用來觀察短線動能。",
@@ -975,7 +1251,18 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       positive5dPct: "產業內 5 日報酬大於 0 的股票比例。",
       positive10dPct: "產業內 10 日報酬大於 0 的股票比例。",
       strongPct: "產業內符合強勢動能訊號的股票比例。",
-      highRelativeVolumePct: "產業內相對量大於 1.2 的股票比例。"
+      highRelativeVolumePct: "產業內相對量大於 1.2 的股票比例。",
+      industryRegime: "產業狀態由 10 日報酬排名、廣度分數、持續性與衰竭警示決定。",
+      leaderType: "手動維護的領導股類型；目前預設為未標註領導。",
+      industryQuality: "手動維護的產業品質分數，1 到 5 分；研究候選需要至少 4 分。",
+      currentState: "依近期報酬、回撤、均線與 price zone 判斷的目前價格狀態。",
+      priceZone: "綜合短期與長期價格位置後的區間，用於 watch status。",
+      shortTermPriceZone: "由價格相對 20 日均線的距離判斷。",
+      longTermPriceZone: "由價格在 52 週區間中的位置判斷。",
+      watchStatus: "風險優先的確定性研究狀態，不代表投資建議。",
+      distance20d: "最新價格相對 20 日均線的距離。",
+      distance52wHigh: "最新價格相對 52 週高點的距離。",
+      position52wRange: "最新價格在 52 週高低區間中的位置，越接近 1 代表越靠近區間上緣。"
     };
 
     const tableConfigs = {
@@ -1118,6 +1405,66 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume }
         ]
       },
+      "leader-research-candidates": {
+        rows: dashboardData.leader_accumulation.research_candidates,
+        columns: [
+          { key: "ticker", label: "代號", type: "ticker" },
+          { key: "company_name", label: "公司", type: "company" },
+          { key: "industry_group", label: "產業" },
+          { key: "industry_regime", label: "產業狀態", description: explanations.industryRegime },
+          { key: "leader_type", label: "領導類型", description: explanations.leaderType },
+          { key: "industry_quality_score", label: "品質分數", type: "integer", description: explanations.industryQuality },
+          { key: "current_state", label: "目前狀態", description: explanations.currentState },
+          { key: "price_zone", label: "綜合區間", description: explanations.priceZone },
+          { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d },
+          { key: "relative_strength_vs_industry", label: "相對強度", type: "percent", description: explanations.relativeStrength },
+          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume }
+        ]
+      },
+      "leader-wait-for-stabilization": {
+        rows: dashboardData.leader_accumulation.wait_for_stabilization,
+        columns: [
+          { key: "ticker", label: "代號", type: "ticker" },
+          { key: "company_name", label: "公司", type: "company" },
+          { key: "industry_group", label: "產業" },
+          { key: "industry_regime", label: "產業狀態", description: explanations.industryRegime },
+          { key: "leader_type", label: "領導類型", description: explanations.leaderType },
+          { key: "industry_quality_score", label: "品質分數", type: "integer", description: explanations.industryQuality },
+          { key: "current_state", label: "目前狀態", description: explanations.currentState },
+          { key: "short_term_price_zone", label: "短期區間", description: explanations.shortTermPriceZone },
+          { key: "long_term_price_zone", label: "長期區間", description: explanations.longTermPriceZone },
+          { key: "return_5d", label: "5日", type: "percent", description: explanations.return5d },
+          { key: "max_drawdown_10d", label: "最大回撤", type: "warningPercent", description: explanations.maxDrawdown }
+        ]
+      },
+      "leader-too-extended": {
+        rows: dashboardData.leader_accumulation.too_extended_leaders,
+        columns: [
+          { key: "ticker", label: "代號", type: "ticker" },
+          { key: "company_name", label: "公司", type: "company" },
+          { key: "industry_group", label: "產業" },
+          { key: "industry_regime", label: "產業狀態", description: explanations.industryRegime },
+          { key: "leader_type", label: "領導類型", description: explanations.leaderType },
+          { key: "current_state", label: "目前狀態", description: explanations.currentState },
+          { key: "price_zone", label: "綜合區間", description: explanations.priceZone },
+          { key: "distance_from_20d_ma", label: "距20日均線", type: "percent", description: explanations.distance20d },
+          { key: "position_in_52w_range", label: "52週位置", type: "percent", description: explanations.position52wRange },
+          { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d }
+        ]
+      },
+      "leader-not-eligible-industries": {
+        rows: dashboardData.leader_accumulation.not_eligible_industries,
+        columns: [
+          { key: "industry_group", label: "產業" },
+          { key: "industry_regime", label: "產業狀態", description: explanations.industryRegime },
+          { key: "return_5d", label: "平均 5日", type: "percent", description: explanations.return5d },
+          { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
+          { key: "breadth_score", label: "廣度分數", type: "percent", description: explanations.breadthScore },
+          { key: "confirmed_signal_pct", label: "確認比例", type: "percent", description: explanations.confirmedPct },
+          { key: "momentum_persistence", label: "前三持續天數", type: "integer", description: explanations.persistence },
+          { key: "momentum_exhaustion_warning", label: "衰竭警示" }
+        ]
+      },
       "top-relative-strength": {
         rows: dashboardData.top_relative_strength,
         columns: [
@@ -1220,6 +1567,14 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       if (column.type === "integer") return formatInteger(value);
       if (column.type === "signedInteger") return formatSignedInteger(value);
       if (column.key === "industry_group") return displayText(value);
+      if (column.key === "industry_regime") return regimeLabels[value] || displayText(value);
+      if (column.key === "leader_type") return leaderTypeLabels[value] || displayText(value);
+      if (["short_term_price_zone", "long_term_price_zone", "price_zone"].includes(column.key)) {
+        return priceZoneLabels[value] || displayText(value);
+      }
+      if (column.key === "current_state") return currentStateLabels[value] || displayText(value);
+      if (column.key === "watch_status") return watchStatusLabels[value] || displayText(value);
+      if (typeof value === "boolean") return value ? "是" : "否";
       return isMissing(value) ? "" : String(value);
     }
 
@@ -1240,6 +1595,18 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
     function valueForColumn(row, column, rowIndex) {
       return column.key === "__rank" ? rowIndex : row[column.key];
+    }
+
+    function hasMixedSignal(row) {
+      return row.early_momentum_signal === true && row.risk_warning === true;
+    }
+
+    function createMixedSignalBadge() {
+      const badge = document.createElement("span");
+      badge.className = "mixed-signal-badge";
+      badge.textContent = "動能+風險";
+      badge.title = "同時符合早期動能與風險提醒；判斷時不要只依賴單一候選名單。";
+      return badge;
     }
 
     function isMobileIdentityColumn(column) {
@@ -1273,6 +1640,50 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       return list;
     }
 
+    function ensureFieldHelp(id, tableWrap) {
+      const existing = tableWrap.parentElement.querySelector(`[data-field-help="${id}"]`);
+      if (existing) return existing;
+
+      const help = document.createElement("div");
+      help.className = "field-help";
+      help.dataset.fieldHelp = id;
+      tableWrap.insertAdjacentElement("beforebegin", help);
+      return help;
+    }
+
+    function renderFieldHelp(id, config, tableWrap) {
+      const help = ensureFieldHelp(id, tableWrap);
+      const describedColumns = config.columns.filter((column) => column.description);
+      help.replaceChildren();
+
+      if (!describedColumns.length) {
+        help.hidden = true;
+        return;
+      }
+
+      help.hidden = false;
+      const intro = document.createElement("span");
+      intro.className = "field-help-intro";
+      intro.textContent = "欄位說明";
+      help.appendChild(intro);
+
+      for (const column of describedColumns) {
+        const item = document.createElement("span");
+        item.className = "field-help-item";
+
+        const term = document.createElement("span");
+        term.className = "field-help-term";
+        term.textContent = column.label;
+
+        const description = document.createElement("span");
+        description.className = "field-help-description";
+        description.textContent = column.description;
+
+        item.append(term, description);
+        help.appendChild(item);
+      }
+    }
+
     function renderMobileCards(id, config, rows, tableWrap) {
       const list = ensureMobileCardList(id, tableWrap);
       list.replaceChildren();
@@ -1286,13 +1697,19 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       rows.forEach((row, rowIndex) => {
         const card = document.createElement("article");
         card.className = "mobile-row-card";
+        if (hasMixedSignal(row)) {
+          card.classList.add("mixed-signal-card");
+        }
 
         const header = document.createElement("div");
         header.className = "mobile-card-header";
 
         const title = document.createElement("div");
         title.className = "mobile-card-title";
-        title.textContent = mobileTitleForRow(row, config, rowIndex);
+        title.appendChild(document.createTextNode(mobileTitleForRow(row, config, rowIndex)));
+        if (hasMixedSignal(row)) {
+          title.appendChild(createMixedSignalBadge());
+        }
         header.appendChild(title);
 
         if (config.columns.some((column) => column.key === "__rank")) {
@@ -1353,7 +1770,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       const grid = document.getElementById("summary-grid");
       const tiles = [
         ["追蹤檔數", summary.total_tickers, "目前觀察清單內的全部標的。"],
-        ["有資料", summary.tickers_with_data, "成功取得近 6 個月日線資料的標的。"],
+        ["有資料", summary.tickers_with_data, "成功取得近 1 年日線資料的標的。"],
         ["早期", summary.early_count, "3 日與 5 日轉強，偏早期觀察名單。"],
         ["確認", summary.confirmed_count, "5 日/10 日轉正，且均線與上漲天數支持。"],
         ["強勢", summary.strong_count, "確認動能、跑贏同產業，且量能放大。"],
@@ -1391,6 +1808,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       const tableWrap = table.parentElement;
       const empty = document.querySelector(`[data-empty-for="${id}"]`);
       const count = document.querySelector(`[data-count-for="${id}"]`);
+      renderFieldHelp(id, config, tableWrap);
       if (count) {
         count.textContent = `${rows.length} 筆`;
       }
@@ -1423,11 +1841,17 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       const tbody = document.createElement("tbody");
       rows.forEach((row, rowIndex) => {
         const tr = document.createElement("tr");
+        if (hasMixedSignal(row)) {
+          tr.classList.add("mixed-signal-row");
+        }
         for (const column of config.columns) {
           const value = valueForColumn(row, column, rowIndex);
           const td = document.createElement("td");
           td.className = classForCell(value, column);
           td.textContent = formatCell(value, column, rowIndex);
+          if (column.type === "ticker" && hasMixedSignal(row)) {
+            td.appendChild(createMixedSignalBadge());
+          }
           tr.appendChild(td);
         }
         tbody.appendChild(tr);
@@ -1448,6 +1872,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       .reduce((total, rows) => total + rows.length, 0);
     document.getElementById("trend-intelligence-status").textContent =
       `${intelligenceRows} 筆訊號`;
+    const leaderRows = Object.values(dashboardData.leader_accumulation)
+      .reduce((total, rows) => total + rows.length, 0);
+    document.getElementById("leader-accumulation-status").textContent =
+      `${leaderRows} 筆觀察`;
     for (const [id, config] of Object.entries(tableConfigs)) {
       renderTable(id, config);
     }

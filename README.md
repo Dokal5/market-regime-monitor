@@ -1,6 +1,6 @@
 # Stock Momentum Tracker MVP
 
-Local Python MVP that downloads six months of daily adjusted close and volume data with `yfinance`, calculates ticker-level momentum metrics, and writes clean CSV outputs.
+Local Python MVP that downloads one year of daily adjusted close and volume data with `yfinance`, calculates ticker-level momentum metrics, and writes clean CSV outputs.
 
 ## Run locally
 
@@ -29,8 +29,8 @@ Open `outputs/index.html` in a browser to view the static dashboard. The dashboa
 Edit `tickers.csv` with these columns:
 
 ```csv
-ticker,company_name,industry_group
-AAPL,Apple Inc.,Technology Hardware
+ticker,company_name,industry_group,leader_type,industry_quality_score
+AAPL,Apple Inc.,Technology Hardware,non_leader,3
 ```
 
 Each row should include:
@@ -38,8 +38,12 @@ Each row should include:
 - `ticker`: stock ticker symbol, such as `AAPL`
 - `company_name`: display name used in CSVs and the dashboard
 - `industry_group`: peer group used for industry rankings and relative strength
+- `leader_type`: optional deterministic research metadata; allowed values are `core_leader`, `challenger`, `infrastructure_leader`, `emerging_leader`, `specialist`, and `non_leader`
+- `industry_quality_score`: optional deterministic research metadata from `1` to `5`
 
 Ticker rows are retained even when a ticker has missing or unavailable market data. In those cases, `data_points` is `0` and metric values are blank.
+
+If `leader_type` or `industry_quality_score` is missing, the loader fills `non_leader` and `3`.
 
 ## Metrics
 
@@ -54,6 +58,9 @@ Ticker output includes:
 - Early, confirmed, and strong momentum signal flags
 - Risk warning flag
 - Relative strength versus industry, calculated as ticker 10 day return minus industry average 10 day return
+- Distance from the 20 day moving average
+- Distance from the 52 week high
+- Position in the 52 week range
 
 Industry output groups by `industry_group` and reports the mean of each ticker metric, plus ticker counts.
 
@@ -77,6 +84,30 @@ Industry output also includes trend intelligence fields:
 - `momentum_acceleration`: current average 5 day return minus the previous snapshot's average 5 day return.
 - `momentum_exhaustion_warning`: true when average 10 day return is still strong, but average 3 day return has weakened meaningfully or relative volume is below `0.8`.
 
+Industry output also includes `industry_regime`, a deterministic classification used by the Leader Accumulation Filter. Possible values are `momentum_leader`, `early_recovery`, `neutral`, `weak`, and `exhaustion`.
+
+## Leader Accumulation Filter
+
+The Leader Accumulation Filter is deterministic research support. It does not call any AI API and is not investment advice.
+
+Ticker output appends these fields:
+
+- `leader_type`
+- `industry_quality_score`
+- `industry_regime`
+- `distance_from_20d_ma`
+- `distance_from_52w_high`
+- `position_in_52w_range`
+- `short_term_price_zone`
+- `long_term_price_zone`
+- `price_zone`
+- `current_state`
+- `watch_status`
+
+Meaningful `research_candidate` output requires curated `leader_type` and `industry_quality_score` metadata before the filter becomes useful. Existing tickers default to `non_leader` and score `3`, so `research_candidate` can be empty until that metadata is maintained.
+
+The filter only evaluates higher-quality leader metadata when the industry regime is `momentum_leader` or `early_recovery`. Risk handling has priority in `watch_status`, so unstable or negatively flagged names are not hidden behind industry eligibility.
+
 ## Project structure
 
 `main.py` is the orchestration entry point. The implementation lives in `src/`:
@@ -87,13 +118,14 @@ Industry output also includes trend intelligence fields:
 - `signals.py`: ticker momentum signals, risk warning, and relative strength
 - `industry.py`: industry-level aggregation and confirmed signal percentages
 - `history.py`: dated snapshots, rotation history, and trend intelligence fields
+- `leader_filter.py`: industry regimes, price zones, current state, and watch status
 - `journal.py`: deterministic daily Markdown journal generation
 - `dashboard.py`: static HTML dashboard generation
 - `io_utils.py`: shared CSV writing helpers
 
 ## Historical snapshots
 
-Each run saves a dated copy of the current ticker and industry outputs under `outputs/history/YYYY-MM-DD/`, using the latest market date in the downloaded data. The script rebuilds `outputs/history/industry_rotation_history.csv` from all dated snapshots.
+Each run saves a dated copy of the current ticker and industry outputs under `outputs/history/YYYY-MM-DD/`, using the latest market date in the downloaded data. If a snapshot directory for that date already exists, it is left unchanged. The script rebuilds `outputs/history/industry_rotation_history.csv` from all dated snapshots.
 
 `industry_rotation_history.csv` tracks each industry's daily rank by average 10 day return, average 10 day return, and confirmed signal percentage. The dashboard uses this file for the `Industry Rotation Trend` section. Trend tables populate once there are at least two historical snapshot dates.
 
@@ -128,4 +160,4 @@ The workflow also supports manual runs with `workflow_dispatch`. It uses no API 
 
 ## Disclaimer
 
-This project is for research and tracking only. It is not investment advice, financial advice, or a recommendation to buy or sell securities.
+This project is for research and tracking only. It is not investment advice, financial advice, or a securities transaction recommendation.

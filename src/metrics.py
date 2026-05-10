@@ -5,7 +5,7 @@ from typing import Any
 
 import pandas as pd
 
-from src.config import INPUT_COLUMNS, INTERNAL_COLUMNS, METRIC_COLUMNS
+from src.config import INPUT_COLUMNS, INTERNAL_COLUMNS, METRIC_COLUMNS, OPTIONAL_TICKER_COLUMNS, PRICE_POSITION_COLUMNS
 from src.data_loader import get_ticker_frame
 
 
@@ -37,13 +37,18 @@ def finite_or_none(value: Any) -> Any:
 
 def calculate_metrics(prices: pd.DataFrame) -> dict[str, Any]:
     if prices.empty:
-        return {column: None for column in [*INTERNAL_COLUMNS, *METRIC_COLUMNS]}
+        return {column: None for column in [*INTERNAL_COLUMNS, *METRIC_COLUMNS, *PRICE_POSITION_COLUMNS]}
 
     close = prices["adjusted_close"]
     volume = prices["Volume"]
     latest_price = close.iloc[-1] if not close.empty else math.nan
     latest_volume = volume.iloc[-1] if not volume.empty else math.nan
     avg_volume_20d = volume.tail(20).mean() if len(volume) >= 20 else math.nan
+    ma_20d = close.tail(20).mean() if len(close) >= 20 else math.nan
+    close_52w = close.tail(252)
+    high_52w = close_52w.max() if not close_52w.empty else math.nan
+    low_52w = close_52w.min() if not close_52w.empty else math.nan
+    range_52w = high_52w - low_52w if pd.notna(high_52w) and pd.notna(low_52w) else math.nan
 
     metrics = {
         "latest_price": latest_price,
@@ -57,9 +62,12 @@ def calculate_metrics(prices: pd.DataFrame) -> dict[str, Any]:
         "relative_volume": latest_volume / avg_volume_20d if avg_volume_20d and not pd.isna(avg_volume_20d) else math.nan,
         "ma_5d": close.tail(5).mean() if len(close) >= 5 else math.nan,
         "ma_10d": close.tail(10).mean() if len(close) >= 10 else math.nan,
-        "ma_20d": close.tail(20).mean() if len(close) >= 20 else math.nan,
+        "ma_20d": ma_20d,
         "max_drawdown_10d": max_drawdown(close.tail(10)) if len(close) >= 10 else math.nan,
         "up_days_10d": int((close.diff().tail(10) > 0).sum()) if len(close) >= 11 else math.nan,
+        "distance_from_20d_ma": (latest_price / ma_20d) - 1 if pd.notna(ma_20d) and ma_20d else math.nan,
+        "distance_from_52w_high": (latest_price / high_52w) - 1 if pd.notna(high_52w) and high_52w else math.nan,
+        "position_in_52w_range": (latest_price - low_52w) / range_52w if pd.notna(range_52w) and range_52w else math.nan,
     }
     return {key: finite_or_none(value) for key, value in metrics.items()}
 
@@ -81,5 +89,12 @@ def build_ticker_output(tickers: pd.DataFrame, downloaded_data: dict[str, pd.Dat
             }
         )
 
-    output_columns = INPUT_COLUMNS + ["latest_date", "data_points"] + INTERNAL_COLUMNS + METRIC_COLUMNS
+    output_columns = (
+        INPUT_COLUMNS
+        + ["latest_date", "data_points"]
+        + INTERNAL_COLUMNS
+        + METRIC_COLUMNS
+        + OPTIONAL_TICKER_COLUMNS
+        + PRICE_POSITION_COLUMNS
+    )
     return pd.DataFrame(rows, columns=output_columns)

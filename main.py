@@ -20,6 +20,7 @@ from src.history import (
 from src.industry import add_breadth_columns, build_industry_output
 from src.io_utils import write_csv
 from src.journal import write_journal
+from src.leader_filter import add_leader_filter_columns
 from src.metrics import build_ticker_output
 from src.signals import add_signal_columns
 
@@ -36,6 +37,7 @@ def main() -> None:
     industry_output = add_breadth_columns(industry_output, ticker_output)
     snapshot_date = get_snapshot_date(ticker_output)
     industry_output = add_industry_trend_columns(industry_output, snapshot_date)
+    ticker_output, industry_output = add_leader_filter_columns(ticker_output, industry_output, snapshot_date)
 
     write_csv(ticker_output, TICKER_OUTPUT_PATH)
     write_csv(industry_output, INDUSTRY_OUTPUT_PATH)

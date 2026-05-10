@@ -14,10 +14,27 @@ INDUSTRY_ROTATION_HISTORY_PATH = HISTORY_DIR / "industry_rotation_history.csv"
 JOURNAL_DIR = OUTPUT_DIR / "journal"
 LATEST_JOURNAL_PATH = JOURNAL_DIR / "latest.md"
 
-LOOKBACK_PERIOD = "6mo"
+LOOKBACK_PERIOD = "1y"
 MARKET_DATA_INTERVAL = "1d"
 
 INPUT_COLUMNS = ["ticker", "company_name", "industry_group"]
+OPTIONAL_TICKER_COLUMNS = ["leader_type", "industry_quality_score"]
+DEFAULT_LEADER_TYPE = "non_leader"
+DEFAULT_INDUSTRY_QUALITY_SCORE = 3
+ALLOWED_LEADER_TYPES = [
+    "core_leader",
+    "challenger",
+    "infrastructure_leader",
+    "emerging_leader",
+    "specialist",
+    "non_leader",
+]
+RESEARCH_LEADER_TYPES = [
+    "core_leader",
+    "challenger",
+    "infrastructure_leader",
+    "emerging_leader",
+]
 METRIC_COLUMNS = [
     "return_3d",
     "return_5d",
@@ -32,6 +49,11 @@ METRIC_COLUMNS = [
     "ma_20d",
     "max_drawdown_10d",
     "up_days_10d",
+]
+PRICE_POSITION_COLUMNS = [
+    "distance_from_20d_ma",
+    "distance_from_52w_high",
+    "position_in_52w_range",
 ]
 INTERNAL_COLUMNS = ["latest_price"]
 SIGNAL_COLUMNS = [
@@ -92,3 +114,27 @@ BREADTH_POSITIVE_10D_WEIGHT = 0.25
 BREADTH_CONFIRMED_SIGNAL_WEIGHT = 0.25
 BREADTH_STRONG_SIGNAL_WEIGHT = 0.20
 BREADTH_HIGH_RELATIVE_VOLUME_WEIGHT = 0.10
+
+INDUSTRY_REGIME_COLUMN = "industry_regime"
+INDUSTRY_REGIME_TOP_RETURN_RANK = 5
+INDUSTRY_REGIME_TOP_BREADTH_RANK = 5
+INDUSTRY_REGIME_MIN_PERSISTENCE = 2
+
+LEADER_FILTER_COLUMNS = [
+    "industry_regime",
+    "short_term_price_zone",
+    "long_term_price_zone",
+    "price_zone",
+    "current_state",
+    "watch_status",
+]
+LEADER_MIN_QUALITY_SCORE = 4
+
+PRICE_ZONE_DEEP_PULLBACK_DISTANCE_20D = -0.12
+PRICE_ZONE_REASONABLE_PULLBACK_DISTANCE_20D = -0.03
+PRICE_ZONE_EXTENDED_DISTANCE_20D = 0.08
+PRICE_ZONE_VERY_EXTENDED_DISTANCE_20D = 0.15
+PRICE_ZONE_DEEP_PULLBACK_RANGE_POSITION = 0.25
+PRICE_ZONE_REASONABLE_PULLBACK_RANGE_POSITION = 0.45
+PRICE_ZONE_EXTENDED_RANGE_POSITION = 0.82
+PRICE_ZONE_VERY_EXTENDED_RANGE_POSITION = 0.92

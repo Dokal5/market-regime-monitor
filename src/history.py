@@ -171,6 +171,9 @@ def build_rotation_snapshot(
 
 def write_daily_snapshot(ticker_output: pd.DataFrame, industry_output: pd.DataFrame, snapshot_date: str) -> Path:
     snapshot_dir = HISTORY_DIR / snapshot_date
+    if snapshot_dir.exists():
+        return snapshot_dir
+
     write_csv(ticker_output, snapshot_dir / "ticker_momentum.csv")
     write_csv(industry_output, snapshot_dir / "industry_momentum.csv")
     return snapshot_dir

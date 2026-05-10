@@ -3,7 +3,15 @@ from __future__ import annotations
 import pandas as pd
 import yfinance as yf
 
-from src.config import INPUT_COLUMNS, LOOKBACK_PERIOD, MARKET_DATA_INTERVAL
+from src.config import (
+    ALLOWED_LEADER_TYPES,
+    DEFAULT_INDUSTRY_QUALITY_SCORE,
+    DEFAULT_LEADER_TYPE,
+    INPUT_COLUMNS,
+    LOOKBACK_PERIOD,
+    MARKET_DATA_INTERVAL,
+    OPTIONAL_TICKER_COLUMNS,
+)
 
 
 def clean_tickers(raw_tickers: pd.DataFrame) -> pd.DataFrame:
@@ -11,10 +19,25 @@ def clean_tickers(raw_tickers: pd.DataFrame) -> pd.DataFrame:
     if missing_columns:
         raise ValueError(f"tickers.csv is missing required columns: {', '.join(missing_columns)}")
 
-    tickers = raw_tickers[INPUT_COLUMNS].copy()
+    tickers = raw_tickers.copy()
+    if "leader_type" not in tickers.columns:
+        tickers["leader_type"] = DEFAULT_LEADER_TYPE
+    if "industry_quality_score" not in tickers.columns:
+        tickers["industry_quality_score"] = DEFAULT_INDUSTRY_QUALITY_SCORE
+
+    tickers = tickers[INPUT_COLUMNS + OPTIONAL_TICKER_COLUMNS].copy()
     tickers["ticker"] = tickers["ticker"].astype(str).str.strip().str.upper()
     tickers["company_name"] = tickers["company_name"].fillna("").astype(str).str.strip()
     tickers["industry_group"] = tickers["industry_group"].fillna("Unknown").astype(str).str.strip()
+    tickers["leader_type"] = tickers["leader_type"].fillna(DEFAULT_LEADER_TYPE).astype(str).str.strip().str.lower()
+    tickers.loc[~tickers["leader_type"].isin(ALLOWED_LEADER_TYPES), "leader_type"] = DEFAULT_LEADER_TYPE
+    tickers["industry_quality_score"] = (
+        pd.to_numeric(tickers["industry_quality_score"], errors="coerce")
+        .fillna(DEFAULT_INDUSTRY_QUALITY_SCORE)
+        .clip(lower=1, upper=5)
+        .round()
+        .astype(int)
+    )
     tickers = tickers[tickers["ticker"] != ""].drop_duplicates(subset=["ticker"])
     return tickers.reset_index(drop=True)
 

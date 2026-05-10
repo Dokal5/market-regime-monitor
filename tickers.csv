@@ -1,113 +1,113 @@
-ticker,company_name,industry_group
-ANET,Arista Networks Inc.,AI Infrastructure
-VRT,Vertiv Holdings Co.,AI Infrastructure
-DELL,Dell Technologies Inc.,AI Infrastructure
-HPE,Hewlett Packard Enterprise Co.,AI Infrastructure
-SMCI,Super Micro Computer Inc.,AI Infrastructure
-ETN,Eaton Corporation plc,AI Infrastructure
-NVDA,NVIDIA Corporation,Semiconductors
-AMD,Advanced Micro Devices Inc.,Semiconductors
-AVGO,Broadcom Inc.,Semiconductors
-TSM,Taiwan Semiconductor Manufacturing Co. Ltd.,Semiconductors
-ASML,ASML Holding N.V.,Semiconductors
-MU,Micron Technology Inc.,Semiconductors
-QCOM,Qualcomm Incorporated,Semiconductors
-INTC,Intel Corporation,Semiconductors
-ARM,Arm Holdings plc,Semiconductors
-AMAT,Applied Materials Inc.,Semiconductors
-TXN,Texas Instruments Incorporated,Semiconductors
-AVAV,AeroVironment Inc.,Defense Drones
-KTOS,Kratos Defense & Security Solutions Inc.,Defense Drones
-RCAT,Red Cat Holdings Inc.,Defense Drones
-ONDS,Ondas Holdings Inc.,Defense Drones
-DPRO,Draganfly Inc.,Defense Drones
-RTX,RTX Corporation,Defense
-LHX,L3Harris Technologies Inc.,Defense
-NOC,Northrop Grumman Corporation,Defense
-LMT,Lockheed Martin Corporation,Defense
-GD,General Dynamics Corporation,Defense
-HII,Huntington Ingalls Industries Inc.,Defense
-LDOS,Leidos Holdings Inc.,Defense
-RKLB,Rocket Lab USA Inc.,Space
-LUNR,Intuitive Machines Inc.,Space
-ASTS,AST SpaceMobile Inc.,Space
-IRDM,Iridium Communications Inc.,Space
-SPCE,Virgin Galactic Holdings Inc.,Space
-PL,Planet Labs PBC,Space
-RDW,Redwire Corporation,Space
-BKSY,BlackSky Technology Inc.,Space
-VSAT,Viasat Inc.,Space
-SATL,Satellogic Inc.,Space
-SPIR,Spire Global Inc.,Space
-CRWD,CrowdStrike Holdings Inc.,Cybersecurity
-PANW,Palo Alto Networks Inc.,Cybersecurity
-FTNT,Fortinet Inc.,Cybersecurity
-ZS,Zscaler Inc.,Cybersecurity
-OKTA,Okta Inc.,Cybersecurity
-TENB,Tenable Holdings Inc.,Cybersecurity
-CRM,Salesforce Inc.,Cloud Software
-NOW,ServiceNow Inc.,Cloud Software
-SNOW,Snowflake Inc.,Cloud Software
-DDOG,Datadog Inc.,Cloud Software
-MDB,MongoDB Inc.,Cloud Software
-WDAY,Workday Inc.,Cloud Software
-TTD,The Trade Desk Inc.,Adtech
-APP,AppLovin Corporation,Adtech
-ROKU,Roku Inc.,Adtech
-MGNI,Magnite Inc.,Adtech
-PUBM,PubMatic Inc.,Adtech
-DV,DoubleVerify Holdings Inc.,Adtech
-CEG,Constellation Energy Corporation,Nuclear
-VST,Vistra Corp.,Nuclear
-CCJ,Cameco Corporation,Nuclear
-UEC,Uranium Energy Corp.,Nuclear
-LEU,Centrus Energy Corp.,Nuclear
-SMR,NuScale Power Corporation,Nuclear
-OKLO,Oklo Inc.,Nuclear
-NNE,NANO Nuclear Energy Inc.,Nuclear
-GEV,GE Vernova Inc.,Renewables
-FSLR,First Solar Inc.,Renewables
-NXT,Nextracker Inc.,Renewables
-ARRY,Array Technologies Inc.,Renewables
-ORA,Ormat Technologies Inc.,Renewables
-FLNC,Fluence Energy Inc.,Energy Storage
-STEM,Stem Inc.,Energy Storage
-ENPH,Enphase Energy Inc.,Energy Storage
-SEDG,SolarEdge Technologies Inc.,Energy Storage
-GNRC,Generac Holdings Inc.,Energy Storage
-ISRG,Intuitive Surgical Inc.,Robotics Automation
-TER,Teradyne Inc.,Robotics Automation
-SYM,Symbotic Inc.,Robotics Automation
-ROK,Rockwell Automation Inc.,Robotics Automation
-CGNX,Cognex Corporation,Robotics Automation
-ZBRA,Zebra Technologies Corporation,Robotics Automation
-XYZ,Block Inc.,Fintech
-PYPL,PayPal Holdings Inc.,Fintech
-HOOD,Robinhood Markets Inc.,Fintech
-COIN,Coinbase Global Inc.,Fintech
-SOFI,SoFi Technologies Inc.,Fintech
-AFRM,Affirm Holdings Inc.,Fintech
-NFLX,Netflix Inc.,Consumer Platforms
-UBER,Uber Technologies Inc.,Consumer Platforms
-ABNB,Airbnb Inc.,Consumer Platforms
-DASH,DoorDash Inc.,Consumer Platforms
-SPOT,Spotify Technology S.A.,Consumer Platforms
-PINS,Pinterest Inc.,Consumer Platforms
-JNJ,Johnson & Johnson,Defensive Healthcare
-MRK,Merck & Co. Inc.,Defensive Healthcare
-PFE,Pfizer Inc.,Defensive Healthcare
-ABBV,AbbVie Inc.,Defensive Healthcare
-UNH,UnitedHealth Group Inc.,Defensive Healthcare
-MDT,Medtronic plc,Defensive Healthcare
-PG,Procter & Gamble Co.,Defensive Staples
-KO,The Coca-Cola Company,Defensive Staples
-PEP,PepsiCo Inc.,Defensive Staples
-WMT,Walmart Inc.,Defensive Staples
-COST,Costco Wholesale Corporation,Defensive Staples
-CL,Colgate-Palmolive Company,Defensive Staples
-SPY,SPDR S&P 500 ETF Trust,Market ETFs
-QQQ,Invesco QQQ Trust,Market ETFs
-IWM,iShares Russell 2000 ETF,Market ETFs
-DIA,SPDR Dow Jones Industrial Average ETF Trust,Market ETFs
-VTI,Vanguard Total Stock Market ETF,Market ETFs
-VOO,Vanguard S&P 500 ETF,Market ETFs
+ticker,company_name,industry_group,leader_type,industry_quality_score
+ANET,Arista Networks Inc.,AI Infrastructure,infrastructure_leader,5
+VRT,Vertiv Holdings Co.,AI Infrastructure,infrastructure_leader,5
+DELL,Dell Technologies Inc.,AI Infrastructure,challenger,5
+HPE,Hewlett Packard Enterprise Co.,AI Infrastructure,non_leader,5
+SMCI,Super Micro Computer Inc.,AI Infrastructure,non_leader,5
+ETN,Eaton Corporation plc,AI Infrastructure,infrastructure_leader,5
+NVDA,NVIDIA Corporation,Semiconductors,core_leader,5
+AMD,Advanced Micro Devices Inc.,Semiconductors,challenger,5
+AVGO,Broadcom Inc.,Semiconductors,core_leader,5
+TSM,Taiwan Semiconductor Manufacturing Co. Ltd.,Semiconductors,core_leader,5
+ASML,ASML Holding N.V.,Semiconductors,infrastructure_leader,5
+MU,Micron Technology Inc.,Semiconductors,specialist,5
+QCOM,Qualcomm Incorporated,Semiconductors,specialist,5
+INTC,Intel Corporation,Semiconductors,non_leader,5
+ARM,Arm Holdings plc,Semiconductors,specialist,5
+AMAT,Applied Materials Inc.,Semiconductors,infrastructure_leader,5
+TXN,Texas Instruments Incorporated,Semiconductors,specialist,5
+AVAV,AeroVironment Inc.,Defense Drones,core_leader,3
+KTOS,Kratos Defense & Security Solutions Inc.,Defense Drones,challenger,3
+RCAT,Red Cat Holdings Inc.,Defense Drones,emerging_leader,3
+ONDS,Ondas Holdings Inc.,Defense Drones,non_leader,3
+DPRO,Draganfly Inc.,Defense Drones,non_leader,3
+RTX,RTX Corporation,Defense,core_leader,4
+LHX,L3Harris Technologies Inc.,Defense,specialist,4
+NOC,Northrop Grumman Corporation,Defense,core_leader,4
+LMT,Lockheed Martin Corporation,Defense,core_leader,4
+GD,General Dynamics Corporation,Defense,core_leader,4
+HII,Huntington Ingalls Industries Inc.,Defense,specialist,4
+LDOS,Leidos Holdings Inc.,Defense,non_leader,4
+RKLB,Rocket Lab USA Inc.,Space,emerging_leader,3
+LUNR,Intuitive Machines Inc.,Space,emerging_leader,3
+ASTS,AST SpaceMobile Inc.,Space,emerging_leader,3
+IRDM,Iridium Communications Inc.,Space,specialist,3
+SPCE,Virgin Galactic Holdings Inc.,Space,non_leader,3
+PL,Planet Labs PBC,Space,specialist,3
+RDW,Redwire Corporation,Space,non_leader,3
+BKSY,BlackSky Technology Inc.,Space,specialist,3
+VSAT,Viasat Inc.,Space,specialist,3
+SATL,Satellogic Inc.,Space,non_leader,3
+SPIR,Spire Global Inc.,Space,specialist,3
+CRWD,CrowdStrike Holdings Inc.,Cybersecurity,core_leader,5
+PANW,Palo Alto Networks Inc.,Cybersecurity,core_leader,5
+FTNT,Fortinet Inc.,Cybersecurity,core_leader,5
+ZS,Zscaler Inc.,Cybersecurity,challenger,5
+OKTA,Okta Inc.,Cybersecurity,specialist,5
+TENB,Tenable Holdings Inc.,Cybersecurity,specialist,5
+CRM,Salesforce Inc.,Cloud Software,core_leader,5
+NOW,ServiceNow Inc.,Cloud Software,core_leader,5
+SNOW,Snowflake Inc.,Cloud Software,challenger,5
+DDOG,Datadog Inc.,Cloud Software,infrastructure_leader,5
+MDB,MongoDB Inc.,Cloud Software,specialist,5
+WDAY,Workday Inc.,Cloud Software,specialist,5
+TTD,The Trade Desk Inc.,Adtech,core_leader,3
+APP,AppLovin Corporation,Adtech,challenger,3
+ROKU,Roku Inc.,Adtech,non_leader,3
+MGNI,Magnite Inc.,Adtech,specialist,3
+PUBM,PubMatic Inc.,Adtech,non_leader,3
+DV,DoubleVerify Holdings Inc.,Adtech,specialist,3
+CEG,Constellation Energy Corporation,Nuclear,core_leader,4
+VST,Vistra Corp.,Nuclear,challenger,4
+CCJ,Cameco Corporation,Nuclear,core_leader,4
+UEC,Uranium Energy Corp.,Nuclear,specialist,4
+LEU,Centrus Energy Corp.,Nuclear,specialist,4
+SMR,NuScale Power Corporation,Nuclear,emerging_leader,4
+OKLO,Oklo Inc.,Nuclear,emerging_leader,4
+NNE,NANO Nuclear Energy Inc.,Nuclear,emerging_leader,4
+GEV,GE Vernova Inc.,Renewables,infrastructure_leader,3
+FSLR,First Solar Inc.,Renewables,core_leader,3
+NXT,Nextracker Inc.,Renewables,challenger,3
+ARRY,Array Technologies Inc.,Renewables,specialist,3
+ORA,Ormat Technologies Inc.,Renewables,specialist,3
+FLNC,Fluence Energy Inc.,Energy Storage,emerging_leader,3
+STEM,Stem Inc.,Energy Storage,non_leader,3
+ENPH,Enphase Energy Inc.,Energy Storage,specialist,3
+SEDG,SolarEdge Technologies Inc.,Energy Storage,non_leader,3
+GNRC,Generac Holdings Inc.,Energy Storage,specialist,3
+ISRG,Intuitive Surgical Inc.,Robotics Automation,core_leader,4
+TER,Teradyne Inc.,Robotics Automation,specialist,4
+SYM,Symbotic Inc.,Robotics Automation,emerging_leader,4
+ROK,Rockwell Automation Inc.,Robotics Automation,core_leader,4
+CGNX,Cognex Corporation,Robotics Automation,specialist,4
+ZBRA,Zebra Technologies Corporation,Robotics Automation,specialist,4
+XYZ,Block Inc.,Fintech,challenger,3
+PYPL,PayPal Holdings Inc.,Fintech,core_leader,3
+HOOD,Robinhood Markets Inc.,Fintech,emerging_leader,3
+COIN,Coinbase Global Inc.,Fintech,challenger,3
+SOFI,SoFi Technologies Inc.,Fintech,emerging_leader,3
+AFRM,Affirm Holdings Inc.,Fintech,specialist,3
+NFLX,Netflix Inc.,Consumer Platforms,core_leader,4
+UBER,Uber Technologies Inc.,Consumer Platforms,core_leader,4
+ABNB,Airbnb Inc.,Consumer Platforms,challenger,4
+DASH,DoorDash Inc.,Consumer Platforms,challenger,4
+SPOT,Spotify Technology S.A.,Consumer Platforms,challenger,4
+PINS,Pinterest Inc.,Consumer Platforms,non_leader,4
+JNJ,Johnson & Johnson,Defensive Healthcare,core_leader,4
+MRK,Merck & Co. Inc.,Defensive Healthcare,core_leader,4
+PFE,Pfizer Inc.,Defensive Healthcare,specialist,4
+ABBV,AbbVie Inc.,Defensive Healthcare,core_leader,4
+UNH,UnitedHealth Group Inc.,Defensive Healthcare,core_leader,4
+MDT,Medtronic plc,Defensive Healthcare,specialist,4
+PG,Procter & Gamble Co.,Defensive Staples,core_leader,4
+KO,The Coca-Cola Company,Defensive Staples,core_leader,4
+PEP,PepsiCo Inc.,Defensive Staples,core_leader,4
+WMT,Walmart Inc.,Defensive Staples,core_leader,4
+COST,Costco Wholesale Corporation,Defensive Staples,core_leader,4
+CL,Colgate-Palmolive Company,Defensive Staples,specialist,4
+SPY,SPDR S&P 500 ETF Trust,Market ETFs,non_leader,5
+QQQ,Invesco QQQ Trust,Market ETFs,non_leader,5
+IWM,iShares Russell 2000 ETF,Market ETFs,non_leader,5
+DIA,SPDR Dow Jones Industrial Average ETF Trust,Market ETFs,non_leader,5
+VTI,Vanguard Total Stock Market ETF,Market ETFs,non_leader,5
+VOO,Vanguard S&P 500 ETF,Market ETFs,non_leader,5
