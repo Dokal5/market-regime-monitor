@@ -10,6 +10,7 @@ import pandas as pd
 from src.config import BREADTH_COLUMNS, INDUSTRY_REGIME_COLUMN, INDUSTRY_TREND_COLUMNS, METRIC_COLUMNS
 from src.data_quality import build_data_quality_summary
 from src.industry import calculate_confirmed_by_industry
+from src.update_health import build_update_health_output
 
 
 def dataframe_records(data: pd.DataFrame) -> list[dict[str, Any]]:
@@ -123,7 +124,10 @@ def build_rotation_trends(rotation_history: pd.DataFrame) -> dict[str, Any]:
 
 
 def build_dashboard_data(
-    ticker_output: pd.DataFrame, industry_output: pd.DataFrame, rotation_history: pd.DataFrame
+    ticker_output: pd.DataFrame,
+    industry_output: pd.DataFrame,
+    rotation_history: pd.DataFrame,
+    update_health_output: pd.DataFrame | None = None,
 ) -> dict[str, Any]:
     tickers = ticker_output.copy()
     industries = industry_output.copy()
@@ -403,6 +407,10 @@ def build_dashboard_data(
     data_quality_issues = tickers[tickers["data_status"].isin(["missing", "stale"])].sort_values(
         ["data_status", "ticker"], ascending=[True, True], na_position="last"
     )
+    if update_health_output is None:
+        update_health_output = build_update_health_output(tickers)
+    update_health_records = dataframe_records(update_health_output) if not update_health_output.empty else []
+    update_health = update_health_records[0] if update_health_records else {}
 
     return {
         "summary": {
@@ -420,6 +428,7 @@ def build_dashboard_data(
             "summary": data_quality_summary,
             "issue_tickers": dataframe_records(data_quality_issues[data_quality_columns]),
         },
+        "update_health": update_health,
         "industry_momentum": dataframe_records(
             industries[industry_momentum_columns].sort_values("return_10d", ascending=False, na_position="last")
         )
@@ -617,6 +626,16 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       background: rgba(255, 248, 229, 0.86);
     }
 
+    .quality-tile.healthy {
+      border-color: rgba(0, 122, 85, 0.28);
+      background: rgba(235, 249, 243, 0.82);
+    }
+
+    .quality-tile.unknown {
+      border-color: rgba(96, 111, 108, 0.32);
+      background: rgba(242, 245, 244, 0.9);
+    }
+
     .quality-label {
       color: var(--muted);
       font-size: 12px;
@@ -634,6 +653,15 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       color: var(--muted);
       font-size: 12px;
       line-height: 1.35;
+    }
+
+    .quality-value a {
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    .quality-value a:hover {
+      text-decoration: underline;
     }
 
     .dashboard-section {
@@ -1198,6 +1226,14 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
   <main>
     <section class="summary-grid" id="summary-grid" aria-label="動能摘要"></section>
 
+    <section class="dashboard-section update-health-section">
+      <div class="section-heading">
+        <h2>更新健康狀態</h2>
+      </div>
+      <p class="section-note">檢查本次輸出是否由排程正常產生、資料是否新鮮，以及 GitHub Actions run 是否可追溯；這不是投資訊號。</p>
+      <div class="quality-grid" id="update-health-grid"></div>
+    </section>
+
     <section class="dashboard-section data-quality-section">
       <div class="section-heading">
         <h2>資料來源與品質</h2>
@@ -1513,6 +1549,12 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       missing: "缺資料",
       stale: "資料落後",
       limited_history: "歷史不足"
+    };
+
+    const updateHealthLabels = {
+      healthy: "正常",
+      warning: "注意",
+      unknown: "未知"
     };
 
     const explanations = {
@@ -2158,6 +2200,60 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       }
     }
 
+    function appendQualityTile(grid, label, value, description, stateClass = "", linkHref = "") {
+      const tile = document.createElement("div");
+      tile.className = `quality-tile ${stateClass}`.trim();
+
+      const labelEl = document.createElement("div");
+      labelEl.className = "quality-label";
+      labelEl.textContent = label;
+
+      const valueEl = document.createElement("div");
+      valueEl.className = "quality-value";
+      if (linkHref) {
+        const link = document.createElement("a");
+        link.href = linkHref;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = value;
+        valueEl.appendChild(link);
+      } else {
+        valueEl.textContent = value;
+      }
+
+      const descriptionEl = document.createElement("div");
+      descriptionEl.className = "quality-description";
+      descriptionEl.textContent = description;
+
+      tile.append(labelEl, valueEl, descriptionEl);
+      grid.appendChild(tile);
+    }
+
+    function renderUpdateHealth() {
+      const health = dashboardData.update_health || {};
+      const grid = document.getElementById("update-health-grid");
+      const status = health.update_health_status || "unknown";
+      const stateClass = status === "healthy" ? "healthy" : status === "warning" ? "warning" : "unknown";
+      const runLabel = health.github_run_url
+        ? `Run ${health.github_run_id || ""}`.trim()
+        : health.run_context === "github_actions"
+          ? "GitHub Actions"
+          : "本機執行";
+      const sha = health.git_sha ? String(health.git_sha).slice(0, 7) : "";
+      const cards = [
+        ["健康狀態", updateHealthLabels[status] || displayText(status), health.update_health_note || "尚無健康狀態說明。", stateClass, ""],
+        ["最新市場日期", health.latest_market_date || "無法取得", "本次輸出使用的最新市場資料日期。", "", ""],
+        ["資料年齡", isMissing(health.market_data_age_days) ? "無法取得" : `${formatInteger(health.market_data_age_days)} 天`, "以紐約日期計算；大於 3 天會提示注意。", "", ""],
+        ["產生時間", health.generated_at_new_york || "無法取得", "America/New_York 時區的產生時間。", "", ""],
+        ["資料成功率", formatPercent(health.success_rate), "成功取得資料的 ticker 比例。", "", ""],
+        ["執行來源", runLabel, sha ? `git ${sha}` : "本機或 Actions 執行資訊。", "", health.github_run_url || ""]
+      ];
+
+      for (const [label, value, description, cardClass, href] of cards) {
+        appendQualityTile(grid, label, value, description, cardClass, href);
+      }
+    }
+
     function renderDataQuality() {
       const quality = dashboardData.data_quality.summary;
       const grid = document.getElementById("data-quality-grid");
@@ -2174,23 +2270,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       ];
 
       for (const [label, value, description, stateClass] of cards) {
-        const tile = document.createElement("div");
-        tile.className = `quality-tile ${stateClass}`.trim();
-
-        const labelEl = document.createElement("div");
-        labelEl.className = "quality-label";
-        labelEl.textContent = label;
-
-        const valueEl = document.createElement("div");
-        valueEl.className = "quality-value";
-        valueEl.textContent = value;
-
-        const descriptionEl = document.createElement("div");
-        descriptionEl.className = "quality-description";
-        descriptionEl.textContent = description;
-
-        tile.append(labelEl, valueEl, descriptionEl);
-        grid.appendChild(tile);
+        appendQualityTile(grid, label, value, description, stateClass);
       }
     }
 
@@ -2357,6 +2437,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     });
 
     renderSummary();
+    renderUpdateHealth();
     renderDataQuality();
     const breadthRows = Object.values(dashboardData.industry_breadth)
       .reduce((total, rows) => total + rows.length, 0);
@@ -2383,8 +2464,12 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
 
 def write_dashboard(
-    ticker_output: pd.DataFrame, industry_output: pd.DataFrame, rotation_history: pd.DataFrame, path: Path
+    ticker_output: pd.DataFrame,
+    industry_output: pd.DataFrame,
+    rotation_history: pd.DataFrame,
+    path: Path,
+    update_health_output: pd.DataFrame | None = None,
 ) -> None:
-    dashboard_data = build_dashboard_data(ticker_output, industry_output, rotation_history)
+    dashboard_data = build_dashboard_data(ticker_output, industry_output, rotation_history, update_health_output)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(build_dashboard_html(dashboard_data), encoding="utf-8")

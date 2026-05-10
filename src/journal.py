@@ -7,6 +7,7 @@ import pandas as pd
 
 from src.config import JOURNAL_DIR, LATEST_JOURNAL_PATH
 from src.data_quality import build_data_quality_summary
+from src.update_health import build_update_health_output
 
 
 def format_percent(value: Any) -> str:
@@ -191,7 +192,12 @@ def build_interpretation(
     return lines
 
 
-def build_journal_markdown(ticker_output: pd.DataFrame, industry_output: pd.DataFrame, market_date: str) -> str:
+def build_journal_markdown(
+    ticker_output: pd.DataFrame,
+    industry_output: pd.DataFrame,
+    market_date: str,
+    update_health_output: pd.DataFrame | None = None,
+) -> str:
     tickers = prepare_tickers(ticker_output)
     industries = prepare_industries(industry_output)
     tradable_tickers = tickers[tickers["data_points"] > 0] if "data_points" in tickers.columns else tickers
@@ -218,6 +224,9 @@ def build_journal_markdown(ticker_output: pd.DataFrame, industry_output: pd.Data
     data_quality_issues = tickers[tickers["data_status"] != "ok"].sort_values(
         ["data_status", "ticker"], ascending=[True, True], na_position="last"
     )
+    if update_health_output is None:
+        update_health_output = build_update_health_output(tickers)
+    update_health_records = update_health_output.to_dict("records")
     interpretation = build_interpretation(tickers, industries, leading_industries, broad_strength_industries, market_date)
 
     snapshot_table = table_from_records(
@@ -265,6 +274,19 @@ def build_journal_markdown(ticker_output: pd.DataFrame, industry_output: pd.Data
             ("data_points", "data_points", "text"),
             ("data_status", "data_status", "text"),
             ("data_quality_note", "data_quality_note", "text"),
+        ],
+    )
+    update_health_table = table_from_records(
+        update_health_records,
+        [
+            ("update_health_status", "update_health_status", "text"),
+            ("update_health_note", "update_health_note", "text"),
+            ("generated_at_new_york", "generated_at_new_york", "text"),
+            ("run_context", "run_context", "text"),
+            ("github_run_url", "github_run_url", "text"),
+            ("latest_market_date", "latest_market_date", "text"),
+            ("market_data_age_days", "market_data_age_days", "text"),
+            ("success_rate", "success_rate", "percent"),
         ],
     )
     leading_table = table_from_records(
@@ -330,6 +352,7 @@ def build_journal_markdown(ticker_output: pd.DataFrame, industry_output: pd.Data
         [
             f"# Market Regime Monitor Journal: {market_date}",
             "## Market Snapshot\n" + snapshot_table,
+            "## Update Health\n" + update_health_table,
             "## Data Quality\n" + data_quality_table + "\n\n" + data_quality_issue_table,
             "## Leading Industries\n" + leading_table,
             "## Broad Strength Industries\n" + breadth_table,
@@ -345,8 +368,13 @@ def build_journal_markdown(ticker_output: pd.DataFrame, industry_output: pd.Data
     )
 
 
-def write_journal(ticker_output: pd.DataFrame, industry_output: pd.DataFrame, market_date: str) -> tuple[Path, Path]:
-    markdown = build_journal_markdown(ticker_output, industry_output, market_date)
+def write_journal(
+    ticker_output: pd.DataFrame,
+    industry_output: pd.DataFrame,
+    market_date: str,
+    update_health_output: pd.DataFrame | None = None,
+) -> tuple[Path, Path]:
+    markdown = build_journal_markdown(ticker_output, industry_output, market_date, update_health_output)
     dated_path = JOURNAL_DIR / f"{market_date}.md"
 
     JOURNAL_DIR.mkdir(parents=True, exist_ok=True)

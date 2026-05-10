@@ -9,6 +9,7 @@ from src.config import (
     INDUSTRY_ROTATION_HISTORY_PATH,
     TICKER_OUTPUT_PATH,
     TICKERS_PATH,
+    UPDATE_HEALTH_OUTPUT_PATH,
 )
 from src.dashboard import write_dashboard
 from src.data_quality import add_data_quality_columns, build_data_quality_output
@@ -25,6 +26,7 @@ from src.journal import write_journal
 from src.leader_filter import add_leader_filter_columns
 from src.metrics import build_ticker_output
 from src.signals import add_signal_columns
+from src.update_health import build_update_health_output
 
 
 def main() -> None:
@@ -42,19 +44,22 @@ def main() -> None:
     ticker_output, industry_output = add_leader_filter_columns(ticker_output, industry_output, snapshot_date)
     ticker_output = add_data_quality_columns(ticker_output)
     data_quality_output = build_data_quality_output(ticker_output)
+    update_health_output = build_update_health_output(ticker_output)
 
     write_csv(ticker_output, TICKER_OUTPUT_PATH)
     write_csv(industry_output, INDUSTRY_OUTPUT_PATH)
     write_csv(data_quality_output, DATA_QUALITY_OUTPUT_PATH)
+    write_csv(update_health_output, UPDATE_HEALTH_OUTPUT_PATH)
     snapshot_dir = write_daily_snapshot(ticker_output, industry_output, snapshot_date)
     rotation_history = build_industry_rotation_history()
     write_csv(rotation_history, INDUSTRY_ROTATION_HISTORY_PATH)
-    write_dashboard(ticker_output, industry_output, rotation_history, DASHBOARD_OUTPUT_PATH)
-    journal_path, latest_journal_path = write_journal(ticker_output, industry_output, snapshot_date)
+    write_dashboard(ticker_output, industry_output, rotation_history, DASHBOARD_OUTPUT_PATH, update_health_output)
+    journal_path, latest_journal_path = write_journal(ticker_output, industry_output, snapshot_date, update_health_output)
 
     print(f"Wrote {TICKER_OUTPUT_PATH}")
     print(f"Wrote {INDUSTRY_OUTPUT_PATH}")
     print(f"Wrote {DATA_QUALITY_OUTPUT_PATH}")
+    print(f"Wrote {UPDATE_HEALTH_OUTPUT_PATH}")
     print(f"Wrote {snapshot_dir}")
     print(f"Wrote {INDUSTRY_ROTATION_HISTORY_PATH}")
     print(f"Wrote {DASHBOARD_OUTPUT_PATH}")

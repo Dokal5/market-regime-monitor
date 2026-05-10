@@ -16,6 +16,7 @@ The script creates:
 - `outputs/ticker_momentum.csv`
 - `outputs/industry_momentum.csv`
 - `outputs/data_quality.csv`
+- `outputs/update_health.csv`
 - `outputs/index.html`
 - `outputs/history/YYYY-MM-DD/ticker_momentum.csv`
 - `outputs/history/YYYY-MM-DD/industry_momentum.csv`
@@ -56,6 +57,22 @@ Each run writes `outputs/data_quality.csv` and appends these fields to `outputs/
 - `data_quality_note`: short explanation for the status
 
 `missing` means no usable daily data was downloaded. `stale` means a ticker has data, but its latest date is older than the latest market date found in the current run. `limited_history` means fewer than 60 daily bars are available, so long-term price position metrics should be read conservatively.
+
+## Update health
+
+Each run writes `outputs/update_health.csv` with one row describing the operational health of the latest update. This is not a trading or investment signal; it only checks whether the output was generated recently and whether the data feed looked complete.
+
+Key fields:
+
+- `run_context`: `local` or `github_actions`
+- `github_run_url`: link to the GitHub Actions run when available
+- `latest_market_date`: latest market date found in the generated ticker data
+- `market_data_age_days`: number of days between the New York generation date and `latest_market_date`
+- `success_rate`: share of tickers with usable market data
+- `update_health_status`: `healthy`, `warning`, or `unknown`
+- `update_health_note`: concise reason for the status
+
+`warning` is used when market data is more than 3 days old, when missing or stale ticker data appears, or when data success rate falls below 98%. `limited_history_count` is displayed as context but does not by itself make the update unhealthy.
 
 ## Metrics
 
@@ -132,6 +149,7 @@ The filter only evaluates higher-quality leader metadata when the industry regim
 - `history.py`: dated snapshots, rotation history, and trend intelligence fields
 - `leader_filter.py`: industry regimes, price zones, current state, and watch status
 - `data_quality.py`: source transparency, missing/stale checks, and data quality CSV output
+- `update_health.py`: run context, data freshness, and update health CSV output
 - `journal.py`: deterministic daily Markdown journal generation
 - `dashboard.py`: static HTML dashboard generation
 - `io_utils.py`: shared CSV writing helpers

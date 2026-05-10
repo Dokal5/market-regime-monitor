@@ -9,6 +9,7 @@ OUTPUT_DIR = BASE_DIR / "outputs"
 TICKER_OUTPUT_PATH = OUTPUT_DIR / "ticker_momentum.csv"
 INDUSTRY_OUTPUT_PATH = OUTPUT_DIR / "industry_momentum.csv"
 DATA_QUALITY_OUTPUT_PATH = OUTPUT_DIR / "data_quality.csv"
+UPDATE_HEALTH_OUTPUT_PATH = OUTPUT_DIR / "update_health.csv"
 DASHBOARD_OUTPUT_PATH = OUTPUT_DIR / "index.html"
 HISTORY_DIR = OUTPUT_DIR / "history"
 INDUSTRY_ROTATION_HISTORY_PATH = HISTORY_DIR / "industry_rotation_history.csv"
@@ -63,6 +64,25 @@ DATA_QUALITY_EXPORT_COLUMNS = [
     "data_quality_note",
 ]
 LIMITED_HISTORY_MIN_DATA_POINTS = 60
+UPDATE_HEALTH_COLUMNS = [
+    "generated_at_utc",
+    "generated_at_new_york",
+    "run_context",
+    "github_workflow",
+    "github_run_id",
+    "github_run_url",
+    "git_sha",
+    "latest_market_date",
+    "market_data_age_days",
+    "success_rate",
+    "missing_count",
+    "stale_count",
+    "limited_history_count",
+    "update_health_status",
+    "update_health_note",
+]
+UPDATE_HEALTH_MAX_DATA_AGE_DAYS = 3
+UPDATE_HEALTH_MIN_SUCCESS_RATE = 0.98
 PRICE_POSITION_COLUMNS = [
     "distance_from_20d_ma",
     "distance_from_52w_high",
