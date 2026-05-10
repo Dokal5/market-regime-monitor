@@ -150,8 +150,9 @@ def build_dashboard_data(
             tickers[column] = pd.to_numeric(tickers[column], errors="coerce")
 
     for column in ["early_momentum_signal", "confirmed_momentum_signal", "strong_momentum_signal", "risk_warning"]:
-        if column in tickers.columns:
-            tickers[column] = tickers[column].fillna(False).astype(bool)
+        if column not in tickers.columns:
+            tickers[column] = False
+        tickers[column] = tickers[column].fillna(False).astype(bool)
     for column, default in [
         ("leader_type", "non_leader"),
         (INDUSTRY_REGIME_COLUMN, "neutral"),
@@ -284,6 +285,23 @@ def build_dashboard_data(
         "momentum_persistence",
         "momentum_exhaustion_warning",
     ]
+    constituent_columns = [
+        "ticker",
+        "company_name",
+        "industry_group",
+        "data_points",
+        "leader_type",
+        "industry_quality_score",
+        "watch_status",
+        "current_state",
+        "return_5d",
+        "return_10d",
+        "relative_strength_vs_industry",
+        "relative_volume",
+        "confirmed_momentum_signal",
+        "strong_momentum_signal",
+        "risk_warning",
+    ]
 
     tradable_tickers = tickers[tickers["data_points"] > 0] if "data_points" in tickers.columns else tickers
     latest_dates = tradable_tickers["latest_date"].dropna().astype(str) if "latest_date" in tradable_tickers.columns else []
@@ -354,6 +372,15 @@ def build_dashboard_data(
     not_eligible_industries = industries[
         industries[INDUSTRY_REGIME_COLUMN].isin(["neutral", "weak", "exhaustion"])
     ].sort_values(["return_10d", "breadth_score"], ascending=[False, False], na_position="last")
+    industry_constituents = {}
+    if not tickers.empty:
+        for industry_group, industry_tickers in tickers.groupby("industry_group", dropna=False):
+            ranked_tickers = industry_tickers.sort_values(
+                ["data_points", "return_10d", "relative_volume", "ticker"],
+                ascending=[False, False, False, True],
+                na_position="last",
+            )
+            industry_constituents[str(industry_group)] = dataframe_records(ranked_tickers[constituent_columns])
 
     return {
         "summary": {
@@ -392,6 +419,7 @@ def build_dashboard_data(
             "too_extended_leaders": dataframe_records(leader_too_extended[leader_stock_columns].head(20)),
             "not_eligible_industries": dataframe_records(not_eligible_industries[leader_industry_columns]),
         },
+        "industry_constituents": industry_constituents,
         "top_relative_strength": sorted_records(
             tradable_tickers[stock_columns], "relative_strength_vs_industry", limit=10
         )
@@ -703,6 +731,27 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       text-overflow: ellipsis;
     }
 
+    .industry-link {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--teal);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 720;
+      padding: 0;
+      text-align: left;
+      text-decoration: underline;
+      text-decoration-color: rgba(15, 118, 110, 0.35);
+      text-underline-offset: 3px;
+    }
+
+    .industry-link:hover,
+    .industry-link:focus-visible {
+      color: var(--blue);
+      text-decoration-color: currentColor;
+    }
+
     .mixed-signal-row td {
       background: #fff7ed;
     }
@@ -873,6 +922,112 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       padding: 16px;
     }
 
+    .industry-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+    }
+
+    .industry-modal[hidden] {
+      display: none;
+    }
+
+    .industry-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(23, 33, 29, 0.42);
+    }
+
+    .industry-modal-panel {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      width: min(1040px, 100%);
+      max-height: min(86vh, 780px);
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 24px 80px rgba(23, 33, 29, 0.26);
+      overflow: hidden;
+    }
+
+    .industry-modal-header {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-soft);
+      padding: 16px 18px;
+    }
+
+    .industry-modal-title {
+      font-size: 20px;
+      font-weight: 780;
+    }
+
+    .industry-modal-subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .industry-modal-close {
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .industry-modal-body {
+      min-height: 0;
+      overflow: auto;
+      padding: 14px 18px 18px;
+    }
+
+    .industry-modal-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .industry-modal-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(238, 244, 242, 0.7);
+      padding: 5px 8px;
+    }
+
+    .industry-modal-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .industry-modal-table {
+      min-width: 760px;
+      box-shadow: none;
+    }
+
+    .industry-modal-table th,
+    .industry-modal-table td {
+      padding: 8px 9px;
+      font-size: 12px;
+    }
+
     @media (max-width: 920px) {
       .header-inner {
         align-items: start;
@@ -914,6 +1069,22 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
       .summary-grid {
         grid-template-columns: 1fr;
+      }
+
+      .industry-modal {
+        padding: 10px;
+      }
+
+      .industry-modal-panel {
+        max-height: 92vh;
+      }
+
+      .industry-modal-header {
+        padding: 13px 14px;
+      }
+
+      .industry-modal-body {
+        padding: 12px 14px 14px;
       }
     }
 
@@ -1167,6 +1338,26 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       <p class="empty-state" data-empty-for="risk-warnings" hidden>目前沒有風險提醒。</p>
     </section>
   </main>
+
+  <div class="industry-modal" id="industry-modal" hidden>
+    <div class="industry-modal-backdrop" data-close-industry-modal></div>
+    <section class="industry-modal-panel" role="dialog" aria-modal="true" aria-labelledby="industry-modal-title">
+      <div class="industry-modal-header">
+        <div>
+          <h2 class="industry-modal-title" id="industry-modal-title">產業成分</h2>
+          <p class="industry-modal-subtitle" id="industry-modal-subtitle"></p>
+        </div>
+        <button class="industry-modal-close" type="button" data-close-industry-modal aria-label="關閉產業成分">×</button>
+      </div>
+      <div class="industry-modal-body">
+        <div class="industry-modal-summary" id="industry-modal-summary"></div>
+        <div class="industry-modal-table-wrap">
+          <table class="industry-modal-table" id="industry-modal-table"></table>
+        </div>
+        <p class="empty-state" id="industry-modal-empty" hidden>目前沒有這個產業的成分股資料。</p>
+      </div>
+    </section>
+  </div>
 
   <script id="dashboard-data" type="application/json">__DASHBOARD_DATA__</script>
   <script>
@@ -1519,6 +1710,21 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       }
     };
 
+    const constituentColumns = [
+      { key: "ticker", label: "代號", type: "ticker" },
+      { key: "company_name", label: "公司", type: "company" },
+      { key: "data_points", label: "資料", type: "dataStatus" },
+      { key: "leader_type", label: "領導類型", description: explanations.leaderType },
+      { key: "watch_status", label: "觀察狀態", description: explanations.watchStatus },
+      { key: "return_5d", label: "5日", type: "percent", description: explanations.return5d },
+      { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d },
+      { key: "relative_strength_vs_industry", label: "相對強度", type: "percent", description: explanations.relativeStrength },
+      { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
+      { key: "confirmed_momentum_signal", label: "確認" },
+      { key: "strong_momentum_signal", label: "強勢" },
+      { key: "risk_warning", label: "風險" }
+    ];
+
     function isMissing(value) {
       return value === null || value === undefined || Number.isNaN(value);
     }
@@ -1527,6 +1733,16 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       if (isMissing(value)) return "";
       const text = String(value);
       return industryLabels[text] || text;
+    }
+
+    function createIndustryButton(industryGroup) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "industry-link";
+      button.textContent = displayText(industryGroup);
+      button.title = `查看 ${displayText(industryGroup)} 的 ticker 組合`;
+      button.addEventListener("click", () => openIndustryModal(industryGroup, button));
+      return button;
     }
 
     function formatPercent(value) {
@@ -1566,6 +1782,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       if (column.type === "number") return formatNumber(value, column.digits ?? 2);
       if (column.type === "integer") return formatInteger(value);
       if (column.type === "signedInteger") return formatSignedInteger(value);
+      if (column.type === "dataStatus") return Number(value) > 0 ? "有資料" : "無資料";
       if (column.key === "industry_group") return displayText(value);
       if (column.key === "industry_regime") return regimeLabels[value] || displayText(value);
       if (column.key === "leader_type") return leaderTypeLabels[value] || displayText(value);
@@ -1586,6 +1803,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       if (column.type === "rank") classes.push("rank");
       if (column.type === "ticker") classes.push("ticker");
       if (column.type === "company") classes.push("company");
+      if (column.type === "dataStatus" && Number(value) <= 0) classes.push("warning");
       if ((column.type === "percent" || column.type === "signedPercent" || column.type === "warningPercent" || column.type === "signedInteger") && !isMissing(value)) {
         if (value > 0) classes.push("positive");
         if (value < 0) classes.push(column.type === "warningPercent" ? "warning" : "negative");
@@ -1706,7 +1924,11 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
         const title = document.createElement("div");
         title.className = "mobile-card-title";
-        title.appendChild(document.createTextNode(mobileTitleForRow(row, config, rowIndex)));
+        if (!isMissing(row.industry_group) && isMissing(row.ticker)) {
+          title.appendChild(createIndustryButton(row.industry_group));
+        } else {
+          title.appendChild(document.createTextNode(mobileTitleForRow(row, config, rowIndex)));
+        }
         if (hasMixedSignal(row)) {
           title.appendChild(createMixedSignalBadge());
         }
@@ -1725,7 +1947,14 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         if (subtitleText) {
           const subtitle = document.createElement("div");
           subtitle.className = "mobile-card-subtitle";
-          subtitle.textContent = subtitleText;
+          if (!isMissing(row.ticker) && !isMissing(row.industry_group)) {
+            if (!isMissing(row.company_name)) {
+              subtitle.appendChild(document.createTextNode(`${row.company_name} / `));
+            }
+            subtitle.appendChild(createIndustryButton(row.industry_group));
+          } else {
+            subtitle.textContent = subtitleText;
+          }
           card.appendChild(subtitle);
         }
 
@@ -1848,7 +2077,11 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           const value = valueForColumn(row, column, rowIndex);
           const td = document.createElement("td");
           td.className = classForCell(value, column);
-          td.textContent = formatCell(value, column, rowIndex);
+          if (column.key === "industry_group" && !isMissing(value)) {
+            td.appendChild(createIndustryButton(value));
+          } else {
+            td.textContent = formatCell(value, column, rowIndex);
+          }
           if (column.type === "ticker" && hasMixedSignal(row)) {
             td.appendChild(createMixedSignalBadge());
           }
@@ -1860,6 +2093,105 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       table.replaceChildren(thead, tbody);
       renderMobileCards(id, config, rows, tableWrap);
     }
+
+    let lastIndustryTrigger = null;
+
+    function renderIndustryModalTable(rows) {
+      const table = document.getElementById("industry-modal-table");
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+      for (const column of constituentColumns) {
+        const th = document.createElement("th");
+        th.textContent = column.label;
+        if (column.description) {
+          th.title = column.description;
+        }
+        if (["number", "integer", "percent", "dataStatus"].includes(column.type)) {
+          th.className = "numeric";
+        }
+        headerRow.appendChild(th);
+      }
+      thead.appendChild(headerRow);
+
+      const tbody = document.createElement("tbody");
+      for (const row of rows) {
+        const tr = document.createElement("tr");
+        if (hasMixedSignal(row)) {
+          tr.classList.add("mixed-signal-row");
+        }
+        for (const column of constituentColumns) {
+          const value = row[column.key];
+          const td = document.createElement("td");
+          td.className = classForCell(value, column);
+          td.textContent = formatCell(value, column, 0);
+          if (column.type === "ticker" && hasMixedSignal(row)) {
+            td.appendChild(createMixedSignalBadge());
+          }
+          tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+      }
+
+      table.replaceChildren(thead, tbody);
+    }
+
+    function renderIndustrySummary(rows) {
+      const summary = document.getElementById("industry-modal-summary");
+      summary.replaceChildren();
+      const withData = rows.filter((row) => Number(row.data_points) > 0).length;
+      const confirmed = rows.filter((row) => row.confirmed_momentum_signal === true).length;
+      const strong = rows.filter((row) => row.strong_momentum_signal === true).length;
+      const risk = rows.filter((row) => row.risk_warning === true).length;
+      const trackedLeaders = rows.filter((row) => row.leader_type && row.leader_type !== "non_leader").length;
+      const pills = [
+        `${rows.length} 檔 ticker`,
+        `${withData} 檔有資料`,
+        `${confirmed} 檔確認動能`,
+        `${strong} 檔強勢動能`,
+        `${risk} 檔風險提醒`,
+        `${trackedLeaders} 檔已標註 leader metadata`
+      ];
+
+      for (const text of pills) {
+        const pill = document.createElement("span");
+        pill.className = "industry-modal-pill";
+        pill.textContent = text;
+        summary.appendChild(pill);
+      }
+    }
+
+    function openIndustryModal(industryGroup, trigger) {
+      const modal = document.getElementById("industry-modal");
+      const rows = dashboardData.industry_constituents[String(industryGroup)] || [];
+      lastIndustryTrigger = trigger || null;
+      document.getElementById("industry-modal-title").textContent = `${displayText(industryGroup)} ticker 組合`;
+      document.getElementById("industry-modal-subtitle").textContent =
+        "此清單就是產業平均、廣度、輪動與趨勢判讀所依據的 watchlist 成分。";
+      document.getElementById("industry-modal-empty").hidden = rows.length > 0;
+      document.querySelector(".industry-modal-table-wrap").hidden = rows.length === 0;
+      renderIndustrySummary(rows);
+      renderIndustryModalTable(rows);
+      modal.hidden = false;
+      document.querySelector(".industry-modal-close").focus();
+    }
+
+    function closeIndustryModal() {
+      const modal = document.getElementById("industry-modal");
+      modal.hidden = true;
+      if (lastIndustryTrigger) {
+        lastIndustryTrigger.focus();
+      }
+    }
+
+    document.querySelectorAll("[data-close-industry-modal]").forEach((element) => {
+      element.addEventListener("click", closeIndustryModal);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !document.getElementById("industry-modal").hidden) {
+        closeIndustryModal();
+      }
+    });
 
     renderSummary();
     const breadthRows = Object.values(dashboardData.industry_breadth)
