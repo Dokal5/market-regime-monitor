@@ -8,6 +8,7 @@ from typing import Any
 import pandas as pd
 
 from src.config import BREADTH_COLUMNS, INDUSTRY_REGIME_COLUMN, INDUSTRY_TREND_COLUMNS, METRIC_COLUMNS
+from src.data_quality import build_data_quality_summary
 from src.industry import calculate_confirmed_by_industry
 
 
@@ -133,6 +134,8 @@ def build_dashboard_data(
         "return_5d",
         "return_10d",
         "return_20d",
+        "latest_volume",
+        "avg_volume_20d",
         "relative_volume",
         "ma_5d",
         "ma_10d",
@@ -161,6 +164,8 @@ def build_dashboard_data(
         ("price_zone", "neutral"),
         ("current_state", "sideways_base"),
         ("watch_status", "avoid_for_now"),
+        ("data_status", "missing"),
+        ("data_quality_note", ""),
     ]:
         if column not in tickers.columns:
             tickers[column] = default
@@ -289,7 +294,9 @@ def build_dashboard_data(
         "ticker",
         "company_name",
         "industry_group",
+        "latest_date",
         "data_points",
+        "data_status",
         "leader_type",
         "industry_quality_score",
         "watch_status",
@@ -297,10 +304,21 @@ def build_dashboard_data(
         "return_5d",
         "return_10d",
         "relative_strength_vs_industry",
+        "latest_volume",
+        "avg_volume_20d",
         "relative_volume",
         "confirmed_momentum_signal",
         "strong_momentum_signal",
         "risk_warning",
+    ]
+    data_quality_columns = [
+        "ticker",
+        "company_name",
+        "industry_group",
+        "latest_date",
+        "data_points",
+        "data_status",
+        "data_quality_note",
     ]
 
     tradable_tickers = tickers[tickers["data_points"] > 0] if "data_points" in tickers.columns else tickers
@@ -381,6 +399,10 @@ def build_dashboard_data(
                 na_position="last",
             )
             industry_constituents[str(industry_group)] = dataframe_records(ranked_tickers[constituent_columns])
+    data_quality_summary = build_data_quality_summary(tickers)
+    data_quality_issues = tickers[tickers["data_status"].isin(["missing", "stale"])].sort_values(
+        ["data_status", "ticker"], ascending=[True, True], na_position="last"
+    )
 
     return {
         "summary": {
@@ -393,6 +415,10 @@ def build_dashboard_data(
             else 0,
             "strong_count": int(tickers["strong_momentum_signal"].sum()) if "strong_momentum_signal" in tickers.columns else 0,
             "risk_count": int(tickers["risk_warning"].sum()) if "risk_warning" in tickers.columns else 0,
+        },
+        "data_quality": {
+            "summary": data_quality_summary,
+            "issue_tickers": dataframe_records(data_quality_issues[data_quality_columns]),
         },
         "industry_momentum": dataframe_records(
             industries[industry_momentum_columns].sort_values("return_10d", ascending=False, na_position="last")
@@ -565,6 +591,46 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
     .summary-description {
       margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .quality-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .quality-tile {
+      min-height: 70px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .quality-tile.warning {
+      border-color: rgba(194, 111, 0, 0.35);
+      background: rgba(255, 248, 229, 0.86);
+    }
+
+    .quality-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .quality-value {
+      margin-top: 6px;
+      font-size: 18px;
+      font-weight: 760;
+    }
+
+    .quality-description {
+      margin-top: 5px;
       color: var(--muted);
       font-size: 12px;
       line-height: 1.35;
@@ -1042,6 +1108,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .quality-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .section-heading {
         align-items: start;
         flex-direction: column;
@@ -1127,6 +1197,19 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
   <main>
     <section class="summary-grid" id="summary-grid" aria-label="動能摘要"></section>
+
+    <section class="dashboard-section data-quality-section">
+      <div class="section-heading">
+        <h2>資料來源與品質</h2>
+        <span class="row-count" data-count-for="data-quality-issues"></span>
+      </div>
+      <p class="section-note">資料來自 Yahoo Finance via yfinance，適合研究與觀察，不是機構級資料源，也不是正式交易或投資建議。</p>
+      <div class="quality-grid" id="data-quality-grid"></div>
+      <div class="table-wrap">
+        <table data-table="data-quality-issues"></table>
+      </div>
+      <p class="empty-state" data-empty-for="data-quality-issues" hidden>目前沒有缺資料或資料落後的 ticker。</p>
+    </section>
 
     <section class="dashboard-section">
       <div class="section-heading">
@@ -1425,12 +1508,21 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       not_eligible_industry: "產業不符合"
     };
 
+    const dataStatusLabels = {
+      ok: "正常",
+      missing: "缺資料",
+      stale: "資料落後",
+      limited_history: "歷史不足"
+    };
+
     const explanations = {
       return3d: "最近 3 個交易日的報酬率。",
       return5d: "最近 5 個交易日的報酬率，用來觀察短線動能。",
       return10d: "最近 10 個交易日的報酬率，這是主要排名依據。",
       return20d: "最近 20 個交易日的報酬率，用來對照較長週期趨勢。",
-      relativeVolume: "最新成交量 / 20 日平均成交量；大於 1 代表量能高於近期平均。",
+      latestVolume: "最新交易日成交量；用來觀察這個訊號背後的流動性基礎。",
+      avgVolume20d: "最近 20 個交易日的平均成交量；可用來對照最新量是否異常放大。",
+      relativeVolume: "最新成交量 / 20 日平均成交量；大於 1 代表量能高於近期平均。相對量看放大倍數，原始量看流動性基礎。",
       relativeStrength: "個股 10 日報酬減去所屬產業平均 10 日報酬；正值代表跑贏同產業。",
       maxDrawdown: "最近 10 個交易日從高點回落的最大幅度；數值越負代表回撤越深。",
       upDays: "最近 10 個交易日中，上漲日的天數。",
@@ -1457,6 +1549,18 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     };
 
     const tableConfigs = {
+      "data-quality-issues": {
+        rows: dashboardData.data_quality.issue_tickers,
+        columns: [
+          { key: "ticker", label: "代號", type: "ticker" },
+          { key: "company_name", label: "公司", type: "company" },
+          { key: "industry_group", label: "產業" },
+          { key: "latest_date", label: "最新日期" },
+          { key: "data_points", label: "資料筆數", type: "integer" },
+          { key: "data_status", label: "資料狀態" },
+          { key: "data_quality_note", label: "資料註記" }
+        ]
+      },
       "industry-momentum": {
         rows: dashboardData.industry_momentum,
         columns: [
@@ -1713,12 +1817,16 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     const constituentColumns = [
       { key: "ticker", label: "代號", type: "ticker" },
       { key: "company_name", label: "公司", type: "company" },
+      { key: "latest_date", label: "最新日期" },
       { key: "data_points", label: "資料", type: "dataStatus" },
+      { key: "data_status", label: "資料狀態" },
       { key: "leader_type", label: "領導類型", description: explanations.leaderType },
       { key: "watch_status", label: "觀察狀態", description: explanations.watchStatus },
       { key: "return_5d", label: "5日", type: "percent", description: explanations.return5d },
       { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d },
       { key: "relative_strength_vs_industry", label: "相對強度", type: "percent", description: explanations.relativeStrength },
+      { key: "latest_volume", label: "最新量", type: "compactVolume", description: explanations.latestVolume },
+      { key: "avg_volume_20d", label: "20日平均量", type: "compactVolume", description: explanations.avgVolume20d },
       { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
       { key: "confirmed_momentum_signal", label: "確認" },
       { key: "strong_momentum_signal", label: "強勢" },
@@ -1775,15 +1883,32 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       return value > 0 ? `+${formatted}` : formatted;
     }
 
+    function compactWithUnit(value, divisor, suffix, digits) {
+      return `${(value / divisor).toFixed(digits).replace(/\\.0$/, "")}${suffix}`;
+    }
+
+    function formatCompactVolume(value) {
+      if (isMissing(value)) return "";
+      const number = Number(value);
+      if (!Number.isFinite(number)) return "";
+      const abs = Math.abs(number);
+      if (abs >= 1_000_000_000) return compactWithUnit(number, 1_000_000_000, "B", abs >= 10_000_000_000 ? 1 : 2);
+      if (abs >= 1_000_000) return compactWithUnit(number, 1_000_000, "M", 1);
+      if (abs >= 1_000) return compactWithUnit(number, 1_000, "K", abs >= 100_000 ? 0 : 1);
+      return number.toLocaleString(undefined, { maximumFractionDigits: 0 });
+    }
+
     function formatCell(value, column, rowIndex) {
       if (column.type === "rank") return String(rowIndex + 1);
       if (column.type === "percent" || column.type === "warningPercent") return formatPercent(value);
       if (column.type === "signedPercent") return formatSignedPercent(value);
       if (column.type === "number") return formatNumber(value, column.digits ?? 2);
+      if (column.type === "compactVolume") return formatCompactVolume(value);
       if (column.type === "integer") return formatInteger(value);
       if (column.type === "signedInteger") return formatSignedInteger(value);
       if (column.type === "dataStatus") return Number(value) > 0 ? "有資料" : "無資料";
       if (column.key === "industry_group") return displayText(value);
+      if (column.key === "data_status") return dataStatusLabels[value] || displayText(value);
       if (column.key === "industry_regime") return regimeLabels[value] || displayText(value);
       if (column.key === "leader_type") return leaderTypeLabels[value] || displayText(value);
       if (["short_term_price_zone", "long_term_price_zone", "price_zone"].includes(column.key)) {
@@ -1797,13 +1922,15 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
     function classForCell(value, column) {
       const classes = [];
-      if (["rank", "number", "integer", "signedInteger", "percent", "signedPercent", "warningPercent"].includes(column.type)) {
+      if (["rank", "number", "compactVolume", "integer", "signedInteger", "percent", "signedPercent", "warningPercent"].includes(column.type)) {
         classes.push("numeric");
       }
       if (column.type === "rank") classes.push("rank");
       if (column.type === "ticker") classes.push("ticker");
       if (column.type === "company") classes.push("company");
       if (column.type === "dataStatus" && Number(value) <= 0) classes.push("warning");
+      if (column.key === "data_status" && ["missing", "stale"].includes(String(value))) classes.push("warning");
+      if (column.key === "data_status" && String(value) === "limited_history") classes.push("negative");
       if ((column.type === "percent" || column.type === "signedPercent" || column.type === "warningPercent" || column.type === "signedInteger") && !isMissing(value)) {
         if (value > 0) classes.push("positive");
         if (value < 0) classes.push(column.type === "warningPercent" ? "warning" : "negative");
@@ -2031,6 +2158,42 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       }
     }
 
+    function renderDataQuality() {
+      const quality = dashboardData.data_quality.summary;
+      const grid = document.getElementById("data-quality-grid");
+      const missingCount = Number(quality.missing_count || 0);
+      const staleCount = Number(quality.stale_count || 0);
+      const limitedCount = Number(quality.limited_history_count || 0);
+      const cards = [
+        ["資料來源", quality.data_source || "Yahoo Finance via yfinance", "透過 yfinance 抓取 Yahoo Finance 日線資料。", ""],
+        ["最新市場日期", quality.latest_market_date || "無法取得", "本次有效資料中最新的交易日期。", ""],
+        ["成功取得資料", `${formatInteger(quality.tickers_with_data)}/${formatInteger(quality.total_tickers)}`, "有至少一筆可用日線資料的 ticker。", ""],
+        ["缺資料", formatInteger(missingCount), "完全沒有可用日線資料的 ticker。", missingCount > 0 ? "warning" : ""],
+        ["資料落後", formatInteger(staleCount), "最新日期早於本次市場日期的 ticker。", staleCount > 0 ? "warning" : ""],
+        ["歷史不足", formatInteger(limitedCount), "少於 60 筆日線資料，長週期位置需保守解讀。", limitedCount > 0 ? "warning" : ""]
+      ];
+
+      for (const [label, value, description, stateClass] of cards) {
+        const tile = document.createElement("div");
+        tile.className = `quality-tile ${stateClass}`.trim();
+
+        const labelEl = document.createElement("div");
+        labelEl.className = "quality-label";
+        labelEl.textContent = label;
+
+        const valueEl = document.createElement("div");
+        valueEl.className = "quality-value";
+        valueEl.textContent = value;
+
+        const descriptionEl = document.createElement("div");
+        descriptionEl.className = "quality-description";
+        descriptionEl.textContent = description;
+
+        tile.append(labelEl, valueEl, descriptionEl);
+        grid.appendChild(tile);
+      }
+    }
+
     function renderTable(id, config) {
       const rows = config.rows || [];
       const table = document.querySelector(`[data-table="${id}"]`);
@@ -2106,7 +2269,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         if (column.description) {
           th.title = column.description;
         }
-        if (["number", "integer", "percent", "dataStatus"].includes(column.type)) {
+        if (["number", "compactVolume", "integer", "percent", "dataStatus"].includes(column.type)) {
           th.className = "numeric";
         }
         headerRow.appendChild(th);
@@ -2194,6 +2357,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     });
 
     renderSummary();
+    renderDataQuality();
     const breadthRows = Object.values(dashboardData.industry_breadth)
       .reduce((total, rows) => total + rows.length, 0);
     document.getElementById("breadth-status").textContent =

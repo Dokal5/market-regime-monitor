@@ -5,7 +5,14 @@ from typing import Any
 
 import pandas as pd
 
-from src.config import INPUT_COLUMNS, INTERNAL_COLUMNS, METRIC_COLUMNS, OPTIONAL_TICKER_COLUMNS, PRICE_POSITION_COLUMNS
+from src.config import (
+    INPUT_COLUMNS,
+    INTERNAL_COLUMNS,
+    METRIC_COLUMNS,
+    OPTIONAL_TICKER_COLUMNS,
+    PRICE_POSITION_COLUMNS,
+    TICKER_VOLUME_COLUMNS,
+)
 from src.data_loader import get_ticker_frame
 
 
@@ -37,7 +44,10 @@ def finite_or_none(value: Any) -> Any:
 
 def calculate_metrics(prices: pd.DataFrame) -> dict[str, Any]:
     if prices.empty:
-        return {column: None for column in [*INTERNAL_COLUMNS, *METRIC_COLUMNS, *PRICE_POSITION_COLUMNS]}
+        return {
+            column: None
+            for column in [*INTERNAL_COLUMNS, *METRIC_COLUMNS, *PRICE_POSITION_COLUMNS, *TICKER_VOLUME_COLUMNS]
+        }
 
     close = prices["adjusted_close"]
     volume = prices["Volume"]
@@ -52,6 +62,7 @@ def calculate_metrics(prices: pd.DataFrame) -> dict[str, Any]:
 
     metrics = {
         "latest_price": latest_price,
+        "latest_volume": latest_volume,
         "return_3d": pct_return(close, 3),
         "return_5d": pct_return(close, 5),
         "return_10d": pct_return(close, 10),
@@ -96,5 +107,6 @@ def build_ticker_output(tickers: pd.DataFrame, downloaded_data: dict[str, pd.Dat
         + METRIC_COLUMNS
         + OPTIONAL_TICKER_COLUMNS
         + PRICE_POSITION_COLUMNS
+        + TICKER_VOLUME_COLUMNS
     )
     return pd.DataFrame(rows, columns=output_columns)

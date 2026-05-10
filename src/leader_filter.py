@@ -25,6 +25,7 @@ from src.config import (
     PRICE_ZONE_VERY_EXTENDED_RANGE_POSITION,
     RESEARCH_LEADER_TYPES,
     RISK_DRAWDOWN_THRESHOLD,
+    TICKER_VOLUME_COLUMNS,
 )
 
 ELIGIBLE_INDUSTRY_REGIMES = {"momentum_leader", "early_recovery"}
@@ -256,9 +257,12 @@ def add_leader_filter_columns(
     ticker_output: pd.DataFrame, industry_output: pd.DataFrame, snapshot_date: str
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     industry = add_industry_regime_column(industry_output, snapshot_date)
-    ticker_output_columns = list(ticker_output.columns) + [
-        column for column in LEADER_FILTER_COLUMNS if column not in ticker_output.columns
-    ]
+    base_columns = [column for column in ticker_output.columns if column not in TICKER_VOLUME_COLUMNS]
+    ticker_output_columns = (
+        base_columns
+        + [column for column in LEADER_FILTER_COLUMNS if column not in base_columns]
+        + [column for column in TICKER_VOLUME_COLUMNS if column in ticker_output.columns or ticker_output.empty]
+    )
     if ticker_output.empty:
         return pd.DataFrame(columns=ticker_output_columns), industry
 

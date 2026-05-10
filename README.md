@@ -15,6 +15,7 @@ The script creates:
 
 - `outputs/ticker_momentum.csv`
 - `outputs/industry_momentum.csv`
+- `outputs/data_quality.csv`
 - `outputs/index.html`
 - `outputs/history/YYYY-MM-DD/ticker_momentum.csv`
 - `outputs/history/YYYY-MM-DD/industry_momentum.csv`
@@ -44,6 +45,17 @@ Each row should include:
 Ticker rows are retained even when a ticker has missing or unavailable market data. In those cases, `data_points` is `0` and metric values are blank.
 
 If `leader_type` or `industry_quality_score` is missing, the loader fills `non_leader` and `3`.
+
+## Data quality
+
+Market data comes from Yahoo Finance through `yfinance`. This is useful for research, watchlists, and market observation, but it is not an institutional-grade data feed.
+
+Each run writes `outputs/data_quality.csv` and appends these fields to `outputs/ticker_momentum.csv`:
+
+- `data_status`: `ok`, `missing`, `stale`, or `limited_history`
+- `data_quality_note`: short explanation for the status
+
+`missing` means no usable daily data was downloaded. `stale` means a ticker has data, but its latest date is older than the latest market date found in the current run. `limited_history` means fewer than 60 daily bars are available, so long-term price position metrics should be read conservatively.
 
 ## Metrics
 
@@ -119,6 +131,7 @@ The filter only evaluates higher-quality leader metadata when the industry regim
 - `industry.py`: industry-level aggregation and confirmed signal percentages
 - `history.py`: dated snapshots, rotation history, and trend intelligence fields
 - `leader_filter.py`: industry regimes, price zones, current state, and watch status
+- `data_quality.py`: source transparency, missing/stale checks, and data quality CSV output
 - `journal.py`: deterministic daily Markdown journal generation
 - `dashboard.py`: static HTML dashboard generation
 - `io_utils.py`: shared CSV writing helpers

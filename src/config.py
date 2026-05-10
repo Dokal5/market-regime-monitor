@@ -8,6 +8,7 @@ TICKERS_PATH = BASE_DIR / "tickers.csv"
 OUTPUT_DIR = BASE_DIR / "outputs"
 TICKER_OUTPUT_PATH = OUTPUT_DIR / "ticker_momentum.csv"
 INDUSTRY_OUTPUT_PATH = OUTPUT_DIR / "industry_momentum.csv"
+DATA_QUALITY_OUTPUT_PATH = OUTPUT_DIR / "data_quality.csv"
 DASHBOARD_OUTPUT_PATH = OUTPUT_DIR / "index.html"
 HISTORY_DIR = OUTPUT_DIR / "history"
 INDUSTRY_ROTATION_HISTORY_PATH = HISTORY_DIR / "industry_rotation_history.csv"
@@ -50,6 +51,18 @@ METRIC_COLUMNS = [
     "max_drawdown_10d",
     "up_days_10d",
 ]
+TICKER_VOLUME_COLUMNS = ["latest_volume"]
+DATA_QUALITY_COLUMNS = ["data_status", "data_quality_note"]
+DATA_QUALITY_EXPORT_COLUMNS = [
+    "ticker",
+    "company_name",
+    "industry_group",
+    "latest_date",
+    "data_points",
+    "data_status",
+    "data_quality_note",
+]
+LIMITED_HISTORY_MIN_DATA_POINTS = 60
 PRICE_POSITION_COLUMNS = [
     "distance_from_20d_ma",
     "distance_from_52w_high",

@@ -5,6 +5,15 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | 2026-05-08 | 112 | 112 | 50 | 34 | 13 | 46 |
 
+## Data Quality
+| data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Yahoo Finance via yfinance | 2026-05-08 | 112 | 112 | 100.00% | 0 | 0 | 0 |
+
+| ticker | company_name | industry_group | latest_date | data_points | data_status | data_quality_note |
+| --- | --- | --- | --- | --- | --- | --- |
+| None |  |  |  |  |  |  |
+
 ## Leading Industries
 | industry_group | return_10d | return_5d | relative_volume | breadth_score | confirmed_signal_pct |
 | --- | --- | --- | --- | --- | --- |

@@ -4,12 +4,14 @@ import pandas as pd
 
 from src.config import (
     DASHBOARD_OUTPUT_PATH,
+    DATA_QUALITY_OUTPUT_PATH,
     INDUSTRY_OUTPUT_PATH,
     INDUSTRY_ROTATION_HISTORY_PATH,
     TICKER_OUTPUT_PATH,
     TICKERS_PATH,
 )
 from src.dashboard import write_dashboard
+from src.data_quality import add_data_quality_columns, build_data_quality_output
 from src.data_loader import clean_tickers, download_market_data
 from src.history import (
     add_industry_trend_columns,
@@ -38,9 +40,12 @@ def main() -> None:
     snapshot_date = get_snapshot_date(ticker_output)
     industry_output = add_industry_trend_columns(industry_output, snapshot_date)
     ticker_output, industry_output = add_leader_filter_columns(ticker_output, industry_output, snapshot_date)
+    ticker_output = add_data_quality_columns(ticker_output)
+    data_quality_output = build_data_quality_output(ticker_output)
 
     write_csv(ticker_output, TICKER_OUTPUT_PATH)
     write_csv(industry_output, INDUSTRY_OUTPUT_PATH)
+    write_csv(data_quality_output, DATA_QUALITY_OUTPUT_PATH)
     snapshot_dir = write_daily_snapshot(ticker_output, industry_output, snapshot_date)
     rotation_history = build_industry_rotation_history()
     write_csv(rotation_history, INDUSTRY_ROTATION_HISTORY_PATH)
@@ -49,6 +54,7 @@ def main() -> None:
 
     print(f"Wrote {TICKER_OUTPUT_PATH}")
     print(f"Wrote {INDUSTRY_OUTPUT_PATH}")
+    print(f"Wrote {DATA_QUALITY_OUTPUT_PATH}")
     print(f"Wrote {snapshot_dir}")
     print(f"Wrote {INDUSTRY_ROTATION_HISTORY_PATH}")
     print(f"Wrote {DASHBOARD_OUTPUT_PATH}")

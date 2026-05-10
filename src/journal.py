@@ -6,6 +6,7 @@ from typing import Any
 import pandas as pd
 
 from src.config import JOURNAL_DIR, LATEST_JOURNAL_PATH
+from src.data_quality import build_data_quality_summary
 
 
 def format_percent(value: Any) -> str:
@@ -75,6 +76,10 @@ def prepare_tickers(ticker_output: pd.DataFrame) -> pd.DataFrame:
             tickers[column] = tickers[column].fillna(False).astype(bool)
         else:
             tickers[column] = False
+    for column, default in [("data_status", "missing"), ("data_quality_note", "")]:
+        if column not in tickers.columns:
+            tickers[column] = default
+        tickers[column] = tickers[column].fillna(default).astype(str)
     return tickers
 
 
@@ -209,6 +214,10 @@ def build_journal_markdown(ticker_output: pd.DataFrame, industry_output: pd.Data
         [True],
         10,
     )
+    data_quality_summary = build_data_quality_summary(tickers)
+    data_quality_issues = tickers[tickers["data_status"] != "ok"].sort_values(
+        ["data_status", "ticker"], ascending=[True, True], na_position="last"
+    )
     interpretation = build_interpretation(tickers, industries, leading_industries, broad_strength_industries, market_date)
 
     snapshot_table = table_from_records(
@@ -221,6 +230,41 @@ def build_journal_markdown(ticker_output: pd.DataFrame, industry_output: pd.Data
             ("confirmed_momentum_count", "confirmed momentum count", "text"),
             ("strong_momentum_count", "strong momentum count", "text"),
             ("risk_warning_count", "risk warning count", "text"),
+        ],
+    )
+    data_quality_table = table_from_records(
+        [data_quality_summary],
+        [
+            ("data_source", "data source", "text"),
+            ("latest_market_date", "latest market date", "text"),
+            ("tickers_with_data", "tickers with data", "text"),
+            ("total_tickers", "total tickers", "text"),
+            ("success_rate", "success rate", "percent"),
+            ("missing_count", "missing", "text"),
+            ("stale_count", "stale", "text"),
+            ("limited_history_count", "limited history", "text"),
+        ],
+    )
+    data_quality_issue_table = table_from_records(
+        data_quality_issues[
+            [
+                "ticker",
+                "company_name",
+                "industry_group",
+                "latest_date",
+                "data_points",
+                "data_status",
+                "data_quality_note",
+            ]
+        ].to_dict("records"),
+        [
+            ("ticker", "ticker", "text"),
+            ("company_name", "company_name", "text"),
+            ("industry_group", "industry_group", "text"),
+            ("latest_date", "latest_date", "text"),
+            ("data_points", "data_points", "text"),
+            ("data_status", "data_status", "text"),
+            ("data_quality_note", "data_quality_note", "text"),
         ],
     )
     leading_table = table_from_records(
@@ -286,6 +330,7 @@ def build_journal_markdown(ticker_output: pd.DataFrame, industry_output: pd.Data
         [
             f"# Market Regime Monitor Journal: {market_date}",
             "## Market Snapshot\n" + snapshot_table,
+            "## Data Quality\n" + data_quality_table + "\n\n" + data_quality_issue_table,
             "## Leading Industries\n" + leading_table,
             "## Broad Strength Industries\n" + breadth_table,
             "## Strongest Relative Strength Stocks\n" + relative_strength_table,

@@ -17,6 +17,7 @@ from src.config import (
     RISK_EXTENSION_MULTIPLE,
     SIGNAL_COLUMNS,
     STRONG_MOMENTUM_RELATIVE_VOLUME_THRESHOLD,
+    TICKER_VOLUME_COLUMNS,
 )
 
 
@@ -29,6 +30,7 @@ def add_signal_columns(ticker_output: pd.DataFrame, industry_output: pd.DataFram
             + SIGNAL_COLUMNS
             + OPTIONAL_TICKER_COLUMNS
             + PRICE_POSITION_COLUMNS
+            + TICKER_VOLUME_COLUMNS
         )
 
     signals = ticker_output.copy()
@@ -86,5 +88,6 @@ def add_signal_columns(ticker_output: pd.DataFrame, industry_output: pd.DataFram
         + SIGNAL_COLUMNS
         + OPTIONAL_TICKER_COLUMNS
         + PRICE_POSITION_COLUMNS
+        + TICKER_VOLUME_COLUMNS
     )
     return signals[output_columns]
