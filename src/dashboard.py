@@ -662,6 +662,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       background: rgba(250, 252, 251, 0.9);
       padding: 8px;
       min-width: 0;
+      cursor: pointer;
     }
 
     .reading-step strong {
@@ -686,6 +687,12 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     .reading-step.is-active strong,
     .section-nav-links a.is-active {
       color: var(--accent-strong);
+    }
+    .reading-step:hover,
+    .reading-step:focus-visible {
+      border-color: rgba(0, 122, 85, 0.38);
+      background: rgba(235, 249, 243, 0.92);
+      outline: none;
     }
 
     .summary-grid {
@@ -1506,11 +1513,11 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           <option value="#risk-warning">風險提醒</option>
         </select>
         <div class="reading-flow" aria-label="建議閱讀順序">
-          <div class="reading-step" data-step="focus"><strong>1. 先看每日重點</strong><span>資料、主線、輪動、候選與風險濃縮摘要</span></div>
-          <div class="reading-step" data-step="theme"><strong>2. 市場主線在哪</strong><span>產業動能、確認比例、產業廣度</span></div>
-          <div class="reading-step" data-step="rotation"><strong>3. 主線是否輪動</strong><span>產業輪動趨勢、產業趨勢判讀</span></div>
-          <div class="reading-step" data-step="stock"><strong>4. 哪些個股值得研究</strong><span>領導股篩選、模擬持股、相對強度與動能</span></div>
-          <div class="reading-step" data-step="risk"><strong>5. 資料與風險複核</strong><span>更新健康、資料品質、風險提醒名單</span></div>
+          <div class="reading-step" data-step="focus" data-target="#daily-brief" role="button" tabindex="0"><strong>1. 先看每日重點</strong><span>資料、主線、輪動、候選與風險濃縮摘要</span></div>
+          <div class="reading-step" data-step="theme" data-target="#industry-momentum" role="button" tabindex="0"><strong>2. 市場主線在哪</strong><span>產業動能、確認比例、產業廣度</span></div>
+          <div class="reading-step" data-step="rotation" data-target="#rotation-trend" role="button" tabindex="0"><strong>3. 主線是否輪動</strong><span>產業輪動趨勢、產業趨勢判讀</span></div>
+          <div class="reading-step" data-step="stock" data-target="#leader-filter" role="button" tabindex="0"><strong>4. 哪些個股值得研究</strong><span>領導股篩選、模擬持股、相對強度與動能</span></div>
+          <div class="reading-step" data-step="risk" data-target="#update-health" role="button" tabindex="0"><strong>5. 資料與風險複核</strong><span>更新健康、資料品質、風險提醒名單</span></div>
         </div>
       </div>
     </nav>
@@ -2953,6 +2960,25 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         step.classList.toggle("is-active", step.dataset.step === stepKey);
       });
     }
+
+    function jumpToSection(target) {
+      if (!target) return;
+      const section = document.querySelector(target);
+      if (!section) return;
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    readingSteps.forEach((step) => {
+      step.addEventListener("click", () => {
+        jumpToSection(step.dataset.target);
+      });
+      step.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          jumpToSection(step.dataset.target);
+        }
+      });
+    });
 
     const observedSections = Object.keys(sectionStepMap)
       .map((id) => document.getElementById(id))
