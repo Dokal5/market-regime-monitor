@@ -7,6 +7,7 @@ import pandas as pd
 
 from src.config import JOURNAL_DIR, LATEST_JOURNAL_PATH
 from src.data_quality import build_data_quality_summary
+from src.daily_brief import build_daily_brief, daily_brief_to_markdown
 from src.update_health import build_update_health_output
 
 
@@ -227,6 +228,7 @@ def build_journal_markdown(
     if update_health_output is None:
         update_health_output = build_update_health_output(tickers)
     update_health_records = update_health_output.to_dict("records")
+    daily_brief = build_daily_brief(tickers, industries, update_health_output)
     interpretation = build_interpretation(tickers, industries, leading_industries, broad_strength_industries, market_date)
 
     snapshot_table = table_from_records(
@@ -351,6 +353,7 @@ def build_journal_markdown(
     return "\n\n".join(
         [
             f"# Market Regime Monitor Journal: {market_date}",
+            "## Daily Brief\n" + daily_brief_to_markdown(daily_brief),
             "## Market Snapshot\n" + snapshot_table,
             "## Update Health\n" + update_health_table,
             "## Data Quality\n" + data_quality_table + "\n\n" + data_quality_issue_table,

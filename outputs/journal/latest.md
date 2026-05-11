@@ -1,5 +1,35 @@
 # Market Regime Monitor Journal: 2026-05-08
 
+## Daily Brief
+### 資料狀態
+**資料狀態正常，最新市場日期 2026-05-08**
+- 成功率 100.00%；缺資料 0，資料落後 0。
+- 排程輸出與資料新鮮度目前正常。
+
+### 市場主線
+**10 日主線：半導體；廣度主線：資安**
+- 半導體 10 日報酬 17.83%。
+- 資安 廣度分數 79.17%。
+- 主線偏廣：10 日報酬領先產業的廣度高於產業中位數。
+
+### 輪動變化
+**改善最強：太空與衛星、雲端軟體、資安**
+- 排名或加速轉強：太空與衛星、雲端軟體、資安。
+- 排名轉弱：核能、防禦型必需消費、再生能源。
+- 可能動能衰竭：1 個產業。
+
+### 研究候選
+**研究候選需要先維護 leader metadata**
+- 目前沒有研究候選；需要 curated leader_type 與 industry_quality_score 後，輸出才會有意義。
+- 強勢動能：FLNC、DDOG、INTC、MU、QCOM。
+- 早期動能且無風險提醒：RDW、MDB、AMAT、ASML、ROK。
+
+### 風險焦點
+**46 檔風險提醒；25 檔同時有早期動能與風險**
+- 最大回撤代表：TER -23.80%、STEM -22.67%、BKSY -20.41%、ONDS -18.81%、SEDG -18.51%。
+- 動能與風險重疊：FLNC、DDOG、MU、RKLB、FTNT。
+- 讀法提醒：不能只依賴單一候選名單，需要同時檢查風險欄位。
+
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -8,7 +38,7 @@
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-05-10T16:18:15-04:00 | local |  | 2026-05-08 | 2 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-05-11T01:19:58-04:00 | local |  | 2026-05-08 | 3 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |

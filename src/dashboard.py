@@ -9,6 +9,7 @@ import pandas as pd
 
 from src.config import BREADTH_COLUMNS, INDUSTRY_REGIME_COLUMN, INDUSTRY_TREND_COLUMNS, METRIC_COLUMNS
 from src.data_quality import build_data_quality_summary
+from src.daily_brief import build_daily_brief
 from src.industry import calculate_confirmed_by_industry
 from src.update_health import build_update_health_output
 
@@ -424,6 +425,7 @@ def build_dashboard_data(
             "strong_count": int(tickers["strong_momentum_signal"].sum()) if "strong_momentum_signal" in tickers.columns else 0,
             "risk_count": int(tickers["risk_warning"].sum()) if "risk_warning" in tickers.columns else 0,
         },
+        "daily_brief": build_daily_brief(tickers, industries, update_health_output),
         "data_quality": {
             "summary": data_quality_summary,
             "issue_tickers": dataframe_records(data_quality_issues[data_quality_columns]),
@@ -716,6 +718,66 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       color: var(--muted);
       font-size: 12px;
       line-height: 1.35;
+    }
+
+    .daily-brief-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .daily-brief-card {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .daily-brief-card.healthy {
+      border-color: rgba(0, 122, 85, 0.28);
+      background: rgba(235, 249, 243, 0.72);
+    }
+
+    .daily-brief-card.warning {
+      border-color: rgba(194, 111, 0, 0.35);
+      background: rgba(255, 248, 229, 0.76);
+    }
+
+    .daily-brief-card.unknown {
+      border-color: rgba(96, 111, 108, 0.32);
+      background: rgba(242, 245, 244, 0.88);
+    }
+
+    .daily-brief-title {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 780;
+    }
+
+    .daily-brief-headline {
+      margin-top: 8px;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 760;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .daily-brief-list {
+      display: grid;
+      gap: 6px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .daily-brief-list li {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
     }
 
     .quality-grid {
@@ -1253,6 +1315,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .daily-brief-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .reading-flow {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -1331,6 +1397,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         grid-template-columns: 1fr;
       }
 
+      .daily-brief-grid {
+        grid-template-columns: 1fr;
+      }
+
       .summary-grid,
       .dashboard-section {
         scroll-margin-top: 320px;
@@ -1378,11 +1448,12 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         <div class="nav-heading">
           <div>
             <div class="nav-title">閱讀導覽</div>
-            <div class="nav-hint">先確認資料，再看產業主線、輪動、個股候選，最後檢查風險。</div>
+            <div class="nav-hint">先看每日重點，再確認資料、產業主線、輪動、個股候選與風險。</div>
           </div>
         </div>
         <div class="section-nav-links">
           <a href="#overview">總覽</a>
+          <a href="#daily-brief">每日重點</a>
           <a href="#update-health">更新健康</a>
           <a href="#data-quality">資料品質</a>
           <a href="#industry-momentum">產業動能</a>
@@ -1399,6 +1470,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         <select class="section-nav-select" id="section-jump" aria-label="跳到 dashboard 區塊">
           <option value="">跳到區塊</option>
           <option value="#overview">總覽</option>
+          <option value="#daily-brief">每日重點</option>
           <option value="#update-health">更新健康</option>
           <option value="#data-quality">資料品質</option>
           <option value="#industry-momentum">產業動能</option>
@@ -1413,16 +1485,24 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           <option value="#risk-warning">風險提醒</option>
         </select>
         <div class="reading-flow" aria-label="建議閱讀順序">
-          <div class="reading-step"><strong>1. 資料是否可信</strong><span>更新健康狀態、資料來源與品質</span></div>
+          <div class="reading-step"><strong>1. 先看每日重點</strong><span>資料、主線、輪動、候選與風險濃縮摘要</span></div>
           <div class="reading-step"><strong>2. 市場主線在哪</strong><span>產業動能、確認比例、產業廣度</span></div>
           <div class="reading-step"><strong>3. 主線是否輪動</strong><span>產業輪動趨勢、產業趨勢判讀</span></div>
           <div class="reading-step"><strong>4. 哪些個股值得研究</strong><span>相對強度、早期與強勢動能、領導股篩選</span></div>
-          <div class="reading-step"><strong>5. 哪裡需要小心</strong><span>風險提醒名單</span></div>
+          <div class="reading-step"><strong>5. 資料與風險複核</strong><span>更新健康、資料品質、風險提醒名單</span></div>
         </div>
       </div>
     </nav>
 
     <section class="summary-grid" id="overview" data-summary-grid aria-label="動能摘要"></section>
+
+    <section class="dashboard-section daily-brief-section" id="daily-brief">
+      <div class="section-heading">
+        <h2>每日重點摘要</h2>
+      </div>
+      <p class="section-note">把資料健康、產業主線、輪動變化、研究候選與風險焦點濃縮成第一眼判讀；這是既有輸出的確定性彙整，不是新指標，也不是投資建議。</p>
+      <div class="daily-brief-grid" id="daily-brief-grid"></div>
+    </section>
 
     <section class="dashboard-section update-health-section" id="update-health">
       <div class="section-heading">
@@ -2398,6 +2478,37 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       }
     }
 
+    function renderDailyBrief() {
+      const grid = document.getElementById("daily-brief-grid");
+      const cards = dashboardData.daily_brief?.cards || [];
+      grid.replaceChildren();
+
+      for (const card of cards) {
+        const cardEl = document.createElement("article");
+        cardEl.className = `daily-brief-card ${card.status || ""}`.trim();
+
+        const title = document.createElement("div");
+        title.className = "daily-brief-title";
+        title.textContent = card.title || "摘要";
+
+        const headline = document.createElement("div");
+        headline.className = "daily-brief-headline";
+        headline.textContent = card.headline || "目前沒有摘要資料";
+
+        const list = document.createElement("ul");
+        list.className = "daily-brief-list";
+        const details = Array.isArray(card.details) ? card.details : [];
+        for (const detail of details) {
+          const item = document.createElement("li");
+          item.textContent = detail || "";
+          list.appendChild(item);
+        }
+
+        cardEl.append(title, headline, list);
+        grid.appendChild(cardEl);
+      }
+    }
+
     function appendQualityTile(grid, label, value, description, stateClass = "", linkHref = "") {
       const tile = document.createElement("div");
       tile.className = `quality-tile ${stateClass}`.trim();
@@ -2648,6 +2759,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     });
 
     renderSummary();
+    renderDailyBrief();
     renderUpdateHealth();
     renderDataQuality();
     const breadthRows = Object.values(dashboardData.industry_breadth)

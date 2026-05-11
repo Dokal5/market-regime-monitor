@@ -97,6 +97,8 @@ Industry output groups by `industry_group` and reports the mean of each ticker m
 
 The dashboard is a static HTML file with embedded data from the Python run. It does not require a framework, server, or build step.
 
+The dashboard also includes a Daily Brief section near the top of the page. The brief condenses existing generated data into five deterministic cards covering data status, market theme, rotation changes, research candidates, and risk focus. It does not add new indicators, call any AI API, or provide investment advice.
+
 Industry output also includes breadth fields:
 
 - `positive_5d_pct`: share of industry tickers with `return_5d > 0`
@@ -150,6 +152,7 @@ The filter only evaluates higher-quality leader metadata when the industry regim
 - `leader_filter.py`: industry regimes, price zones, current state, and watch status
 - `data_quality.py`: source transparency, missing/stale checks, and data quality CSV output
 - `update_health.py`: run context, data freshness, and update health CSV output
+- `daily_brief.py`: deterministic daily summary shared by the dashboard and journal
 - `journal.py`: deterministic daily Markdown journal generation
 - `dashboard.py`: static HTML dashboard generation
 - `io_utils.py`: shared CSV writing helpers
@@ -168,6 +171,8 @@ Each run writes a deterministic Markdown journal under `outputs/journal/`, using
 - `outputs/journal/latest.md`: copy of the latest generated journal
 
 The journal summarizes the current snapshot, leading industries, breadth leaders, relative strength stocks, early momentum candidates, and risk warnings. Its system interpretation is rule based, uses only generated output data, and does not call any AI API.
+
+The journal also includes a `Daily Brief` section before `Market Snapshot`. This section matches the dashboard brief and is a concise deterministic summary, not a recommendation.
 
 ## GitHub Pages
 
