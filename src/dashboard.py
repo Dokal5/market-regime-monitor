@@ -678,6 +678,15 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       font-size: 11px;
       line-height: 1.35;
     }
+    .reading-step.is-active {
+      border-color: var(--accent);
+      background: #ecfdf5;
+      box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2) inset;
+    }
+    .reading-step.is-active strong,
+    .section-nav-links a.is-active {
+      color: var(--accent-strong);
+    }
 
     .summary-grid {
       display: grid;
@@ -1377,6 +1386,16 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     @media (max-width: 640px) {
       .dashboard-nav {
         margin-top: -10px;
+        position: sticky;
+        top: 8px;
+        z-index: 40;
+      }
+      .dashboard-nav.is-collapsed .reading-flow,
+      .dashboard-nav.is-collapsed .nav-hint {
+        display: none;
+      }
+      .dashboard-nav.is-collapsed .nav-panel {
+        padding-bottom: 10px;
       }
 
       .nav-heading {
@@ -1403,7 +1422,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
       .summary-grid,
       .dashboard-section {
-        scroll-margin-top: 320px;
+        scroll-margin-top: 120px;
       }
 
       .field-help {
@@ -1462,6 +1481,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           <a href="#rotation-trend">輪動趨勢</a>
           <a href="#trend-intelligence">趨勢判讀</a>
           <a href="#leader-filter">領導股篩選</a>
+          <a href="#portfolio-simulator">模擬持股</a>
           <a href="#relative-strength">相對強度</a>
           <a href="#early-momentum">早期動能</a>
           <a href="#strong-momentum">強勢動能</a>
@@ -1479,17 +1499,18 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           <option value="#rotation-trend">輪動趨勢</option>
           <option value="#trend-intelligence">趨勢判讀</option>
           <option value="#leader-filter">領導股篩選</option>
+          <option value="#portfolio-simulator">模擬持股</option>
           <option value="#relative-strength">相對強度</option>
           <option value="#early-momentum">早期動能</option>
           <option value="#strong-momentum">強勢動能</option>
           <option value="#risk-warning">風險提醒</option>
         </select>
         <div class="reading-flow" aria-label="建議閱讀順序">
-          <div class="reading-step"><strong>1. 先看每日重點</strong><span>資料、主線、輪動、候選與風險濃縮摘要</span></div>
-          <div class="reading-step"><strong>2. 市場主線在哪</strong><span>產業動能、確認比例、產業廣度</span></div>
-          <div class="reading-step"><strong>3. 主線是否輪動</strong><span>產業輪動趨勢、產業趨勢判讀</span></div>
-          <div class="reading-step"><strong>4. 哪些個股值得研究</strong><span>相對強度、早期與強勢動能、領導股篩選</span></div>
-          <div class="reading-step"><strong>5. 資料與風險複核</strong><span>更新健康、資料品質、風險提醒名單</span></div>
+          <div class="reading-step" data-step="focus"><strong>1. 先看每日重點</strong><span>資料、主線、輪動、候選與風險濃縮摘要</span></div>
+          <div class="reading-step" data-step="theme"><strong>2. 市場主線在哪</strong><span>產業動能、確認比例、產業廣度</span></div>
+          <div class="reading-step" data-step="rotation"><strong>3. 主線是否輪動</strong><span>產業輪動趨勢、產業趨勢判讀</span></div>
+          <div class="reading-step" data-step="stock"><strong>4. 哪些個股值得研究</strong><span>領導股篩選、模擬持股、相對強度與動能</span></div>
+          <div class="reading-step" data-step="risk"><strong>5. 資料與風險複核</strong><span>更新健康、資料品質、風險提醒名單</span></div>
         </div>
       </div>
     </nav>
@@ -2899,6 +2920,74 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         }
         event.target.value = "";
       });
+    }
+
+    const navContainer = document.querySelector(".dashboard-nav");
+    const sectionLinks = Array.from(document.querySelectorAll(".section-nav-links a"));
+    const readingSteps = Array.from(document.querySelectorAll(".reading-step[data-step]"));
+    const sectionStepMap = {
+      overview: "focus",
+      "daily-brief": "focus",
+      "update-health": "risk",
+      "data-quality": "risk",
+      "industry-momentum": "theme",
+      "industry-confirmed": "theme",
+      "industry-breadth": "theme",
+      "rotation-trend": "rotation",
+      "trend-intelligence": "rotation",
+      "leader-filter": "stock",
+      "portfolio-simulator": "stock",
+      "relative-strength": "stock",
+      "early-momentum": "stock",
+      "strong-momentum": "stock",
+      "risk-warning": "risk",
+    };
+
+    function setActiveNav(sectionId) {
+      const targetHash = `#${sectionId}`;
+      sectionLinks.forEach((link) => {
+        link.classList.toggle("is-active", link.getAttribute("href") === targetHash);
+      });
+      const stepKey = sectionStepMap[sectionId];
+      readingSteps.forEach((step) => {
+        step.classList.toggle("is-active", step.dataset.step === stepKey);
+      });
+    }
+
+    const observedSections = Object.keys(sectionStepMap)
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+    if (observedSections.length > 0) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          if (visible.length > 0) {
+            setActiveNav(visible[0].target.id);
+          }
+        },
+        { rootMargin: "-35% 0px -45% 0px", threshold: [0.2, 0.45, 0.7] }
+      );
+      observedSections.forEach((section) => observer.observe(section));
+    }
+
+    if (navContainer) {
+      let lastScrollY = window.scrollY;
+      const collapseOnMobile = () => {
+        if (window.innerWidth > 640) {
+          navContainer.classList.remove("is-collapsed");
+          lastScrollY = window.scrollY;
+          return;
+        }
+        const currentY = window.scrollY;
+        const scrollingDown = currentY > lastScrollY + 6;
+        navContainer.classList.toggle("is-collapsed", scrollingDown && currentY > 80);
+        lastScrollY = currentY;
+      };
+      collapseOnMobile();
+      window.addEventListener("scroll", collapseOnMobile, { passive: true });
+      window.addEventListener("resize", collapseOnMobile);
     }
 
     document.addEventListener("keydown", (event) => {
