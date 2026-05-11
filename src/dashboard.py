@@ -2916,19 +2916,6 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       element.addEventListener("click", closeIndustryModal);
     });
 
-    const sectionJump = document.getElementById("section-jump");
-    if (sectionJump) {
-      sectionJump.addEventListener("change", (event) => {
-        const target = event.target.value;
-        if (!target) return;
-        const section = document.querySelector(target);
-        if (section) {
-          section.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-        event.target.value = "";
-      });
-    }
-
     const navContainer = document.querySelector(".dashboard-nav");
     const sectionLinks = Array.from(document.querySelectorAll(".section-nav-links a"));
     const readingSteps = Array.from(document.querySelectorAll(".reading-step[data-step]"));
@@ -2965,8 +2952,30 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       if (!target) return;
       const section = document.querySelector(target);
       if (!section) return;
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      const navHeight = navContainer ? Math.ceil(navContainer.getBoundingClientRect().height) : 0;
+      const y = section.getBoundingClientRect().top + window.scrollY - navHeight - 12;
+      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+      if (window.location.hash !== target) {
+        window.history.replaceState(null, "", target);
+      }
     }
+
+    const sectionJump = document.getElementById("section-jump");
+    if (sectionJump) {
+      sectionJump.addEventListener("change", (event) => {
+        const target = event.target.value;
+        if (!target) return;
+        jumpToSection(target);
+        event.target.value = "";
+      });
+    }
+
+    sectionLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        jumpToSection(link.getAttribute("href"));
+      });
+    });
 
     readingSteps.forEach((step) => {
       step.addEventListener("click", () => {
