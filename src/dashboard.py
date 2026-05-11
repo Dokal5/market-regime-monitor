@@ -1687,6 +1687,26 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       </div>
     </section>
 
+    <section class="dashboard-section" id="portfolio-simulator">
+      <div class="section-heading">
+        <h2>Portfolio 模擬與下一步建議</h2>
+      </div>
+      <p class="section-note">輸入你目前持股與權重（例如：NVDA 25, MSFT 20），系統會用本頁最新動能與風險訊號做快速體檢，並給出下一步建議。此工具僅做研究排序，不構成投資建議。</p>
+      <div class="table-wrap" style="padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface);">
+        <label for="portfolio-input" style="display:block; font-weight:650; margin-bottom:8px;">持股清單（每行：Ticker 權重%）</label>
+        <textarea id="portfolio-input" rows="7" style="width:100%; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; border:1px solid var(--line); border-radius:8px; padding:10px;" placeholder="NVDA 25&#10;MSFT 20&#10;LLY 15&#10;CASH 40"></textarea>
+        <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
+          <button id="portfolio-run" type="button" style="border:1px solid var(--line-strong); border-radius:8px; padding:8px 12px; background:var(--surface-soft); cursor:pointer;">執行模擬</button>
+          <button id="portfolio-sample" type="button" style="border:1px solid var(--line); border-radius:8px; padding:8px 12px; background:var(--surface); cursor:pointer;">填入範例</button>
+        </div>
+      </div>
+      <div id="portfolio-result" class="quality-grid" style="margin-top:12px;"></div>
+      <ul id="portfolio-actions" class="daily-brief-list" style="margin-top:10px;"></ul>
+      <div id="portfolio-alignment" class="table-wrap" style="margin-top:12px;" hidden>
+        <table id="portfolio-alignment-table"></table>
+      </div>
+    </section>
+
     <section class="dashboard-section" id="relative-strength">
       <div class="section-heading">
         <h2>相對產業強度前 10 名</h2>
@@ -2583,6 +2603,135 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       }
     }
 
+    function parsePortfolioInput(raw) {
+      const entries = [];
+      const lines = String(raw || "").split(/\n+/).map((line) => line.trim()).filter(Boolean);
+      for (const line of lines) {
+        const tokens = line.split(/[,\\s]+/).filter(Boolean);
+        const ticker = (tokens[0] || "").toUpperCase();
+        const weight = Number(tokens[1] || 0);
+        if (!ticker) continue;
+        entries.push({ ticker, weight: Number.isFinite(weight) ? weight : 0 });
+      }
+      return entries;
+    }
+
+    function renderPortfolioSimulator() {
+      const runBtn = document.getElementById("portfolio-run");
+      const sampleBtn = document.getElementById("portfolio-sample");
+      const input = document.getElementById("portfolio-input");
+      const resultGrid = document.getElementById("portfolio-result");
+      const actionsList = document.getElementById("portfolio-actions");
+      const alignmentWrap = document.getElementById("portfolio-alignment");
+      const alignmentTable = document.getElementById("portfolio-alignment-table");
+      const tickerRows = (dashboardData.top_relative_strength || [])
+        .concat(dashboardData.strong_candidates || [])
+        .concat(dashboardData.early_candidates || [])
+        .concat(dashboardData.risk_warnings || []);
+      const byTicker = new Map();
+      tickerRows.forEach((row) => {
+        if (row?.ticker && !byTicker.has(row.ticker)) byTicker.set(row.ticker, row);
+      });
+
+      sampleBtn.addEventListener("click", () => {
+        input.value = "NVDA 25\nMSFT 20\nPLTR 10\nLLY 15\nCASH 30";
+      });
+
+      runBtn.addEventListener("click", () => {
+        const holdings = parsePortfolioInput(input.value);
+        resultGrid.replaceChildren();
+        actionsList.replaceChildren();
+        alignmentWrap.hidden = true;
+        alignmentTable.replaceChildren();
+        if (!holdings.length) return;
+
+        let modeledWeight = 0;
+        let riskWeight = 0;
+        let strongWeight = 0;
+        let earlyWeight = 0;
+        let alignedWeight = 0;
+        const missing = [];
+        const alignmentRows = [];
+        for (const h of holdings) {
+          if (h.ticker === "CASH") continue;
+          const row = byTicker.get(h.ticker);
+          if (!row) {
+            missing.push(h.ticker);
+            alignmentRows.push({ ticker: h.ticker, weight: h.weight, status: "無資料", note: "未納入追蹤清單" });
+            continue;
+          }
+          modeledWeight += h.weight;
+          if (row.risk_warning === true) riskWeight += h.weight;
+          if (row.strong_momentum_signal === true) strongWeight += h.weight;
+          if (row.early_momentum_signal === true) earlyWeight += h.weight;
+          const aligned = (row.strong_momentum_signal === true || row.early_momentum_signal === true) && row.risk_warning !== true;
+          if (aligned) alignedWeight += h.weight;
+          alignmentRows.push({
+            ticker: h.ticker,
+            weight: h.weight,
+            status: aligned ? "一致" : "不一致",
+            note: row.risk_warning === true
+              ? "有風險警示"
+              : row.strong_momentum_signal === true
+                ? "強勢動能"
+                : row.early_momentum_signal === true
+                  ? "早期動能"
+                  : "無動能訊號"
+          });
+        }
+
+        const addCard = (label, value, desc, state = "") => appendQualityTile(resultGrid, label, value, desc, state);
+        addCard("可判讀權重", `${formatNumber(modeledWeight, 1)}%`, "有出現在本頁資料中的持股權重總和。");
+        addCard("風險權重", `${formatNumber(riskWeight, 1)}%`, "被標記為 risk warning 的持股權重。", riskWeight >= 25 ? "warning" : "");
+        addCard("強勢動能權重", `${formatNumber(strongWeight, 1)}%`, "符合 strong momentum 的持股權重。", strongWeight >= 20 ? "healthy" : "");
+        addCard("早期動能權重", `${formatNumber(earlyWeight, 1)}%`, "符合 early momentum 的持股權重。");
+        addCard("動能一致權重", `${formatNumber(alignedWeight, 1)}%`, "符合早期/強勢動能且無風險警示的持股權重。", alignedWeight >= 35 ? "healthy" : "");
+
+        const actions = [];
+        if (riskWeight >= 25) actions.push("降低風險部位集中度：優先檢視 risk warning 權重最高的 2 檔持股，評估是否降權重或設停損。");
+        if (strongWeight < 20) actions.push("提高趨勢品質：可從「強勢動能候選」挑 1-2 檔建立觀察倉，分批替換弱勢持股。");
+        if (earlyWeight > strongWeight) actions.push("目前組合偏早期訊號，建議等待確認訊號再加碼，避免過早擴大部位。");
+        if (!actions.length) actions.push("結構相對平衡：維持核心持股，並用每週再平衡檢查風險權重是否重新升高。");
+        if (missing.length) actions.push(`以下持股不在目前追蹤清單：${missing.join(", ")}。建議加入 tickers.csv 以納入完整模擬。`);
+        actions.forEach((text) => {
+          const li = document.createElement("li");
+          li.textContent = text;
+          actionsList.appendChild(li);
+        });
+
+        if (alignmentRows.length) {
+          alignmentWrap.hidden = false;
+          const thead = document.createElement("thead");
+          const headRow = document.createElement("tr");
+          ["持股", "權重", "與動能是否一致", "判讀"].forEach((label) => {
+            const th = document.createElement("th");
+            th.textContent = label;
+            headRow.appendChild(th);
+          });
+          thead.appendChild(headRow);
+
+          const tbody = document.createElement("tbody");
+          alignmentRows.forEach((item) => {
+            const tr = document.createElement("tr");
+            const cells = [
+              item.ticker,
+              `${formatNumber(item.weight, 1)}%`,
+              item.status === "一致" ? "✅ 一致" : item.status === "不一致" ? "⚠️ 不一致" : "—",
+              item.note
+            ];
+            cells.forEach((text, idx) => {
+              const td = document.createElement("td");
+              if (idx === 1) td.className = "numeric";
+              td.textContent = text;
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          alignmentTable.replaceChildren(thead, tbody);
+        }
+      });
+    }
+
     function renderTable(id, config) {
       const rows = config.rows || [];
       const table = document.querySelector(`[data-table="${id}"]`);
@@ -2762,6 +2911,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     renderDailyBrief();
     renderUpdateHealth();
     renderDataQuality();
+    renderPortfolioSimulator();
     const breadthRows = Object.values(dashboardData.industry_breadth)
       .reduce((total, rows) => total + rows.length, 0);
     document.getElementById("breadth-status").textContent =
