@@ -197,3 +197,17 @@ The workflow also supports manual runs with `workflow_dispatch`. It uses no API 
 ## Disclaimer
 
 This project is for research and tracking only. It is not investment advice, financial advice, or a securities transaction recommendation.
+
+## Leader metadata 維護流程（建議）
+
+為了讓 `research_candidate` 從「可顯示」進一步成為「可決策參考」，建議把 `tickers.csv` 的 `leader_type` 與 `industry_quality_score` 維護拆成固定流程：
+
+1. 建立核心觀察池（每個重點產業先 3-8 檔），優先覆蓋半導體、資安、雲端軟體、AI 基礎設施、太空/衛星、能源儲存。
+2. 每週固定檢查一次：
+   - 公司是否仍屬於原產業敘事與競爭位置
+   - `leader_type` 是否需要升降級（例如 `challenger` ↔ `core_leader`）
+   - `industry_quality_score` 是否需要調整（1-5）
+3. 每次財報季後做一次深度校準，避免 metadata 與市場結構脫節。
+4. 若無把握，先維持保守分級（`specialist` / `challenger`），避免過度標記為 `core_leader`。
+
+實務上可先把「近 20 日內曾出現在 Daily Brief 強勢動能或早期動能清單」的標的納入優先維護，逐步擴展到全 universe。

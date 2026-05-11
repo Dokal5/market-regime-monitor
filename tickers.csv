@@ -3,7 +3,7 @@ ANET,Arista Networks Inc.,AI Infrastructure,infrastructure_leader,5
 VRT,Vertiv Holdings Co.,AI Infrastructure,infrastructure_leader,5
 DELL,Dell Technologies Inc.,AI Infrastructure,challenger,5
 HPE,Hewlett Packard Enterprise Co.,AI Infrastructure,non_leader,5
-SMCI,Super Micro Computer Inc.,AI Infrastructure,non_leader,5
+SMCI,Super Micro Computer Inc.,AI Infrastructure,challenger,5
 ETN,Eaton Corporation plc,AI Infrastructure,infrastructure_leader,5
 NVDA,NVIDIA Corporation,Semiconductors,core_leader,5
 AMD,Advanced Micro Devices Inc.,Semiconductors,challenger,5
@@ -12,7 +12,7 @@ TSM,Taiwan Semiconductor Manufacturing Co. Ltd.,Semiconductors,core_leader,5
 ASML,ASML Holding N.V.,Semiconductors,infrastructure_leader,5
 MU,Micron Technology Inc.,Semiconductors,specialist,5
 QCOM,Qualcomm Incorporated,Semiconductors,specialist,5
-INTC,Intel Corporation,Semiconductors,non_leader,5
+INTC,Intel Corporation,Semiconductors,challenger,5
 ARM,Arm Holdings plc,Semiconductors,specialist,5
 AMAT,Applied Materials Inc.,Semiconductors,infrastructure_leader,5
 TXN,Texas Instruments Incorporated,Semiconductors,specialist,5
@@ -34,7 +34,7 @@ ASTS,AST SpaceMobile Inc.,Space,emerging_leader,3
 IRDM,Iridium Communications Inc.,Space,specialist,3
 SPCE,Virgin Galactic Holdings Inc.,Space,non_leader,3
 PL,Planet Labs PBC,Space,specialist,3
-RDW,Redwire Corporation,Space,non_leader,3
+RDW,Redwire Corporation,Space,emerging_leader,3
 BKSY,BlackSky Technology Inc.,Space,specialist,3
 VSAT,Viasat Inc.,Space,specialist,3
 SATL,Satellogic Inc.,Space,non_leader,3
@@ -71,9 +71,9 @@ NXT,Nextracker Inc.,Renewables,challenger,3
 ARRY,Array Technologies Inc.,Renewables,specialist,3
 ORA,Ormat Technologies Inc.,Renewables,specialist,3
 FLNC,Fluence Energy Inc.,Energy Storage,emerging_leader,3
-STEM,Stem Inc.,Energy Storage,non_leader,3
+STEM,Stem Inc.,Energy Storage,specialist,3
 ENPH,Enphase Energy Inc.,Energy Storage,specialist,3
-SEDG,SolarEdge Technologies Inc.,Energy Storage,non_leader,3
+SEDG,SolarEdge Technologies Inc.,Energy Storage,specialist,3
 GNRC,Generac Holdings Inc.,Energy Storage,specialist,3
 ISRG,Intuitive Surgical Inc.,Robotics Automation,core_leader,4
 TER,Teradyne Inc.,Robotics Automation,specialist,4
