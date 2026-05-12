@@ -2633,7 +2633,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
     function parsePortfolioInput(raw) {
       const entries = [];
-      const lines = String(raw || "").split(/\n+/).map((line) => line.trim()).filter(Boolean);
+      const lines = String(raw || "").split(/\\n+/).map((line) => line.trim()).filter(Boolean);
       for (const line of lines) {
         const tokens = line.split(/[,\\s]+/).filter(Boolean);
         const ticker = (tokens[0] || "").toUpperCase();
@@ -2662,7 +2662,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       });
 
       sampleBtn.addEventListener("click", () => {
-        input.value = "NVDA 25\nMSFT 20\nPLTR 10\nLLY 15\nCASH 30";
+        input.value = "NVDA 25\\nMSFT 20\\nPLTR 10\\nLLY 15\\nCASH 30";
       });
 
       runBtn.addEventListener("click", () => {

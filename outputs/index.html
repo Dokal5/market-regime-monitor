@@ -2145,8 +2145,7 @@
 
     function parsePortfolioInput(raw) {
       const entries = [];
-      const lines = String(raw || "").split(/
-+/).map((line) => line.trim()).filter(Boolean);
+      const lines = String(raw || "").split(/\n+/).map((line) => line.trim()).filter(Boolean);
       for (const line of lines) {
         const tokens = line.split(/[,\s]+/).filter(Boolean);
         const ticker = (tokens[0] || "").toUpperCase();
@@ -2175,11 +2174,7 @@
       });
 
       sampleBtn.addEventListener("click", () => {
-        input.value = "NVDA 25
-MSFT 20
-PLTR 10
-LLY 15
-CASH 30";
+        input.value = "NVDA 25\nMSFT 20\nPLTR 10\nLLY 15\nCASH 30";
       });
 
       runBtn.addEventListener("click", () => {
