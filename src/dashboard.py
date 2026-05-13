@@ -1706,11 +1706,11 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           <p class="empty-state" data-empty-for="leader-too-extended" hidden>目前沒有延伸偏高的領導股。</p>
         </div>
         <div class="intelligence-block">
-          <h3>產業不符合</h3>
+          <h3>產業動能未確認，暫列觀察</h3>
           <div class="table-wrap">
             <table data-table="leader-not-eligible-industries"></table>
           </div>
-          <p class="empty-state" data-empty-for="leader-not-eligible-industries" hidden>目前沒有產業不符合資料。</p>
+          <p class="empty-state" data-empty-for="leader-not-eligible-industries" hidden>目前沒有產業動能未確認的觀察資料。</p>
         </div>
       </div>
     </section>
@@ -1867,7 +1867,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       wait_for_stabilization: "等待穩定",
       too_extended: "延伸偏高",
       avoid_for_now: "暫不列入",
-      not_eligible_industry: "產業不符合"
+      not_eligible_industry: "產業動能未確認，暫列觀察"
     };
 
     const dataStatusLabels = {
