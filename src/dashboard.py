@@ -593,53 +593,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       box-shadow: var(--shadow);
     }
 
-    .nav-heading {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-
-    .nav-title {
-      color: var(--ink);
-      font-size: 13px;
-      font-weight: 780;
-    }
-
-    .nav-hint {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .section-nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .section-nav-links a {
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      color: var(--ink);
-      background: rgba(238, 244, 242, 0.62);
-      padding: 6px 8px;
-      font-size: 12px;
-      font-weight: 720;
-      line-height: 1;
-      text-decoration: none;
-    }
-
-    .section-nav-links a:hover,
-    .section-nav-links a:focus-visible {
-      border-color: rgba(0, 122, 85, 0.38);
-      background: rgba(235, 249, 243, 0.92);
-      color: var(--green);
-      outline: none;
-    }
-
     .section-nav-select {
-      display: none;
       width: 100%;
       border: 1px solid var(--line);
       border-radius: 6px;
@@ -647,52 +601,6 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       color: var(--ink);
       padding: 9px 10px;
       font: inherit;
-    }
-
-    .reading-flow {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .reading-step {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(250, 252, 251, 0.9);
-      padding: 8px;
-      min-width: 0;
-      cursor: pointer;
-    }
-
-    .reading-step strong {
-      display: block;
-      color: var(--ink);
-      font-size: 12px;
-      line-height: 1.25;
-    }
-
-    .reading-step span {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.35;
-    }
-    .reading-step.is-active {
-      border-color: var(--accent);
-      background: #ecfdf5;
-      box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2) inset;
-    }
-    .reading-step.is-active strong,
-    .section-nav-links a.is-active {
-      color: var(--accent-strong);
-    }
-    .reading-step:hover,
-    .reading-step:focus-visible {
-      border-color: rgba(0, 122, 85, 0.38);
-      background: rgba(235, 249, 243, 0.92);
-      outline: none;
     }
 
     .summary-grid {
@@ -1335,10 +1243,6 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .reading-flow {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
       .summary-grid,
       .dashboard-section {
         scroll-margin-top: 220px;
@@ -1397,32 +1301,6 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         top: 8px;
         z-index: 40;
       }
-      .dashboard-nav.is-collapsed .reading-flow,
-      .dashboard-nav.is-collapsed .nav-hint {
-        display: none;
-      }
-      .dashboard-nav.is-collapsed .nav-panel {
-        padding-bottom: 10px;
-      }
-
-      .nav-heading {
-        align-items: start;
-        flex-direction: column;
-        gap: 3px;
-      }
-
-      .section-nav-links {
-        display: none;
-      }
-
-      .section-nav-select {
-        display: block;
-      }
-
-      .reading-flow {
-        grid-template-columns: 1fr;
-      }
-
       .daily-brief-grid {
         grid-template-columns: 1fr;
       }
@@ -1471,29 +1349,6 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
   <main>
     <nav class="dashboard-nav" aria-label="Dashboard 區塊導覽">
       <div class="nav-panel">
-        <div class="nav-heading">
-          <div>
-            <div class="nav-title">閱讀導覽</div>
-            <div class="nav-hint">先看每日重點，再確認資料、產業主線、輪動、個股候選與風險。</div>
-          </div>
-        </div>
-        <div class="section-nav-links">
-          <a href="#overview">總覽</a>
-          <a href="#daily-brief">每日重點</a>
-          <a href="#update-health">更新健康</a>
-          <a href="#data-quality">資料品質</a>
-          <a href="#industry-momentum">產業動能</a>
-          <a href="#industry-confirmed">確認比例</a>
-          <a href="#industry-breadth">產業廣度</a>
-          <a href="#rotation-trend">輪動趨勢</a>
-          <a href="#trend-intelligence">趨勢判讀</a>
-          <a href="#leader-filter">領導股篩選</a>
-          <a href="#portfolio-simulator">模擬持股</a>
-          <a href="#relative-strength">相對強度</a>
-          <a href="#early-momentum">早期動能</a>
-          <a href="#strong-momentum">強勢動能</a>
-          <a href="#risk-warning">風險提醒</a>
-        </div>
         <select class="section-nav-select" id="section-jump" aria-label="跳到 dashboard 區塊">
           <option value="">跳到區塊</option>
           <option value="#overview">總覽</option>
@@ -1512,13 +1367,6 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           <option value="#strong-momentum">強勢動能</option>
           <option value="#risk-warning">風險提醒</option>
         </select>
-        <div class="reading-flow" aria-label="建議閱讀順序">
-          <div class="reading-step" data-step="focus" data-target="#daily-brief" role="button" tabindex="0"><strong>1. 先看每日重點</strong><span>資料、主線、輪動、候選與風險濃縮摘要</span></div>
-          <div class="reading-step" data-step="theme" data-target="#industry-momentum" role="button" tabindex="0"><strong>2. 市場主線在哪</strong><span>產業動能、確認比例、產業廣度</span></div>
-          <div class="reading-step" data-step="rotation" data-target="#rotation-trend" role="button" tabindex="0"><strong>3. 主線是否輪動</strong><span>產業輪動趨勢、產業趨勢判讀</span></div>
-          <div class="reading-step" data-step="stock" data-target="#leader-filter" role="button" tabindex="0"><strong>4. 哪些個股值得研究</strong><span>領導股篩選、模擬持股、相對強度與動能</span></div>
-          <div class="reading-step" data-step="risk" data-target="#update-health" role="button" tabindex="0"><strong>5. 資料與風險複核</strong><span>更新健康、資料品質、風險提醒名單</span></div>
-        </div>
       </div>
     </nav>
 
@@ -2917,37 +2765,6 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     });
 
     const navContainer = document.querySelector(".dashboard-nav");
-    const sectionLinks = Array.from(document.querySelectorAll(".section-nav-links a"));
-    const readingSteps = Array.from(document.querySelectorAll(".reading-step[data-step]"));
-    const sectionStepMap = {
-      overview: "focus",
-      "daily-brief": "focus",
-      "update-health": "risk",
-      "data-quality": "risk",
-      "industry-momentum": "theme",
-      "industry-confirmed": "theme",
-      "industry-breadth": "theme",
-      "rotation-trend": "rotation",
-      "trend-intelligence": "rotation",
-      "leader-filter": "stock",
-      "portfolio-simulator": "stock",
-      "relative-strength": "stock",
-      "early-momentum": "stock",
-      "strong-momentum": "stock",
-      "risk-warning": "risk",
-    };
-
-    function setActiveNav(sectionId) {
-      const targetHash = `#${sectionId}`;
-      sectionLinks.forEach((link) => {
-        link.classList.toggle("is-active", link.getAttribute("href") === targetHash);
-      });
-      const stepKey = sectionStepMap[sectionId];
-      readingSteps.forEach((step) => {
-        step.classList.toggle("is-active", step.dataset.step === stepKey);
-      });
-    }
-
     function jumpToSection(target) {
       if (!target) return;
       const section = document.querySelector(target);
@@ -2968,43 +2785,6 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         jumpToSection(target);
         event.target.value = "";
       });
-    }
-
-    sectionLinks.forEach((link) => {
-      link.addEventListener("click", (event) => {
-        event.preventDefault();
-        jumpToSection(link.getAttribute("href"));
-      });
-    });
-
-    readingSteps.forEach((step) => {
-      step.addEventListener("click", () => {
-        jumpToSection(step.dataset.target);
-      });
-      step.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          jumpToSection(step.dataset.target);
-        }
-      });
-    });
-
-    const observedSections = Object.keys(sectionStepMap)
-      .map((id) => document.getElementById(id))
-      .filter(Boolean);
-    if (observedSections.length > 0) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          const visible = entries
-            .filter((entry) => entry.isIntersecting)
-            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-          if (visible.length > 0) {
-            setActiveNav(visible[0].target.id);
-          }
-        },
-        { rootMargin: "-35% 0px -45% 0px", threshold: [0.2, 0.45, 0.7] }
-      );
-      observedSections.forEach((section) => observer.observe(section));
     }
 
     if (navContainer) {
