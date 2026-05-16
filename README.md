@@ -26,6 +26,28 @@ The script creates:
 
 Open `outputs/index.html` in a browser to view the static dashboard. The dashboard has embedded data from the Python run and does not require a server, framework, or build step.
 
+## Check local and online sync status
+
+Run this command to verify whether the local repository, GitHub `origin/main`, GitHub raw output files, and GitHub Pages dashboard are aligned:
+
+```bash
+python scripts/status_check.py
+```
+
+The check prints stable key/value lines such as `LOCAL_SYNCED`, `RAW_SYNCED`, `PAGES_SYNCED`, `LOCAL_LATEST_MARKET_DATE`, `ONLINE_LATEST_MARKET_DATE`, and `ACTION`.
+
+Exit codes:
+
+- `0`: local outputs, GitHub raw outputs, and GitHub Pages outputs are aligned
+- `1`: the check completed, but a mismatch was found
+- `2`: the check could not complete because git, network, or required local files failed
+
+When `LOCAL_SYNCED=false` and `ACTION=git pull --ff-only origin main`, sync the local project with:
+
+```bash
+git pull --ff-only origin main
+```
+
 ## Update tickers.csv
 
 Edit `tickers.csv` with these columns:
