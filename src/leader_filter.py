@@ -6,15 +6,24 @@ from typing import Any
 import pandas as pd
 
 from src.config import (
+    ALLOWED_ROTATION_TYPES,
+    CAUSAL_HYPOTHESIS_COLUMN,
     DEFAULT_INDUSTRY_QUALITY_SCORE,
     DEFAULT_LEADER_TYPE,
+    EVIDENCE_STATUS_COLUMN,
     HISTORY_DIR,
+    INDUSTRY_NARROW_LEADERSHIP_BREADTH_THRESHOLD,
+    INDUSTRY_OBSERVED_EVIDENCE_BREADTH_THRESHOLD,
     INDUSTRY_REGIME_COLUMN,
     INDUSTRY_REGIME_MIN_PERSISTENCE,
     INDUSTRY_REGIME_TOP_BREADTH_RANK,
     INDUSTRY_REGIME_TOP_RETURN_RANK,
+    INDUSTRY_RISK_FLAG_COLUMN,
+    INDUSTRY_ROTATION_TYPE_MAP,
     LEADER_FILTER_COLUMNS,
     LEADER_MIN_QUALITY_SCORE,
+    MOMENTUM_EXHAUSTION_STRONG_10D_RETURN_THRESHOLD,
+    MOMENTUM_EXHAUSTION_WEAK_3D_RETURN_DIVISOR,
     PRICE_ZONE_DEEP_PULLBACK_DISTANCE_20D,
     PRICE_ZONE_DEEP_PULLBACK_RANGE_POSITION,
     PRICE_ZONE_EXTENDED_DISTANCE_20D,
@@ -24,7 +33,11 @@ from src.config import (
     PRICE_ZONE_VERY_EXTENDED_DISTANCE_20D,
     PRICE_ZONE_VERY_EXTENDED_RANGE_POSITION,
     RESEARCH_LEADER_TYPES,
+    RELATIVE_VOLUME_LOW_THRESHOLD,
+    RELATIVE_VOLUME_STRONG_THRESHOLD,
     RISK_DRAWDOWN_THRESHOLD,
+    ROTATION_TYPE_CAUSAL_HYPOTHESIS_MAP,
+    ROTATION_TYPE_COLUMN,
     TICKER_VOLUME_COLUMNS,
 )
 
@@ -84,9 +97,6 @@ def load_previous_breadth_scores(before_date: str) -> dict[str, float]:
 
 
 def classify_industry_regime(row: pd.Series, previous_breadth_scores: dict[str, float]) -> str:
-    if as_bool(row.get("momentum_exhaustion_warning")):
-        return "exhaustion"
-
     return_rank = as_float(row.get("_return_10d_rank"))
     breadth_rank = as_float(row.get("_breadth_score_rank"))
     persistence = as_float(row.get("momentum_persistence"))
@@ -116,17 +126,115 @@ def classify_industry_regime(row: pd.Series, previous_breadth_scores: dict[str, 
     return "neutral"
 
 
+def has_strong_10d_return(row: pd.Series) -> bool:
+    return_10d = as_float(row.get("return_10d"))
+    return pd.notna(return_10d) and return_10d >= MOMENTUM_EXHAUSTION_STRONG_10D_RETURN_THRESHOLD
+
+
+def has_weak_3d_return(row: pd.Series) -> bool:
+    return_3d = as_float(row.get("return_3d"))
+    return_10d = as_float(row.get("return_10d"))
+    return (
+        pd.notna(return_3d)
+        and pd.notna(return_10d)
+        and (return_3d < 0 or return_3d < (return_10d / MOMENTUM_EXHAUSTION_WEAK_3D_RETURN_DIVISOR))
+    )
+
+
+def has_low_relative_volume(row: pd.Series) -> bool:
+    relative_volume = as_float(row.get("relative_volume"))
+    return pd.notna(relative_volume) and relative_volume < RELATIVE_VOLUME_LOW_THRESHOLD
+
+
+def has_data_limited_risk(row: pd.Series) -> bool:
+    ticker_count = as_float(row.get("ticker_count"))
+    tickers_with_data = as_float(row.get("tickers_with_data"))
+    return (
+        pd.notna(tickers_with_data)
+        and tickers_with_data == 0
+        or (
+            pd.notna(ticker_count)
+            and pd.notna(tickers_with_data)
+            and ticker_count > 0
+            and tickers_with_data < ticker_count
+        )
+    )
+
+
+def classify_industry_risk_flag(row: pd.Series) -> str:
+    if as_bool(row.get("momentum_exhaustion_warning")):
+        return "momentum_exhaustion"
+
+    breadth_score = as_float(row.get("breadth_score"))
+    if (
+        has_strong_10d_return(row)
+        and pd.notna(breadth_score)
+        and breadth_score < INDUSTRY_NARROW_LEADERSHIP_BREADTH_THRESHOLD
+    ):
+        return "narrow_leadership"
+
+    if has_strong_10d_return(row) and (has_weak_3d_return(row) or has_low_relative_volume(row)):
+        return "late_cycle_momentum"
+
+    if has_data_limited_risk(row):
+        return "data_limited"
+
+    return "none"
+
+
+def classify_rotation_type(row: pd.Series) -> str:
+    industry_group = str(row.get("industry_group") or "")
+    rotation_type = INDUSTRY_ROTATION_TYPE_MAP.get(industry_group, "unclear")
+    return rotation_type if rotation_type in ALLOWED_ROTATION_TYPES else "unclear"
+
+
+def classify_causal_hypothesis(rotation_type: str) -> str:
+    return ROTATION_TYPE_CAUSAL_HYPOTHESIS_MAP.get(rotation_type, "unclear")
+
+
+def classify_evidence_status(row: pd.Series) -> str:
+    rotation_type = str(row.get(ROTATION_TYPE_COLUMN) or "unclear")
+    causal_hypothesis = str(row.get(CAUSAL_HYPOTHESIS_COLUMN) or "unclear")
+    if rotation_type == "unclear" or causal_hypothesis == "unclear":
+        return "needs_review"
+
+    breadth_score = as_float(row.get("breadth_score"))
+    relative_volume = as_float(row.get("relative_volume"))
+    if (
+        pd.notna(breadth_score)
+        and breadth_score >= INDUSTRY_OBSERVED_EVIDENCE_BREADTH_THRESHOLD
+        and has_strong_10d_return(row)
+        and pd.notna(relative_volume)
+        and relative_volume >= RELATIVE_VOLUME_STRONG_THRESHOLD
+    ):
+        return "observed"
+
+    return "inferred"
+
+
 def add_industry_regime_column(industry_output: pd.DataFrame, snapshot_date: str) -> pd.DataFrame:
     output_columns = list(industry_output.columns) + [
-        INDUSTRY_REGIME_COLUMN for _ in [0] if INDUSTRY_REGIME_COLUMN not in industry_output.columns
+        column
+        for column in [
+            INDUSTRY_REGIME_COLUMN,
+            INDUSTRY_RISK_FLAG_COLUMN,
+            ROTATION_TYPE_COLUMN,
+            CAUSAL_HYPOTHESIS_COLUMN,
+            EVIDENCE_STATUS_COLUMN,
+        ]
+        if column not in industry_output.columns
     ]
     if industry_output.empty:
         return pd.DataFrame(columns=output_columns)
 
     industry = industry_output.copy()
     numeric_columns = [
+        "ticker_count",
+        "tickers_with_data",
+        "return_3d",
         "return_5d",
         "return_10d",
+        "relative_volume",
         "breadth_score",
         "positive_5d_pct",
         "positive_10d_pct",
@@ -146,6 +254,10 @@ def add_industry_regime_column(industry_output: pd.DataFrame, snapshot_date: str
     industry[INDUSTRY_REGIME_COLUMN] = industry.apply(
         lambda row: classify_industry_regime(row, previous_breadth_scores), axis=1
     )
+    industry[INDUSTRY_RISK_FLAG_COLUMN] = industry.apply(classify_industry_risk_flag, axis=1)
+    industry[ROTATION_TYPE_COLUMN] = industry.apply(classify_rotation_type, axis=1)
+    industry[CAUSAL_HYPOTHESIS_COLUMN] = industry[ROTATION_TYPE_COLUMN].apply(classify_causal_hypothesis)
+    industry[EVIDENCE_STATUS_COLUMN] = industry.apply(classify_evidence_status, axis=1)
     industry = industry.drop(columns=["_return_10d_rank", "_breadth_score_rank"], errors="ignore")
     return industry[output_columns]
 
@@ -267,13 +379,27 @@ def add_leader_filter_columns(
         return pd.DataFrame(columns=ticker_output_columns), industry
 
     tickers = ticker_output.copy()
-    tickers = tickers.drop(columns=[INDUSTRY_REGIME_COLUMN], errors="ignore")
+    causality_columns = [
+        INDUSTRY_REGIME_COLUMN,
+        INDUSTRY_RISK_FLAG_COLUMN,
+        ROTATION_TYPE_COLUMN,
+        CAUSAL_HYPOTHESIS_COLUMN,
+        EVIDENCE_STATUS_COLUMN,
+    ]
+    tickers = tickers.drop(columns=causality_columns, errors="ignore")
     if not industry.empty:
-        regimes = industry[["industry_group", INDUSTRY_REGIME_COLUMN]]
-        tickers = tickers.merge(regimes, on="industry_group", how="left")
+        tickers = tickers.merge(industry[["industry_group", *causality_columns]], on="industry_group", how="left")
         tickers[INDUSTRY_REGIME_COLUMN] = tickers[INDUSTRY_REGIME_COLUMN].fillna("neutral")
+        tickers[INDUSTRY_RISK_FLAG_COLUMN] = tickers[INDUSTRY_RISK_FLAG_COLUMN].fillna("none")
+        tickers[ROTATION_TYPE_COLUMN] = tickers[ROTATION_TYPE_COLUMN].fillna("unclear")
+        tickers[CAUSAL_HYPOTHESIS_COLUMN] = tickers[CAUSAL_HYPOTHESIS_COLUMN].fillna("unclear")
+        tickers[EVIDENCE_STATUS_COLUMN] = tickers[EVIDENCE_STATUS_COLUMN].fillna("needs_review")
     else:
         tickers[INDUSTRY_REGIME_COLUMN] = "neutral"
+        tickers[INDUSTRY_RISK_FLAG_COLUMN] = "none"
+        tickers[ROTATION_TYPE_COLUMN] = "unclear"
+        tickers[CAUSAL_HYPOTHESIS_COLUMN] = "unclear"
+        tickers[EVIDENCE_STATUS_COLUMN] = "needs_review"
 
     if "leader_type" not in tickers.columns:
         tickers["leader_type"] = DEFAULT_LEADER_TYPE

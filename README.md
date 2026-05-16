@@ -137,7 +137,16 @@ Industry output also includes trend intelligence fields:
 - `momentum_acceleration`: current average 5 day return minus the previous snapshot's average 5 day return.
 - `momentum_exhaustion_warning`: true when average 10 day return is still strong, but average 3 day return has weakened meaningfully or relative volume is below `0.8`.
 
-Industry output also includes `industry_regime`, a deterministic classification used by the Leader Accumulation Filter. Possible values are `momentum_leader`, `early_recovery`, `neutral`, `weak`, and `exhaustion`.
+Industry output also includes `industry_regime`, a deterministic trend-state classification used by the Leader Accumulation Filter. Possible values are `momentum_leader`, `early_recovery`, `neutral`, and `weak`.
+
+Phase 1 of the causality layer keeps observable signals separate from possible explanations:
+
+- `industry_risk_flag`: preserves risk context separately from trend state. Possible values are `none`, `momentum_exhaustion`, `narrow_leadership`, `late_cycle_momentum`, and `data_limited`.
+- `rotation_type`: a deterministic classification aid from `INDUSTRY_ROTATION_TYPE_MAP`, defaulting to `unclear`; it does not infer complex causes from price and volume alone.
+- `causal_hypothesis`: a review hypothesis derived from `rotation_type`, not a proven cause.
+- `evidence_status`: indicates whether the current system's observable market evidence is `observed`, `inferred`, `needs_review`, or `unsupported`. `unsupported` is reserved for future rules.
+
+Observable price, volume, relative strength, breadth, rotation, and trend signals are evidence only. They do not prove deeper causes such as earnings revisions, policy support, rates, risk appetite, ETF flows, or short covering.
 
 ## Leader Accumulation Filter
 
@@ -148,6 +157,10 @@ Ticker output appends these fields:
 - `leader_type`
 - `industry_quality_score`
 - `industry_regime`
+- `industry_risk_flag`
+- `rotation_type`
+- `causal_hypothesis`
+- `evidence_status`
 - `distance_from_20d_ma`
 - `distance_from_52w_high`
 - `position_in_52w_range`
@@ -156,6 +169,8 @@ Ticker output appends these fields:
 - `price_zone`
 - `current_state`
 - `watch_status`
+
+`price_zone`, `short_term_price_zone`, and `long_term_price_zone` are technical price position fields. They are not valuation fields, and the system does not make valuation claims without valuation data.
 
 Meaningful `research_candidate` output requires curated `leader_type` and `industry_quality_score` metadata before the filter becomes useful. Existing tickers default to `non_leader` and score `3`, so `research_candidate` can be empty until that metadata is maintained.
 

@@ -7,7 +7,16 @@ from typing import Any
 
 import pandas as pd
 
-from src.config import BREADTH_COLUMNS, INDUSTRY_REGIME_COLUMN, INDUSTRY_TREND_COLUMNS, METRIC_COLUMNS
+from src.config import (
+    BREADTH_COLUMNS,
+    CAUSAL_HYPOTHESIS_COLUMN,
+    EVIDENCE_STATUS_COLUMN,
+    INDUSTRY_REGIME_COLUMN,
+    INDUSTRY_RISK_FLAG_COLUMN,
+    INDUSTRY_TREND_COLUMNS,
+    METRIC_COLUMNS,
+    ROTATION_TYPE_COLUMN,
+)
 from src.data_quality import build_data_quality_summary
 from src.daily_brief import build_daily_brief
 from src.industry import calculate_confirmed_by_industry
@@ -164,6 +173,10 @@ def build_dashboard_data(
     for column, default in [
         ("leader_type", "non_leader"),
         (INDUSTRY_REGIME_COLUMN, "neutral"),
+        (INDUSTRY_RISK_FLAG_COLUMN, "none"),
+        (ROTATION_TYPE_COLUMN, "unclear"),
+        (CAUSAL_HYPOTHESIS_COLUMN, "unclear"),
+        (EVIDENCE_STATUS_COLUMN, "needs_review"),
         ("short_term_price_zone", "neutral"),
         ("long_term_price_zone", "neutral"),
         ("price_zone", "neutral"),
@@ -185,6 +198,15 @@ def build_dashboard_data(
     if INDUSTRY_REGIME_COLUMN not in industries.columns:
         industries[INDUSTRY_REGIME_COLUMN] = "neutral"
     industries[INDUSTRY_REGIME_COLUMN] = industries[INDUSTRY_REGIME_COLUMN].fillna("neutral").astype(str)
+    for column, default in [
+        (INDUSTRY_RISK_FLAG_COLUMN, "none"),
+        (ROTATION_TYPE_COLUMN, "unclear"),
+        (CAUSAL_HYPOTHESIS_COLUMN, "unclear"),
+        (EVIDENCE_STATUS_COLUMN, "needs_review"),
+    ]:
+        if column not in industries.columns:
+            industries[column] = default
+        industries[column] = industries[column].fillna(default).astype(str)
 
     numeric_industry_columns = [
         "ticker_count",
@@ -218,6 +240,9 @@ def build_dashboard_data(
         "return_5d",
         "return_20d",
         "relative_volume",
+        INDUSTRY_REGIME_COLUMN,
+        INDUSTRY_RISK_FLAG_COLUMN,
+        ROTATION_TYPE_COLUMN,
     ]
     industry_breadth_columns = [
         "industry_group",
@@ -231,6 +256,9 @@ def build_dashboard_data(
         "strong_signal_pct",
         "high_relative_volume_pct",
         "breadth_score",
+        INDUSTRY_REGIME_COLUMN,
+        INDUSTRY_RISK_FLAG_COLUMN,
+        ROTATION_TYPE_COLUMN,
     ]
     industry_trend_columns = [
         "industry_group",
@@ -245,6 +273,9 @@ def build_dashboard_data(
         "momentum_acceleration",
         "momentum_exhaustion_warning",
         "confirmed_signal_pct",
+        INDUSTRY_REGIME_COLUMN,
+        INDUSTRY_RISK_FLAG_COLUMN,
+        ROTATION_TYPE_COLUMN,
     ]
 
     stock_columns = [
@@ -268,6 +299,10 @@ def build_dashboard_data(
         "company_name",
         "industry_group",
         INDUSTRY_REGIME_COLUMN,
+        INDUSTRY_RISK_FLAG_COLUMN,
+        ROTATION_TYPE_COLUMN,
+        CAUSAL_HYPOTHESIS_COLUMN,
+        EVIDENCE_STATUS_COLUMN,
         "leader_type",
         "industry_quality_score",
         "watch_status",
@@ -288,6 +323,10 @@ def build_dashboard_data(
     leader_industry_columns = [
         "industry_group",
         INDUSTRY_REGIME_COLUMN,
+        INDUSTRY_RISK_FLAG_COLUMN,
+        ROTATION_TYPE_COLUMN,
+        CAUSAL_HYPOTHESIS_COLUMN,
+        EVIDENCE_STATUS_COLUMN,
         "return_5d",
         "return_10d",
         "breadth_score",
@@ -392,9 +431,9 @@ def build_dashboard_data(
         ascending=[False, False, False],
         na_position="last",
     )
-    not_eligible_industries = industries[
-        industries[INDUSTRY_REGIME_COLUMN].isin(["neutral", "weak", "exhaustion"])
-    ].sort_values(["return_10d", "breadth_score"], ascending=[False, False], na_position="last")
+    not_eligible_industries = industries[industries[INDUSTRY_REGIME_COLUMN].isin(["neutral", "weak"])].sort_values(
+        ["return_10d", "breadth_score"], ascending=[False, False], na_position="last"
+    )
     industry_constituents = {}
     if not tickers.empty:
         for industry_group, industry_tickers in tickers.groupby("industry_group", dropna=False):
@@ -1680,8 +1719,41 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       momentum_leader: "動能領先",
       early_recovery: "早期修復",
       neutral: "中性",
-      weak: "偏弱",
-      exhaustion: "可能衰竭"
+      weak: "偏弱"
+    };
+
+    const industryRiskFlagLabels = {
+      none: "無",
+      momentum_exhaustion: "動能衰竭",
+      narrow_leadership: "領漲偏窄",
+      late_cycle_momentum: "後段動能",
+      data_limited: "資料有限"
+    };
+
+    const rotationTypeLabels = {
+      risk_on_growth: "成長風險偏好",
+      defensive_rotation: "防禦輪動",
+      commodity_inflation: "商品通膨",
+      policy_driven: "政策驅動",
+      panic_rebound: "急跌反彈",
+      liquidity_rebound: "流動性反彈",
+      unclear: "不明"
+    };
+
+    const causalHypothesisLabels = {
+      industry_flow_leads_leaders: "產業流向帶動",
+      leader_strength_leads_industry: "領導股帶動",
+      macro_liquidity_rebound: "流動性修復",
+      policy_or_thematic_support: "政策或題材支撐",
+      defensive_rotation: "防禦輪動",
+      unclear: "不明"
+    };
+
+    const evidenceStatusLabels = {
+      observed: "已觀察",
+      inferred: "推論",
+      needs_review: "待檢查",
+      unsupported: "未支持"
     };
 
     const leaderTypeLabels = {
@@ -1751,11 +1823,15 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       positive10dPct: "產業內 10 日報酬大於 0 的股票比例。",
       strongPct: "產業內符合強勢動能訊號的股票比例。",
       highRelativeVolumePct: "產業內相對量大於 1.2 的股票比例。",
-      industryRegime: "產業狀態由 10 日報酬排名、廣度分數、持續性與衰竭警示決定。",
+      industryRegime: "產業趨勢狀態由 10 日報酬排名、廣度分數與持續性決定；風險另列。",
+      industryRiskFlag: "產業風險旗標保留衰竭、領漲偏窄、後段動能或資料有限等狀況。",
+      rotationType: "手動或設定檔分類的輪動類型；不從價格與量能自動推論複雜原因。",
+      causalHypothesis: "用於研究檢查的因果假說，不代表已證實原因。",
+      evidenceStatus: "目前系統內可觀察資料對假說的支持程度。",
       leaderType: "手動維護的領導股類型；目前預設為未標註領導。",
       industryQuality: "手動維護的產業品質分數，1 到 5 分；研究候選需要至少 4 分。",
-      currentState: "依近期報酬、回撤、均線與 price zone 判斷的目前價格狀態。",
-      priceZone: "綜合短期與長期價格位置後的區間，用於 watch status。",
+      currentState: "依近期報酬、回撤、均線與 price position 判斷的目前價格狀態。",
+      priceZone: "綜合短期與長期技術價格位置後的區間，用於 watch status。",
       shortTermPriceZone: "由價格相對 20 日均線的距離判斷。",
       longTermPriceZone: "由價格在 52 週區間中的位置判斷。",
       watchStatus: "風險優先的確定性研究狀態，不代表投資建議。",
@@ -1786,6 +1862,9 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
           { key: "return_20d", label: "平均 20日", type: "percent", description: explanations.return20d },
           { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
+          { key: "industry_regime", label: "狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType },
           { key: "tickers_with_data", label: "有資料", type: "integer" },
           { key: "ticker_count", label: "檔數", type: "integer" }
         ]
@@ -1812,7 +1891,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "confirmed_signal_pct", label: "確認比例", type: "percent", description: explanations.confirmedPct },
           { key: "strong_signal_pct", label: "強勢比例", type: "percent", description: explanations.strongPct },
           { key: "high_relative_volume_pct", label: "高相對量", type: "percent", description: explanations.highRelativeVolumePct },
-          { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d }
+          { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
+          { key: "industry_regime", label: "狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType }
         ]
       },
       "breadth-high-return-weak": {
@@ -1824,7 +1906,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "positive_10d_pct", label: "10日正報酬", type: "percent", description: explanations.positive10dPct },
           { key: "confirmed_signal_pct", label: "確認比例", type: "percent", description: explanations.confirmedPct },
           { key: "strong_signal_pct", label: "強勢比例", type: "percent", description: explanations.strongPct },
-          { key: "high_relative_volume_pct", label: "高相對量", type: "percent", description: explanations.highRelativeVolumePct }
+          { key: "high_relative_volume_pct", label: "高相對量", type: "percent", description: explanations.highRelativeVolumePct },
+          { key: "industry_regime", label: "狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType }
         ]
       },
       "breadth-moderate-improving": {
@@ -1836,7 +1921,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "positive_5d_pct", label: "5日正報酬", type: "percent", description: explanations.positive5dPct },
           { key: "positive_10d_pct", label: "10日正報酬", type: "percent", description: explanations.positive10dPct },
           { key: "breadth_score", label: "廣度分數", type: "percent", description: explanations.breadthScore },
-          { key: "high_relative_volume_pct", label: "高相對量", type: "percent", description: explanations.highRelativeVolumePct }
+          { key: "high_relative_volume_pct", label: "高相對量", type: "percent", description: explanations.highRelativeVolumePct },
+          { key: "industry_regime", label: "狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType }
         ]
       },
       "rotation-gaining": {
@@ -1880,7 +1968,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "momentum_acceleration", label: "動能加速", type: "signedPercent", description: explanations.acceleration },
           { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
           { key: "return_5d", label: "平均 5日", type: "percent", description: explanations.return5d },
-          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume }
+          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
+          { key: "industry_regime", label: "狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType }
         ]
       },
       "trend-strongest-persistent": {
@@ -1891,7 +1982,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
           { key: "confirmed_signal_pct", label: "確認比例", type: "percent", description: explanations.confirmedPct },
           { key: "rotation_score", label: "輪動分數", type: "signedInteger", description: explanations.rotation },
-          { key: "momentum_acceleration", label: "動能加速", type: "signedPercent", description: explanations.acceleration }
+          { key: "momentum_acceleration", label: "動能加速", type: "signedPercent", description: explanations.acceleration },
+          { key: "industry_regime", label: "狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType }
         ]
       },
       "trend-momentum-exhaustion": {
@@ -1902,7 +1996,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "return_3d", label: "平均 3日", type: "percent", description: explanations.return3d },
           { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
           { key: "momentum_acceleration", label: "動能加速", type: "signedPercent", description: explanations.acceleration },
-          { key: "momentum_persistence", label: "前三持續天數", type: "integer", description: explanations.persistence }
+          { key: "momentum_persistence", label: "前三持續天數", type: "integer", description: explanations.persistence },
+          { key: "industry_regime", label: "狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType }
         ]
       },
       "trend-momentum-recovery": {
@@ -1913,7 +2010,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "rotation_score", label: "輪動分數", type: "signedInteger", description: explanations.rotation },
           { key: "return_5d", label: "平均 5日", type: "percent", description: explanations.return5d },
           { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
-          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume }
+          { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
+          { key: "industry_regime", label: "狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType }
         ]
       },
       "leader-research-candidates": {
@@ -1923,10 +2023,14 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "company_name", label: "公司", type: "company" },
           { key: "industry_group", label: "產業" },
           { key: "industry_regime", label: "產業狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType },
+          { key: "causal_hypothesis", label: "假說", description: explanations.causalHypothesis },
+          { key: "evidence_status", label: "證據", description: explanations.evidenceStatus },
           { key: "leader_type", label: "領導類型", description: explanations.leaderType },
           { key: "industry_quality_score", label: "品質分數", type: "integer", description: explanations.industryQuality },
           { key: "current_state", label: "目前狀態", description: explanations.currentState },
-          { key: "price_zone", label: "綜合區間", description: explanations.priceZone },
+          { key: "price_zone", label: "價格位置", description: explanations.priceZone },
           { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d },
           { key: "relative_strength_vs_industry", label: "相對強度", type: "percent", description: explanations.relativeStrength },
           { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume }
@@ -1939,11 +2043,15 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "company_name", label: "公司", type: "company" },
           { key: "industry_group", label: "產業" },
           { key: "industry_regime", label: "產業狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType },
+          { key: "causal_hypothesis", label: "假說", description: explanations.causalHypothesis },
+          { key: "evidence_status", label: "證據", description: explanations.evidenceStatus },
           { key: "leader_type", label: "領導類型", description: explanations.leaderType },
           { key: "industry_quality_score", label: "品質分數", type: "integer", description: explanations.industryQuality },
           { key: "current_state", label: "目前狀態", description: explanations.currentState },
-          { key: "short_term_price_zone", label: "短期區間", description: explanations.shortTermPriceZone },
-          { key: "long_term_price_zone", label: "長期區間", description: explanations.longTermPriceZone },
+          { key: "short_term_price_zone", label: "短期位置", description: explanations.shortTermPriceZone },
+          { key: "long_term_price_zone", label: "長期位置", description: explanations.longTermPriceZone },
           { key: "return_5d", label: "5日", type: "percent", description: explanations.return5d },
           { key: "max_drawdown_10d", label: "最大回撤", type: "warningPercent", description: explanations.maxDrawdown }
         ]
@@ -1955,9 +2063,13 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "company_name", label: "公司", type: "company" },
           { key: "industry_group", label: "產業" },
           { key: "industry_regime", label: "產業狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType },
+          { key: "causal_hypothesis", label: "假說", description: explanations.causalHypothesis },
+          { key: "evidence_status", label: "證據", description: explanations.evidenceStatus },
           { key: "leader_type", label: "領導類型", description: explanations.leaderType },
           { key: "current_state", label: "目前狀態", description: explanations.currentState },
-          { key: "price_zone", label: "綜合區間", description: explanations.priceZone },
+          { key: "price_zone", label: "價格位置", description: explanations.priceZone },
           { key: "distance_from_20d_ma", label: "距20日均線", type: "percent", description: explanations.distance20d },
           { key: "position_in_52w_range", label: "52週位置", type: "percent", description: explanations.position52wRange },
           { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d }
@@ -1968,6 +2080,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         columns: [
           { key: "industry_group", label: "產業" },
           { key: "industry_regime", label: "產業狀態", description: explanations.industryRegime },
+          { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
+          { key: "rotation_type", label: "輪動", description: explanations.rotationType },
+          { key: "causal_hypothesis", label: "假說", description: explanations.causalHypothesis },
+          { key: "evidence_status", label: "證據", description: explanations.evidenceStatus },
           { key: "return_5d", label: "平均 5日", type: "percent", description: explanations.return5d },
           { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
           { key: "breadth_score", label: "廣度分數", type: "percent", description: explanations.breadthScore },
@@ -2126,6 +2242,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       if (column.key === "industry_group") return displayText(value);
       if (column.key === "data_status") return dataStatusLabels[value] || displayText(value);
       if (column.key === "industry_regime") return regimeLabels[value] || displayText(value);
+      if (column.key === "industry_risk_flag") return industryRiskFlagLabels[value] || displayText(value);
+      if (column.key === "rotation_type") return rotationTypeLabels[value] || displayText(value);
+      if (column.key === "causal_hypothesis") return causalHypothesisLabels[value] || displayText(value);
+      if (column.key === "evidence_status") return evidenceStatusLabels[value] || displayText(value);
       if (column.key === "leader_type") return leaderTypeLabels[value] || displayText(value);
       if (["short_term_price_zone", "long_term_price_zone", "price_zone"].includes(column.key)) {
         return priceZoneLabels[value] || displayText(value);

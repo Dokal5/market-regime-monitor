@@ -149,12 +149,71 @@ BREADTH_STRONG_SIGNAL_WEIGHT = 0.20
 BREADTH_HIGH_RELATIVE_VOLUME_WEIGHT = 0.10
 
 INDUSTRY_REGIME_COLUMN = "industry_regime"
+INDUSTRY_RISK_FLAG_COLUMN = "industry_risk_flag"
+ROTATION_TYPE_COLUMN = "rotation_type"
+CAUSAL_HYPOTHESIS_COLUMN = "causal_hypothesis"
+EVIDENCE_STATUS_COLUMN = "evidence_status"
 INDUSTRY_REGIME_TOP_RETURN_RANK = 5
 INDUSTRY_REGIME_TOP_BREADTH_RANK = 5
 INDUSTRY_REGIME_MIN_PERSISTENCE = 2
+INDUSTRY_NARROW_LEADERSHIP_BREADTH_THRESHOLD = 0.40
+INDUSTRY_OBSERVED_EVIDENCE_BREADTH_THRESHOLD = 0.60
+
+ALLOWED_INDUSTRY_RISK_FLAGS = [
+    "none",
+    "momentum_exhaustion",
+    "narrow_leadership",
+    "late_cycle_momentum",
+    "data_limited",
+]
+ALLOWED_ROTATION_TYPES = [
+    "risk_on_growth",
+    "defensive_rotation",
+    "commodity_inflation",
+    "policy_driven",
+    "panic_rebound",
+    "liquidity_rebound",
+    "unclear",
+]
+ALLOWED_CAUSAL_HYPOTHESES = [
+    "industry_flow_leads_leaders",
+    "leader_strength_leads_industry",
+    "macro_liquidity_rebound",
+    "policy_or_thematic_support",
+    "defensive_rotation",
+    "unclear",
+]
+ALLOWED_EVIDENCE_STATUSES = [
+    "observed",
+    "inferred",
+    "needs_review",
+    "unsupported",
+]
+ALLOWED_EVIDENCE_STATUS = ALLOWED_EVIDENCE_STATUSES
+INDUSTRY_ROTATION_TYPE_MAP = {
+    "Defensive Healthcare": "defensive_rotation",
+    "Defensive Staples": "defensive_rotation",
+    "Nuclear": "policy_driven",
+    "Energy Nuclear": "policy_driven",
+    "Semiconductors": "risk_on_growth",
+    "AI Infrastructure": "risk_on_growth",
+}
+ROTATION_TYPE_CAUSAL_HYPOTHESIS_MAP = {
+    "risk_on_growth": "industry_flow_leads_leaders",
+    "defensive_rotation": "defensive_rotation",
+    "policy_driven": "policy_or_thematic_support",
+    "liquidity_rebound": "macro_liquidity_rebound",
+    "panic_rebound": "macro_liquidity_rebound",
+    "commodity_inflation": "policy_or_thematic_support",
+    "unclear": "unclear",
+}
 
 LEADER_FILTER_COLUMNS = [
     "industry_regime",
+    "industry_risk_flag",
+    "rotation_type",
+    "causal_hypothesis",
+    "evidence_status",
     "short_term_price_zone",
     "long_term_price_zone",
     "price_zone",
