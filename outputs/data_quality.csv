@@ -1,113 +1,113 @@
 ticker,company_name,industry_group,latest_date,data_points,data_status,data_quality_note
-ANET,Arista Networks Inc.,AI Infrastructure,2026-05-28,251,ok,資料日期與本次市場日期一致。
-VRT,Vertiv Holdings Co.,AI Infrastructure,2026-05-28,251,ok,資料日期與本次市場日期一致。
-DELL,Dell Technologies Inc.,AI Infrastructure,2026-05-28,251,ok,資料日期與本次市場日期一致。
-HPE,Hewlett Packard Enterprise Co.,AI Infrastructure,2026-05-28,251,ok,資料日期與本次市場日期一致。
-SMCI,Super Micro Computer Inc.,AI Infrastructure,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ETN,Eaton Corporation plc,AI Infrastructure,2026-05-28,251,ok,資料日期與本次市場日期一致。
-NVDA,NVIDIA Corporation,Semiconductors,2026-05-28,251,ok,資料日期與本次市場日期一致。
-AMD,Advanced Micro Devices Inc.,Semiconductors,2026-05-28,251,ok,資料日期與本次市場日期一致。
-AVGO,Broadcom Inc.,Semiconductors,2026-05-28,251,ok,資料日期與本次市場日期一致。
-TSM,Taiwan Semiconductor Manufacturing Co. Ltd.,Semiconductors,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ASML,ASML Holding N.V.,Semiconductors,2026-05-28,251,ok,資料日期與本次市場日期一致。
-MU,Micron Technology Inc.,Semiconductors,2026-05-28,251,ok,資料日期與本次市場日期一致。
-QCOM,Qualcomm Incorporated,Semiconductors,2026-05-28,251,ok,資料日期與本次市場日期一致。
-INTC,Intel Corporation,Semiconductors,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ARM,Arm Holdings plc,Semiconductors,2026-05-28,251,ok,資料日期與本次市場日期一致。
-AMAT,Applied Materials Inc.,Semiconductors,2026-05-28,251,ok,資料日期與本次市場日期一致。
-TXN,Texas Instruments Incorporated,Semiconductors,2026-05-28,251,ok,資料日期與本次市場日期一致。
-AVAV,AeroVironment Inc.,Defense Drones,2026-05-28,251,ok,資料日期與本次市場日期一致。
-KTOS,Kratos Defense & Security Solutions Inc.,Defense Drones,2026-05-28,251,ok,資料日期與本次市場日期一致。
-RCAT,Red Cat Holdings Inc.,Defense Drones,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ONDS,Ondas Holdings Inc.,Defense Drones,2026-05-28,251,ok,資料日期與本次市場日期一致。
-DPRO,Draganfly Inc.,Defense Drones,2026-05-28,251,ok,資料日期與本次市場日期一致。
-RTX,RTX Corporation,Defense,2026-05-28,251,ok,資料日期與本次市場日期一致。
-LHX,L3Harris Technologies Inc.,Defense,2026-05-28,251,ok,資料日期與本次市場日期一致。
-NOC,Northrop Grumman Corporation,Defense,2026-05-28,251,ok,資料日期與本次市場日期一致。
-LMT,Lockheed Martin Corporation,Defense,2026-05-28,251,ok,資料日期與本次市場日期一致。
-GD,General Dynamics Corporation,Defense,2026-05-28,251,ok,資料日期與本次市場日期一致。
-HII,Huntington Ingalls Industries Inc.,Defense,2026-05-28,251,ok,資料日期與本次市場日期一致。
-LDOS,Leidos Holdings Inc.,Defense,2026-05-28,251,ok,資料日期與本次市場日期一致。
-RKLB,Rocket Lab USA Inc.,Space,2026-05-28,251,ok,資料日期與本次市場日期一致。
-LUNR,Intuitive Machines Inc.,Space,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ASTS,AST SpaceMobile Inc.,Space,2026-05-28,251,ok,資料日期與本次市場日期一致。
-IRDM,Iridium Communications Inc.,Space,2026-05-28,251,ok,資料日期與本次市場日期一致。
-SPCE,Virgin Galactic Holdings Inc.,Space,2026-05-28,251,ok,資料日期與本次市場日期一致。
-PL,Planet Labs PBC,Space,2026-05-28,251,ok,資料日期與本次市場日期一致。
-RDW,Redwire Corporation,Space,2026-05-28,251,ok,資料日期與本次市場日期一致。
-BKSY,BlackSky Technology Inc.,Space,2026-05-28,251,ok,資料日期與本次市場日期一致。
-VSAT,Viasat Inc.,Space,2026-05-28,251,ok,資料日期與本次市場日期一致。
-SATL,Satellogic Inc.,Space,2026-05-28,251,ok,資料日期與本次市場日期一致。
-SPIR,Spire Global Inc.,Space,2026-05-28,251,ok,資料日期與本次市場日期一致。
-CRWD,CrowdStrike Holdings Inc.,Cybersecurity,2026-05-28,251,ok,資料日期與本次市場日期一致。
-PANW,Palo Alto Networks Inc.,Cybersecurity,2026-05-28,251,ok,資料日期與本次市場日期一致。
-FTNT,Fortinet Inc.,Cybersecurity,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ZS,Zscaler Inc.,Cybersecurity,2026-05-28,251,ok,資料日期與本次市場日期一致。
-OKTA,Okta Inc.,Cybersecurity,2026-05-28,251,ok,資料日期與本次市場日期一致。
-TENB,Tenable Holdings Inc.,Cybersecurity,2026-05-28,251,ok,資料日期與本次市場日期一致。
-CRM,Salesforce Inc.,Cloud Software,2026-05-28,251,ok,資料日期與本次市場日期一致。
-NOW,ServiceNow Inc.,Cloud Software,2026-05-28,251,ok,資料日期與本次市場日期一致。
-SNOW,Snowflake Inc.,Cloud Software,2026-05-28,251,ok,資料日期與本次市場日期一致。
-DDOG,Datadog Inc.,Cloud Software,2026-05-28,251,ok,資料日期與本次市場日期一致。
-MDB,MongoDB Inc.,Cloud Software,2026-05-28,251,ok,資料日期與本次市場日期一致。
-WDAY,Workday Inc.,Cloud Software,2026-05-28,251,ok,資料日期與本次市場日期一致。
-TTD,The Trade Desk Inc.,Adtech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-APP,AppLovin Corporation,Adtech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ROKU,Roku Inc.,Adtech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-MGNI,Magnite Inc.,Adtech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-PUBM,PubMatic Inc.,Adtech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-DV,DoubleVerify Holdings Inc.,Adtech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-CEG,Constellation Energy Corporation,Nuclear,2026-05-28,251,ok,資料日期與本次市場日期一致。
-VST,Vistra Corp.,Nuclear,2026-05-28,251,ok,資料日期與本次市場日期一致。
-CCJ,Cameco Corporation,Nuclear,2026-05-28,251,ok,資料日期與本次市場日期一致。
-UEC,Uranium Energy Corp.,Nuclear,2026-05-28,251,ok,資料日期與本次市場日期一致。
-LEU,Centrus Energy Corp.,Nuclear,2026-05-28,251,ok,資料日期與本次市場日期一致。
-SMR,NuScale Power Corporation,Nuclear,2026-05-28,251,ok,資料日期與本次市場日期一致。
-OKLO,Oklo Inc.,Nuclear,2026-05-28,251,ok,資料日期與本次市場日期一致。
-NNE,NANO Nuclear Energy Inc.,Nuclear,2026-05-28,251,ok,資料日期與本次市場日期一致。
-GEV,GE Vernova Inc.,Renewables,2026-05-28,251,ok,資料日期與本次市場日期一致。
-FSLR,First Solar Inc.,Renewables,2026-05-28,251,ok,資料日期與本次市場日期一致。
-NXT,Nextracker Inc.,Renewables,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ARRY,Array Technologies Inc.,Renewables,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ORA,Ormat Technologies Inc.,Renewables,2026-05-28,251,ok,資料日期與本次市場日期一致。
-FLNC,Fluence Energy Inc.,Energy Storage,2026-05-28,251,ok,資料日期與本次市場日期一致。
-STEM,Stem Inc.,Energy Storage,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ENPH,Enphase Energy Inc.,Energy Storage,2026-05-28,251,ok,資料日期與本次市場日期一致。
-SEDG,SolarEdge Technologies Inc.,Energy Storage,2026-05-28,251,ok,資料日期與本次市場日期一致。
-GNRC,Generac Holdings Inc.,Energy Storage,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ISRG,Intuitive Surgical Inc.,Robotics Automation,2026-05-28,251,ok,資料日期與本次市場日期一致。
-TER,Teradyne Inc.,Robotics Automation,2026-05-28,251,ok,資料日期與本次市場日期一致。
-SYM,Symbotic Inc.,Robotics Automation,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ROK,Rockwell Automation Inc.,Robotics Automation,2026-05-28,251,ok,資料日期與本次市場日期一致。
-CGNX,Cognex Corporation,Robotics Automation,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ZBRA,Zebra Technologies Corporation,Robotics Automation,2026-05-28,251,ok,資料日期與本次市場日期一致。
-XYZ,Block Inc.,Fintech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-PYPL,PayPal Holdings Inc.,Fintech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-HOOD,Robinhood Markets Inc.,Fintech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-COIN,Coinbase Global Inc.,Fintech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-SOFI,SoFi Technologies Inc.,Fintech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-AFRM,Affirm Holdings Inc.,Fintech,2026-05-28,251,ok,資料日期與本次市場日期一致。
-NFLX,Netflix Inc.,Consumer Platforms,2026-05-28,251,ok,資料日期與本次市場日期一致。
-UBER,Uber Technologies Inc.,Consumer Platforms,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ABNB,Airbnb Inc.,Consumer Platforms,2026-05-28,251,ok,資料日期與本次市場日期一致。
-DASH,DoorDash Inc.,Consumer Platforms,2026-05-28,251,ok,資料日期與本次市場日期一致。
-SPOT,Spotify Technology S.A.,Consumer Platforms,2026-05-28,251,ok,資料日期與本次市場日期一致。
-PINS,Pinterest Inc.,Consumer Platforms,2026-05-28,251,ok,資料日期與本次市場日期一致。
-JNJ,Johnson & Johnson,Defensive Healthcare,2026-05-28,251,ok,資料日期與本次市場日期一致。
-MRK,Merck & Co. Inc.,Defensive Healthcare,2026-05-28,251,ok,資料日期與本次市場日期一致。
-PFE,Pfizer Inc.,Defensive Healthcare,2026-05-28,251,ok,資料日期與本次市場日期一致。
-ABBV,AbbVie Inc.,Defensive Healthcare,2026-05-28,251,ok,資料日期與本次市場日期一致。
-UNH,UnitedHealth Group Inc.,Defensive Healthcare,2026-05-28,251,ok,資料日期與本次市場日期一致。
-MDT,Medtronic plc,Defensive Healthcare,2026-05-28,251,ok,資料日期與本次市場日期一致。
-PG,Procter & Gamble Co.,Defensive Staples,2026-05-28,251,ok,資料日期與本次市場日期一致。
-KO,The Coca-Cola Company,Defensive Staples,2026-05-28,251,ok,資料日期與本次市場日期一致。
-PEP,PepsiCo Inc.,Defensive Staples,2026-05-28,251,ok,資料日期與本次市場日期一致。
-WMT,Walmart Inc.,Defensive Staples,2026-05-28,251,ok,資料日期與本次市場日期一致。
-COST,Costco Wholesale Corporation,Defensive Staples,2026-05-28,251,ok,資料日期與本次市場日期一致。
-CL,Colgate-Palmolive Company,Defensive Staples,2026-05-28,251,ok,資料日期與本次市場日期一致。
-SPY,SPDR S&P 500 ETF Trust,Market ETFs,2026-05-28,251,ok,資料日期與本次市場日期一致。
-QQQ,Invesco QQQ Trust,Market ETFs,2026-05-28,251,ok,資料日期與本次市場日期一致。
-IWM,iShares Russell 2000 ETF,Market ETFs,2026-05-28,251,ok,資料日期與本次市場日期一致。
-DIA,SPDR Dow Jones Industrial Average ETF Trust,Market ETFs,2026-05-28,251,ok,資料日期與本次市場日期一致。
-VTI,Vanguard Total Stock Market ETF,Market ETFs,2026-05-28,251,ok,資料日期與本次市場日期一致。
-VOO,Vanguard S&P 500 ETF,Market ETFs,2026-05-28,251,ok,資料日期與本次市場日期一致。
+ANET,Arista Networks Inc.,AI Infrastructure,2026-05-29,251,ok,資料日期與本次市場日期一致。
+VRT,Vertiv Holdings Co.,AI Infrastructure,2026-05-29,251,ok,資料日期與本次市場日期一致。
+DELL,Dell Technologies Inc.,AI Infrastructure,2026-05-29,251,ok,資料日期與本次市場日期一致。
+HPE,Hewlett Packard Enterprise Co.,AI Infrastructure,2026-05-29,251,ok,資料日期與本次市場日期一致。
+SMCI,Super Micro Computer Inc.,AI Infrastructure,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ETN,Eaton Corporation plc,AI Infrastructure,2026-05-29,251,ok,資料日期與本次市場日期一致。
+NVDA,NVIDIA Corporation,Semiconductors,2026-05-29,251,ok,資料日期與本次市場日期一致。
+AMD,Advanced Micro Devices Inc.,Semiconductors,2026-05-29,251,ok,資料日期與本次市場日期一致。
+AVGO,Broadcom Inc.,Semiconductors,2026-05-29,251,ok,資料日期與本次市場日期一致。
+TSM,Taiwan Semiconductor Manufacturing Co. Ltd.,Semiconductors,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ASML,ASML Holding N.V.,Semiconductors,2026-05-29,251,ok,資料日期與本次市場日期一致。
+MU,Micron Technology Inc.,Semiconductors,2026-05-29,251,ok,資料日期與本次市場日期一致。
+QCOM,Qualcomm Incorporated,Semiconductors,2026-05-29,251,ok,資料日期與本次市場日期一致。
+INTC,Intel Corporation,Semiconductors,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ARM,Arm Holdings plc,Semiconductors,2026-05-29,251,ok,資料日期與本次市場日期一致。
+AMAT,Applied Materials Inc.,Semiconductors,2026-05-29,251,ok,資料日期與本次市場日期一致。
+TXN,Texas Instruments Incorporated,Semiconductors,2026-05-29,251,ok,資料日期與本次市場日期一致。
+AVAV,AeroVironment Inc.,Defense Drones,2026-05-29,251,ok,資料日期與本次市場日期一致。
+KTOS,Kratos Defense & Security Solutions Inc.,Defense Drones,2026-05-29,251,ok,資料日期與本次市場日期一致。
+RCAT,Red Cat Holdings Inc.,Defense Drones,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ONDS,Ondas Holdings Inc.,Defense Drones,2026-05-29,251,ok,資料日期與本次市場日期一致。
+DPRO,Draganfly Inc.,Defense Drones,2026-05-29,251,ok,資料日期與本次市場日期一致。
+RTX,RTX Corporation,Defense,2026-05-29,251,ok,資料日期與本次市場日期一致。
+LHX,L3Harris Technologies Inc.,Defense,2026-05-29,251,ok,資料日期與本次市場日期一致。
+NOC,Northrop Grumman Corporation,Defense,2026-05-29,251,ok,資料日期與本次市場日期一致。
+LMT,Lockheed Martin Corporation,Defense,2026-05-29,251,ok,資料日期與本次市場日期一致。
+GD,General Dynamics Corporation,Defense,2026-05-29,251,ok,資料日期與本次市場日期一致。
+HII,Huntington Ingalls Industries Inc.,Defense,2026-05-29,251,ok,資料日期與本次市場日期一致。
+LDOS,Leidos Holdings Inc.,Defense,2026-05-29,251,ok,資料日期與本次市場日期一致。
+RKLB,Rocket Lab USA Inc.,Space,2026-05-29,251,ok,資料日期與本次市場日期一致。
+LUNR,Intuitive Machines Inc.,Space,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ASTS,AST SpaceMobile Inc.,Space,2026-05-29,251,ok,資料日期與本次市場日期一致。
+IRDM,Iridium Communications Inc.,Space,2026-05-29,251,ok,資料日期與本次市場日期一致。
+SPCE,Virgin Galactic Holdings Inc.,Space,2026-05-29,251,ok,資料日期與本次市場日期一致。
+PL,Planet Labs PBC,Space,2026-05-29,251,ok,資料日期與本次市場日期一致。
+RDW,Redwire Corporation,Space,2026-05-29,251,ok,資料日期與本次市場日期一致。
+BKSY,BlackSky Technology Inc.,Space,2026-05-29,251,ok,資料日期與本次市場日期一致。
+VSAT,Viasat Inc.,Space,2026-05-29,251,ok,資料日期與本次市場日期一致。
+SATL,Satellogic Inc.,Space,2026-05-29,251,ok,資料日期與本次市場日期一致。
+SPIR,Spire Global Inc.,Space,2026-05-29,251,ok,資料日期與本次市場日期一致。
+CRWD,CrowdStrike Holdings Inc.,Cybersecurity,2026-05-29,251,ok,資料日期與本次市場日期一致。
+PANW,Palo Alto Networks Inc.,Cybersecurity,2026-05-29,251,ok,資料日期與本次市場日期一致。
+FTNT,Fortinet Inc.,Cybersecurity,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ZS,Zscaler Inc.,Cybersecurity,2026-05-29,251,ok,資料日期與本次市場日期一致。
+OKTA,Okta Inc.,Cybersecurity,2026-05-29,251,ok,資料日期與本次市場日期一致。
+TENB,Tenable Holdings Inc.,Cybersecurity,2026-05-29,251,ok,資料日期與本次市場日期一致。
+CRM,Salesforce Inc.,Cloud Software,2026-05-29,251,ok,資料日期與本次市場日期一致。
+NOW,ServiceNow Inc.,Cloud Software,2026-05-29,251,ok,資料日期與本次市場日期一致。
+SNOW,Snowflake Inc.,Cloud Software,2026-05-29,251,ok,資料日期與本次市場日期一致。
+DDOG,Datadog Inc.,Cloud Software,2026-05-29,251,ok,資料日期與本次市場日期一致。
+MDB,MongoDB Inc.,Cloud Software,2026-05-29,251,ok,資料日期與本次市場日期一致。
+WDAY,Workday Inc.,Cloud Software,2026-05-29,251,ok,資料日期與本次市場日期一致。
+TTD,The Trade Desk Inc.,Adtech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+APP,AppLovin Corporation,Adtech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ROKU,Roku Inc.,Adtech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+MGNI,Magnite Inc.,Adtech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+PUBM,PubMatic Inc.,Adtech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+DV,DoubleVerify Holdings Inc.,Adtech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+CEG,Constellation Energy Corporation,Nuclear,2026-05-29,251,ok,資料日期與本次市場日期一致。
+VST,Vistra Corp.,Nuclear,2026-05-29,251,ok,資料日期與本次市場日期一致。
+CCJ,Cameco Corporation,Nuclear,2026-05-29,251,ok,資料日期與本次市場日期一致。
+UEC,Uranium Energy Corp.,Nuclear,2026-05-29,251,ok,資料日期與本次市場日期一致。
+LEU,Centrus Energy Corp.,Nuclear,2026-05-29,251,ok,資料日期與本次市場日期一致。
+SMR,NuScale Power Corporation,Nuclear,2026-05-29,251,ok,資料日期與本次市場日期一致。
+OKLO,Oklo Inc.,Nuclear,2026-05-29,251,ok,資料日期與本次市場日期一致。
+NNE,NANO Nuclear Energy Inc.,Nuclear,2026-05-29,251,ok,資料日期與本次市場日期一致。
+GEV,GE Vernova Inc.,Renewables,2026-05-29,251,ok,資料日期與本次市場日期一致。
+FSLR,First Solar Inc.,Renewables,2026-05-29,251,ok,資料日期與本次市場日期一致。
+NXT,Nextracker Inc.,Renewables,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ARRY,Array Technologies Inc.,Renewables,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ORA,Ormat Technologies Inc.,Renewables,2026-05-29,251,ok,資料日期與本次市場日期一致。
+FLNC,Fluence Energy Inc.,Energy Storage,2026-05-29,251,ok,資料日期與本次市場日期一致。
+STEM,Stem Inc.,Energy Storage,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ENPH,Enphase Energy Inc.,Energy Storage,2026-05-29,251,ok,資料日期與本次市場日期一致。
+SEDG,SolarEdge Technologies Inc.,Energy Storage,2026-05-29,251,ok,資料日期與本次市場日期一致。
+GNRC,Generac Holdings Inc.,Energy Storage,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ISRG,Intuitive Surgical Inc.,Robotics Automation,2026-05-29,251,ok,資料日期與本次市場日期一致。
+TER,Teradyne Inc.,Robotics Automation,2026-05-29,251,ok,資料日期與本次市場日期一致。
+SYM,Symbotic Inc.,Robotics Automation,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ROK,Rockwell Automation Inc.,Robotics Automation,2026-05-29,251,ok,資料日期與本次市場日期一致。
+CGNX,Cognex Corporation,Robotics Automation,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ZBRA,Zebra Technologies Corporation,Robotics Automation,2026-05-29,251,ok,資料日期與本次市場日期一致。
+XYZ,Block Inc.,Fintech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+PYPL,PayPal Holdings Inc.,Fintech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+HOOD,Robinhood Markets Inc.,Fintech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+COIN,Coinbase Global Inc.,Fintech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+SOFI,SoFi Technologies Inc.,Fintech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+AFRM,Affirm Holdings Inc.,Fintech,2026-05-29,251,ok,資料日期與本次市場日期一致。
+NFLX,Netflix Inc.,Consumer Platforms,2026-05-29,251,ok,資料日期與本次市場日期一致。
+UBER,Uber Technologies Inc.,Consumer Platforms,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ABNB,Airbnb Inc.,Consumer Platforms,2026-05-29,251,ok,資料日期與本次市場日期一致。
+DASH,DoorDash Inc.,Consumer Platforms,2026-05-29,251,ok,資料日期與本次市場日期一致。
+SPOT,Spotify Technology S.A.,Consumer Platforms,2026-05-29,251,ok,資料日期與本次市場日期一致。
+PINS,Pinterest Inc.,Consumer Platforms,2026-05-29,251,ok,資料日期與本次市場日期一致。
+JNJ,Johnson & Johnson,Defensive Healthcare,2026-05-29,251,ok,資料日期與本次市場日期一致。
+MRK,Merck & Co. Inc.,Defensive Healthcare,2026-05-29,251,ok,資料日期與本次市場日期一致。
+PFE,Pfizer Inc.,Defensive Healthcare,2026-05-29,251,ok,資料日期與本次市場日期一致。
+ABBV,AbbVie Inc.,Defensive Healthcare,2026-05-29,251,ok,資料日期與本次市場日期一致。
+UNH,UnitedHealth Group Inc.,Defensive Healthcare,2026-05-29,251,ok,資料日期與本次市場日期一致。
+MDT,Medtronic plc,Defensive Healthcare,2026-05-29,251,ok,資料日期與本次市場日期一致。
+PG,Procter & Gamble Co.,Defensive Staples,2026-05-29,251,ok,資料日期與本次市場日期一致。
+KO,The Coca-Cola Company,Defensive Staples,2026-05-29,251,ok,資料日期與本次市場日期一致。
+PEP,PepsiCo Inc.,Defensive Staples,2026-05-29,251,ok,資料日期與本次市場日期一致。
+WMT,Walmart Inc.,Defensive Staples,2026-05-29,251,ok,資料日期與本次市場日期一致。
+COST,Costco Wholesale Corporation,Defensive Staples,2026-05-29,251,ok,資料日期與本次市場日期一致。
+CL,Colgate-Palmolive Company,Defensive Staples,2026-05-29,251,ok,資料日期與本次市場日期一致。
+SPY,SPDR S&P 500 ETF Trust,Market ETFs,2026-05-29,251,ok,資料日期與本次市場日期一致。
+QQQ,Invesco QQQ Trust,Market ETFs,2026-05-29,251,ok,資料日期與本次市場日期一致。
+IWM,iShares Russell 2000 ETF,Market ETFs,2026-05-29,251,ok,資料日期與本次市場日期一致。
+DIA,SPDR Dow Jones Industrial Average ETF Trust,Market ETFs,2026-05-29,251,ok,資料日期與本次市場日期一致。
+VTI,Vanguard Total Stock Market ETF,Market ETFs,2026-05-29,251,ok,資料日期與本次市場日期一致。
+VOO,Vanguard S&P 500 ETF,Market ETFs,2026-05-29,251,ok,資料日期與本次市場日期一致。
