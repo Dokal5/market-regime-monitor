@@ -805,8 +805,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     }
 
     .watchlist-alert-meta,
-    .watchlist-alert-reason,
-    .watchlist-alert-route {
+    .watchlist-alert-reason {
       color: var(--muted);
       font-size: 12px;
       line-height: 1.4;
@@ -820,7 +819,16 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     }
 
     .watchlist-alert-route {
-      margin-top: 7px;
+      border: 1px solid rgba(217, 224, 220, 0.9);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.45;
+      margin: 0 0 10px;
+      overflow-wrap: anywhere;
+      padding: 11px 12px;
     }
 
     .watchlist-alert-metrics {
@@ -1619,6 +1627,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         </div>
         <div class="watchlist-alert-counts" id="watchlist-alert-counts"></div>
       </div>
+      <div class="watchlist-alert-route" id="watchlist-alert-route"></div>
       <div class="watchlist-alert-grid" id="watchlist-alert-grid"></div>
     </section>
 
@@ -2470,6 +2479,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       const title = document.getElementById("watchlist-alert-title");
       const subtitle = document.getElementById("watchlist-alert-subtitle");
       const counts = document.getElementById("watchlist-alert-counts");
+      const route = document.getElementById("watchlist-alert-route");
       const grid = document.getElementById("watchlist-alert-grid");
       const rows = sortedWatchlistAlerts(dashboardData.watchlist_alerts || []);
       const redRows = rows.filter((row) => row.alert_level === "red");
@@ -2484,6 +2494,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       panel.className = `watchlist-alert-panel ${panelClass}`.trim();
       counts.replaceChildren();
       grid.replaceChildren();
+      route.textContent = "";
 
       const addPill = (level, label, value) => {
         const pill = document.createElement("span");
@@ -2500,6 +2511,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       if (!rows.length) {
         title.textContent = "追蹤名單尚未設定";
         subtitle.textContent = "更新 watchlist.csv 後，這裡會直接顯示需要優先檢查的 ticker、原因與替代方向。";
+        route.hidden = true;
         const empty = document.createElement("div");
         empty.className = "empty-state";
         empty.textContent = "目前沒有追蹤名單資料。";
@@ -2514,6 +2526,9 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       subtitle.textContent = reviewRows.length
         ? `優先名單：${focusTickers}。先確認弱動能原因，再往強勢產業與領導候選移動。`
         : "目前追蹤名單沒有明顯轉換警示，仍需用每日資料檢查是否轉弱。";
+      const routeSource = reviewRows[0] || rows[0];
+      route.hidden = false;
+      route.textContent = `整體替代路徑：先看產業動能較強的 ${routeSource.replacement_industries || "目前沒有替代產業"}，再研究候選 ${routeSource.replacement_candidates || "目前沒有替代候選"}。`;
 
       for (const row of focusRows) {
         const level = row.alert_level || "unknown";
@@ -2552,12 +2567,6 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           "watchlist-alert-reason",
           `因為 ${row.alert_reason || "目前沒有明確警示"}，所以列為「${alertActionLabels[row.action] || displayText(row.action)}」。`
         );
-        appendText(
-          card,
-          "watchlist-alert-route",
-          `替代路徑：先看產業動能較強的 ${row.replacement_industries || "目前沒有替代產業"}，再研究候選 ${row.replacement_candidates || "目前沒有替代候選"}。`
-        );
-
         grid.appendChild(card);
       }
     }
