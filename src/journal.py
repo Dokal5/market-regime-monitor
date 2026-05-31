@@ -198,6 +198,7 @@ def build_journal_markdown(
     industry_output: pd.DataFrame,
     market_date: str,
     update_health_output: pd.DataFrame | None = None,
+    watchlist_alerts: pd.DataFrame | None = None,
 ) -> str:
     tickers = prepare_tickers(ticker_output)
     industries = prepare_industries(industry_output)
@@ -228,7 +229,7 @@ def build_journal_markdown(
     if update_health_output is None:
         update_health_output = build_update_health_output(tickers)
     update_health_records = update_health_output.to_dict("records")
-    daily_brief = build_daily_brief(tickers, industries, update_health_output)
+    daily_brief = build_daily_brief(tickers, industries, update_health_output, watchlist_alerts)
     interpretation = build_interpretation(tickers, industries, leading_industries, broad_strength_industries, market_date)
 
     snapshot_table = table_from_records(
@@ -349,11 +350,26 @@ def build_journal_markdown(
             ("relative_volume", "relative_volume", "number"),
         ],
     )
+    watchlist_alert_records = watchlist_alerts.to_dict("records") if watchlist_alerts is not None else []
+    watchlist_alert_table = table_from_records(
+        watchlist_alert_records,
+        [
+            ("ticker", "ticker", "text"),
+            ("theme", "theme", "text"),
+            ("industry_group", "industry_group", "text"),
+            ("alert_level", "alert_level", "text"),
+            ("action", "action", "text"),
+            ("alert_reason", "alert_reason", "text"),
+            ("replacement_industries", "replacement_industries", "text"),
+            ("replacement_candidates", "replacement_candidates", "text"),
+        ],
+    )
 
     return "\n\n".join(
         [
             f"# Market Regime Monitor Journal: {market_date}",
             "## Daily Brief\n" + daily_brief_to_markdown(daily_brief),
+            "## Watchlist Alerts\n" + watchlist_alert_table,
             "## Market Snapshot\n" + snapshot_table,
             "## Update Health\n" + update_health_table,
             "## Data Quality\n" + data_quality_table + "\n\n" + data_quality_issue_table,
@@ -376,8 +392,15 @@ def write_journal(
     industry_output: pd.DataFrame,
     market_date: str,
     update_health_output: pd.DataFrame | None = None,
+    watchlist_alerts: pd.DataFrame | None = None,
 ) -> tuple[Path, Path]:
-    markdown = build_journal_markdown(ticker_output, industry_output, market_date, update_health_output)
+    markdown = build_journal_markdown(
+        ticker_output,
+        industry_output,
+        market_date,
+        update_health_output,
+        watchlist_alerts,
+    )
     dated_path = JOURNAL_DIR / f"{market_date}.md"
 
     JOURNAL_DIR.mkdir(parents=True, exist_ok=True)

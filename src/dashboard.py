@@ -138,6 +138,7 @@ def build_dashboard_data(
     industry_output: pd.DataFrame,
     rotation_history: pd.DataFrame,
     update_health_output: pd.DataFrame | None = None,
+    watchlist_alerts: pd.DataFrame | None = None,
 ) -> dict[str, Any]:
     tickers = ticker_output.copy()
     industries = industry_output.copy()
@@ -464,7 +465,7 @@ def build_dashboard_data(
             "strong_count": int(tickers["strong_momentum_signal"].sum()) if "strong_momentum_signal" in tickers.columns else 0,
             "risk_count": int(tickers["risk_warning"].sum()) if "risk_warning" in tickers.columns else 0,
         },
-        "daily_brief": build_daily_brief(tickers, industries, update_health_output),
+        "daily_brief": build_daily_brief(tickers, industries, update_health_output, watchlist_alerts),
         "data_quality": {
             "summary": data_quality_summary,
             "issue_tickers": dataframe_records(data_quality_issues[data_quality_columns]),
@@ -685,7 +686,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
     .daily-brief-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 10px;
     }
 
@@ -1400,7 +1401,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           <option value="#rotation-trend">輪動趨勢</option>
           <option value="#trend-intelligence">趨勢判讀</option>
           <option value="#leader-filter">領導股篩選</option>
-          <option value="#portfolio-simulator">模擬持股</option>
+          <option value="#portfolio-simulator">追蹤名單檢查</option>
           <option value="#relative-strength">相對強度</option>
           <option value="#early-momentum">早期動能</option>
           <option value="#strong-momentum">強勢動能</option>
@@ -1604,12 +1605,12 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
     <section class="dashboard-section" id="portfolio-simulator">
       <div class="section-heading">
-        <h2>Portfolio 模擬與下一步建議</h2>
+        <h2>追蹤名單快速檢查</h2>
       </div>
-      <p class="section-note">輸入你目前持股與權重（例如：NVDA 25, MSFT 20），系統會用本頁最新動能與風險訊號做快速體檢，並給出下一步建議。此工具僅做研究排序，不構成投資建議。</p>
+      <p class="section-note">輸入你關注的 ticker，系統會用本頁最新動能與風險訊號做快速體檢，並給出下一步研究方向。此工具僅做研究排序，不構成投資建議。</p>
       <div class="table-wrap" style="padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface);">
-        <label for="portfolio-input" style="display:block; font-weight:650; margin-bottom:8px;">持股清單（每行：Ticker 權重%）</label>
-        <textarea id="portfolio-input" rows="7" style="width:100%; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; border:1px solid var(--line); border-radius:8px; padding:10px;" placeholder="NVDA 25&#10;MSFT 20&#10;LLY 15&#10;CASH 40"></textarea>
+        <label for="portfolio-input" style="display:block; font-weight:650; margin-bottom:8px;">追蹤名單（每行一個 ticker）</label>
+        <textarea id="portfolio-input" rows="7" style="width:100%; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; border:1px solid var(--line); border-radius:8px; padding:10px;" placeholder="VRT&#10;DELL&#10;SPOT&#10;SOFI"></textarea>
         <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
           <button id="portfolio-run" type="button" style="border:1px solid var(--line-strong); border-radius:8px; padding:8px 12px; background:var(--surface-soft); cursor:pointer;">執行模擬</button>
           <button id="portfolio-sample" type="button" style="border:1px solid var(--line); border-radius:8px; padding:8px 12px; background:var(--surface); cursor:pointer;">填入範例</button>
@@ -2605,9 +2606,8 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       for (const line of lines) {
         const tokens = line.split(/[,\\s]+/).filter(Boolean);
         const ticker = (tokens[0] || "").toUpperCase();
-        const weight = Number(tokens[1] || 0);
         if (!ticker) continue;
-        entries.push({ ticker, weight: Number.isFinite(weight) ? weight : 0 });
+        entries.push({ ticker, weight: 1 });
       }
       return entries;
     }
@@ -2630,7 +2630,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       });
 
       sampleBtn.addEventListener("click", () => {
-        input.value = "NVDA 25\\nMSFT 20\\nPLTR 10\\nLLY 15\\nCASH 30";
+        input.value = "VRT\\nDELL\\nSPOT\\nSOFI";
       });
 
       runBtn.addEventListener("click", () => {
@@ -2649,7 +2649,6 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         const missing = [];
         const alignmentRows = [];
         for (const h of holdings) {
-          if (h.ticker === "CASH") continue;
           const row = byTicker.get(h.ticker);
           if (!row) {
             missing.push(h.ticker);
@@ -2677,18 +2676,18 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         }
 
         const addCard = (label, value, desc, state = "") => appendQualityTile(resultGrid, label, value, desc, state);
-        addCard("可判讀權重", `${formatNumber(modeledWeight, 1)}%`, "有出現在本頁資料中的持股權重總和。");
-        addCard("風險權重", `${formatNumber(riskWeight, 1)}%`, "被標記為 risk warning 的持股權重。", riskWeight >= 25 ? "warning" : "");
-        addCard("強勢動能權重", `${formatNumber(strongWeight, 1)}%`, "符合 strong momentum 的持股權重。", strongWeight >= 20 ? "healthy" : "");
-        addCard("早期動能權重", `${formatNumber(earlyWeight, 1)}%`, "符合 early momentum 的持股權重。");
-        addCard("動能一致權重", `${formatNumber(alignedWeight, 1)}%`, "符合早期/強勢動能且無風險警示的持股權重。", alignedWeight >= 35 ? "healthy" : "");
+        addCard("可判讀檔數", formatInteger(modeledWeight), "有出現在本頁資料中的追蹤 ticker。");
+        addCard("風險檔數", formatInteger(riskWeight), "被標記為 risk warning 的追蹤 ticker。", riskWeight >= 1 ? "warning" : "");
+        addCard("強勢動能檔數", formatInteger(strongWeight), "符合 strong momentum 的追蹤 ticker。", strongWeight >= 1 ? "healthy" : "");
+        addCard("早期動能檔數", formatInteger(earlyWeight), "符合 early momentum 的追蹤 ticker。");
+        addCard("動能一致檔數", formatInteger(alignedWeight), "符合早期/強勢動能且無風險警示的追蹤 ticker。", alignedWeight >= 1 ? "healthy" : "");
 
         const actions = [];
-        if (riskWeight >= 25) actions.push("降低風險部位集中度：優先檢視 risk warning 權重最高的 2 檔持股，評估是否降權重或設停損。");
-        if (strongWeight < 20) actions.push("提高趨勢品質：可從「強勢動能候選」挑 1-2 檔建立觀察倉，分批替換弱勢持股。");
-        if (earlyWeight > strongWeight) actions.push("目前組合偏早期訊號，建議等待確認訊號再加碼，避免過早擴大部位。");
-        if (!actions.length) actions.push("結構相對平衡：維持核心持股，並用每週再平衡檢查風險權重是否重新升高。");
-        if (missing.length) actions.push(`以下持股不在目前追蹤清單：${missing.join(", ")}。建議加入 tickers.csv 以納入完整模擬。`);
+        if (riskWeight >= 1) actions.push("優先檢視 risk warning 的追蹤 ticker，確認是否需要從弱動能名單移到替代候選研究。");
+        if (strongWeight < 1) actions.push("追蹤名單缺少強勢動能，可從「強勢動能候選」挑 1-2 檔加入觀察。");
+        if (earlyWeight > strongWeight) actions.push("追蹤名單偏早期訊號，建議等待確認訊號再提高優先級。");
+        if (!actions.length) actions.push("追蹤名單結構相對平衡，持續用每日訊號檢查是否轉弱。");
+        if (missing.length) actions.push(`以下 ticker 不在目前追蹤資料：${missing.join(", ")}。建議加入 tickers.csv 以納入完整檢查。`);
         actions.forEach((text) => {
           const li = document.createElement("li");
           li.textContent = text;
@@ -2699,7 +2698,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           alignmentWrap.hidden = false;
           const thead = document.createElement("thead");
           const headRow = document.createElement("tr");
-          ["持股", "權重", "與動能是否一致", "判讀"].forEach((label) => {
+          ["Ticker", "計數", "與動能是否一致", "判讀"].forEach((label) => {
             const th = document.createElement("th");
             th.textContent = label;
             headRow.appendChild(th);
@@ -2711,8 +2710,8 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
             const tr = document.createElement("tr");
             const cells = [
               item.ticker,
-              `${formatNumber(item.weight, 1)}%`,
-              item.status === "一致" ? "✅ 一致" : item.status === "不一致" ? "⚠️ 不一致" : "—",
+              formatInteger(item.weight),
+              item.status === "一致" ? "一致" : item.status === "不一致" ? "不一致" : "-",
               item.note
             ];
             cells.forEach((text, idx) => {
@@ -2966,7 +2965,14 @@ def write_dashboard(
     rotation_history: pd.DataFrame,
     path: Path,
     update_health_output: pd.DataFrame | None = None,
+    watchlist_alerts: pd.DataFrame | None = None,
 ) -> None:
-    dashboard_data = build_dashboard_data(ticker_output, industry_output, rotation_history, update_health_output)
+    dashboard_data = build_dashboard_data(
+        ticker_output,
+        industry_output,
+        rotation_history,
+        update_health_output,
+        watchlist_alerts,
+    )
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(build_dashboard_html(dashboard_data), encoding="utf-8")

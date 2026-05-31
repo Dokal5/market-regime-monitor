@@ -2,6 +2,16 @@ name: Daily Momentum Update
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "watchlist.csv"
+      - "tickers.csv"
+      - "main.py"
+      - "src/**"
+      - "requirements.txt"
+      - ".github/workflows/daily-update.yml"
   schedule:
     # GitHub Actions cron is UTC. 21:30 UTC is after the 4:00 PM
     # America/New_York market close during both EST and EDT.

@@ -22,6 +22,7 @@ CHECK_FILES = [
     "index.html",
     "ticker_momentum.csv",
     "industry_momentum.csv",
+    "watchlist_alerts.csv",
     "update_health.csv",
     "journal/latest.md",
 ]

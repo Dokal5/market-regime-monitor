@@ -51,6 +51,7 @@ SNOW,Snowflake Inc.,Cloud Software,challenger,5
 DDOG,Datadog Inc.,Cloud Software,infrastructure_leader,5
 MDB,MongoDB Inc.,Cloud Software,specialist,5
 WDAY,Workday Inc.,Cloud Software,specialist,5
+MSFT,Microsoft Corporation,Cloud Software,core_leader,5
 TTD,The Trade Desk Inc.,Adtech,core_leader,3
 APP,AppLovin Corporation,Adtech,challenger,3
 ROKU,Roku Inc.,Adtech,non_leader,3
@@ -81,6 +82,7 @@ SYM,Symbotic Inc.,Robotics Automation,emerging_leader,4
 ROK,Rockwell Automation Inc.,Robotics Automation,core_leader,4
 CGNX,Cognex Corporation,Robotics Automation,specialist,4
 ZBRA,Zebra Technologies Corporation,Robotics Automation,specialist,4
+IONQ,IonQ Inc.,Quantum Computing,emerging_leader,3
 XYZ,Block Inc.,Fintech,challenger,3
 PYPL,PayPal Holdings Inc.,Fintech,core_leader,3
 HOOD,Robinhood Markets Inc.,Fintech,emerging_leader,3
@@ -111,3 +113,4 @@ IWM,iShares Russell 2000 ETF,Market ETFs,non_leader,5
 DIA,SPDR Dow Jones Industrial Average ETF Trust,Market ETFs,non_leader,5
 VTI,Vanguard Total Stock Market ETF,Market ETFs,non_leader,5
 VOO,Vanguard S&P 500 ETF,Market ETFs,non_leader,5
+EWT,iShares MSCI Taiwan ETF,Market ETFs,non_leader,5

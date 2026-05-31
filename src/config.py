@@ -5,9 +5,11 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 TICKERS_PATH = BASE_DIR / "tickers.csv"
+WATCHLIST_PATH = BASE_DIR / "watchlist.csv"
 OUTPUT_DIR = BASE_DIR / "outputs"
 TICKER_OUTPUT_PATH = OUTPUT_DIR / "ticker_momentum.csv"
 INDUSTRY_OUTPUT_PATH = OUTPUT_DIR / "industry_momentum.csv"
+WATCHLIST_ALERTS_OUTPUT_PATH = OUTPUT_DIR / "watchlist_alerts.csv"
 DATA_QUALITY_OUTPUT_PATH = OUTPUT_DIR / "data_quality.csv"
 UPDATE_HEALTH_OUTPUT_PATH = OUTPUT_DIR / "update_health.csv"
 DASHBOARD_OUTPUT_PATH = OUTPUT_DIR / "index.html"
@@ -62,6 +64,28 @@ DATA_QUALITY_EXPORT_COLUMNS = [
     "data_points",
     "data_status",
     "data_quality_note",
+]
+WATCHLIST_COLUMNS = ["ticker", "theme", "notes"]
+WATCHLIST_ALERT_COLUMNS = [
+    "ticker",
+    "theme",
+    "notes",
+    "company_name",
+    "industry_group",
+    "latest_date",
+    "alert_level",
+    "action",
+    "alert_reason",
+    "replacement_industries",
+    "replacement_candidates",
+    "return_5d",
+    "return_10d",
+    "relative_strength_vs_industry",
+    "risk_warning",
+    "watch_status",
+    "current_state",
+    "industry_regime",
+    "industry_risk_flag",
 ]
 LIMITED_HISTORY_MIN_DATA_POINTS = 60
 UPDATE_HEALTH_COLUMNS = [

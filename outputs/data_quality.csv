@@ -51,6 +51,7 @@ SNOW,Snowflake Inc.,Cloud Software,2026-05-29,251,ok,資料日期與本次市場
 DDOG,Datadog Inc.,Cloud Software,2026-05-29,251,ok,資料日期與本次市場日期一致。
 MDB,MongoDB Inc.,Cloud Software,2026-05-29,251,ok,資料日期與本次市場日期一致。
 WDAY,Workday Inc.,Cloud Software,2026-05-29,251,ok,資料日期與本次市場日期一致。
+MSFT,Microsoft Corporation,Cloud Software,2026-05-29,251,ok,資料日期與本次市場日期一致。
 TTD,The Trade Desk Inc.,Adtech,2026-05-29,251,ok,資料日期與本次市場日期一致。
 APP,AppLovin Corporation,Adtech,2026-05-29,251,ok,資料日期與本次市場日期一致。
 ROKU,Roku Inc.,Adtech,2026-05-29,251,ok,資料日期與本次市場日期一致。
@@ -81,6 +82,7 @@ SYM,Symbotic Inc.,Robotics Automation,2026-05-29,251,ok,資料日期與本次市
 ROK,Rockwell Automation Inc.,Robotics Automation,2026-05-29,251,ok,資料日期與本次市場日期一致。
 CGNX,Cognex Corporation,Robotics Automation,2026-05-29,251,ok,資料日期與本次市場日期一致。
 ZBRA,Zebra Technologies Corporation,Robotics Automation,2026-05-29,251,ok,資料日期與本次市場日期一致。
+IONQ,IonQ Inc.,Quantum Computing,2026-05-29,251,ok,資料日期與本次市場日期一致。
 XYZ,Block Inc.,Fintech,2026-05-29,251,ok,資料日期與本次市場日期一致。
 PYPL,PayPal Holdings Inc.,Fintech,2026-05-29,251,ok,資料日期與本次市場日期一致。
 HOOD,Robinhood Markets Inc.,Fintech,2026-05-29,251,ok,資料日期與本次市場日期一致。
@@ -111,3 +113,4 @@ IWM,iShares Russell 2000 ETF,Market ETFs,2026-05-29,251,ok,資料日期與本次
 DIA,SPDR Dow Jones Industrial Average ETF Trust,Market ETFs,2026-05-29,251,ok,資料日期與本次市場日期一致。
 VTI,Vanguard Total Stock Market ETF,Market ETFs,2026-05-29,251,ok,資料日期與本次市場日期一致。
 VOO,Vanguard S&P 500 ETF,Market ETFs,2026-05-29,251,ok,資料日期與本次市場日期一致。
+EWT,iShares MSCI Taiwan ETF,Market ETFs,2026-05-29,251,ok,資料日期與本次市場日期一致。

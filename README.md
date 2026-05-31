@@ -15,6 +15,7 @@ The script creates:
 
 - `outputs/ticker_momentum.csv`
 - `outputs/industry_momentum.csv`
+- `outputs/watchlist_alerts.csv`
 - `outputs/data_quality.csv`
 - `outputs/update_health.csv`
 - `outputs/index.html`
@@ -68,6 +69,29 @@ Each row should include:
 Ticker rows are retained even when a ticker has missing or unavailable market data. In those cases, `data_points` is `0` and metric values are blank.
 
 If `leader_type` or `industry_quality_score` is missing, the loader fills `non_leader` and `3`.
+
+## Update watchlist.csv
+
+Edit `watchlist.csv` whenever the tickers you care about change. This file is the source of truth for watchlist alerts in the local run and the GitHub Actions daily run. It is intentionally not a position file, so it does not need share count, cost basis, or portfolio weight.
+
+```csv
+ticker,theme,notes
+VRT,AI Infrastructure,watch for weakening momentum
+```
+
+Only `ticker` is required. `theme` and `notes` are optional context fields for your own tracking.
+
+Each run writes `outputs/watchlist_alerts.csv` and adds a `追蹤名單轉換提醒` card to the Daily Brief. Alert levels are:
+
+- `red`: open-before-market review; the ticker has risk warning, weak 5/10 day momentum versus industry, or a falling-knife state
+- `orange`: watch for transition; the ticker is starting to lag its industry
+- `yellow`: monitor; one caution flag exists but the full weakness rule is not triggered
+- `green`: no current momentum warning
+- `unknown`: the ticker is not in `tickers.csv` or lacks generated market data
+
+To keep the online dashboard synced with the current watchlist, update `watchlist.csv`, commit it, and push it to `main`. A GitHub Actions run starts when `watchlist.csv` changes on `main`, regenerates the outputs, and deploys the updated dashboard. The scheduled daily run also reads the latest watchlist file and commits refreshed outputs under `outputs/`.
+
+Before editing locally, run `git pull --ff-only origin main` so your local files match the latest GitHub Actions commit. After the next triggered or scheduled run, `python scripts/status_check.py` checks `watchlist_alerts.csv` along with the dashboard, ticker, industry, update health, and latest journal outputs.
 
 ## Data quality
 

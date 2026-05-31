@@ -309,16 +309,69 @@ def build_risk_card(tickers: pd.DataFrame) -> dict[str, Any]:
     }
 
 
+def build_watchlist_card(watchlist_alerts: pd.DataFrame | None) -> dict[str, Any]:
+    if watchlist_alerts is None or watchlist_alerts.empty:
+        return {
+            "key": "watchlist_alerts",
+            "title": "追蹤名單轉換提醒",
+            "status": "unknown",
+            "headline": "尚未設定追蹤名單",
+            "details": [
+                "更新 watchlist.csv 後，每日報告會比對追蹤 ticker 與最新動能。",
+                "第一版會標示需檢查 ticker、風險原因、可研究替代產業與候選標的。",
+            ],
+        }
+
+    alerts = watchlist_alerts.copy()
+    for column in ["alert_level", "ticker", "alert_reason", "replacement_industries", "replacement_candidates"]:
+        if column not in alerts.columns:
+            alerts[column] = ""
+        alerts[column] = alerts[column].fillna("").astype(str)
+
+    red_count = int((alerts["alert_level"] == "red").sum())
+    orange_count = int((alerts["alert_level"] == "orange").sum())
+    review_count = red_count + orange_count
+    status = "warning" if review_count else "healthy"
+    headline = f"{review_count} 檔需開盤前檢查；紅色 {red_count}、橘色 {orange_count}"
+
+    priority = {"red": 0, "orange": 1, "yellow": 2, "green": 3, "unknown": 4}
+    alerts["priority"] = alerts["alert_level"].map(priority).fillna(9)
+    focus = alerts.sort_values(["priority", "ticker"], ascending=[True, True]).head(3)
+    focus_text = "、".join(
+        f"{row.ticker}({row.alert_level})"
+        for row in focus[["ticker", "alert_level"]].itertuples(index=False)
+        if row.ticker
+    )
+    first_row = focus.iloc[0].to_dict() if not focus.empty else {}
+    replacement_industries = first_row.get("replacement_industries") or "目前沒有替代產業候選"
+    replacement_candidates = first_row.get("replacement_candidates") or "目前沒有替代個股候選"
+
+    return {
+        "key": "watchlist_alerts",
+        "title": "追蹤名單轉換提醒",
+        "status": status,
+        "headline": headline,
+        "details": [
+            f"優先檢查：{focus_text or '目前沒有需檢查 ticker'}。",
+            f"主要原因：{first_row.get('alert_reason') or '目前沒有明顯警示'}。",
+            f"替代產業：{replacement_industries}。",
+            f"替代候選：{replacement_candidates}。",
+        ],
+    }
+
+
 def build_daily_brief(
     ticker_output: pd.DataFrame,
     industry_output: pd.DataFrame,
     update_health_output: pd.DataFrame | None = None,
+    watchlist_alerts: pd.DataFrame | None = None,
 ) -> dict[str, Any]:
     tickers = prepare_tickers(ticker_output)
     industries = prepare_industries(industry_output)
     return {
         "cards": [
             build_data_status_card(tickers, update_health_output),
+            build_watchlist_card(watchlist_alerts),
             build_market_theme_card(industries),
             build_rotation_card(industries),
             build_research_card(tickers),
