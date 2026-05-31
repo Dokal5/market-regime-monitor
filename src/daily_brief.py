@@ -318,12 +318,11 @@ def build_watchlist_card(watchlist_alerts: pd.DataFrame | None) -> dict[str, Any
             "headline": "尚未設定追蹤名單",
             "details": [
                 "更新 watchlist.csv 後，每日報告會比對追蹤 ticker 與最新動能。",
-                "第一版會標示需檢查 ticker、風險原因、可研究替代產業與候選標的。",
             ],
         }
 
     alerts = watchlist_alerts.copy()
-    for column in ["alert_level", "ticker", "alert_reason", "replacement_industries", "replacement_candidates"]:
+    for column in ["alert_level", "ticker"]:
         if column not in alerts.columns:
             alerts[column] = ""
         alerts[column] = alerts[column].fillna("").astype(str)
@@ -336,15 +335,12 @@ def build_watchlist_card(watchlist_alerts: pd.DataFrame | None) -> dict[str, Any
 
     priority = {"red": 0, "orange": 1, "yellow": 2, "green": 3, "unknown": 4}
     alerts["priority"] = alerts["alert_level"].map(priority).fillna(9)
-    focus = alerts.sort_values(["priority", "ticker"], ascending=[True, True]).head(3)
+    focus = alerts.sort_values(["priority", "ticker"], ascending=[True, True]).head(5)
     focus_text = "、".join(
         f"{row.ticker}({row.alert_level})"
         for row in focus[["ticker", "alert_level"]].itertuples(index=False)
         if row.ticker
     )
-    first_row = focus.iloc[0].to_dict() if not focus.empty else {}
-    replacement_industries = first_row.get("replacement_industries") or "目前沒有替代產業候選"
-    replacement_candidates = first_row.get("replacement_candidates") or "目前沒有替代個股候選"
 
     return {
         "key": "watchlist_alerts",
@@ -352,10 +348,7 @@ def build_watchlist_card(watchlist_alerts: pd.DataFrame | None) -> dict[str, Any
         "status": status,
         "headline": headline,
         "details": [
-            f"優先檢查：{focus_text or '目前沒有需檢查 ticker'}。",
-            f"主要原因：{first_row.get('alert_reason') or '目前沒有明顯警示'}。",
-            f"替代產業：{replacement_industries}。",
-            f"替代候選：{replacement_candidates}。",
+            f"名單：{focus_text or '目前沒有需檢查 ticker'}。",
         ],
     }
 

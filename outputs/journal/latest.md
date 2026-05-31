@@ -8,10 +8,7 @@
 
 ### 追蹤名單轉換提醒
 **5 檔需開盤前檢查；紅色 5、橘色 0**
-- 優先檢查：GEV(red)、IONQ(red)、MU(red)。
-- 主要原因：已有 risk_warning；5 日報酬 -7.23%；10 日報酬 -11.21%；相對產業 -18.72%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 neutral。
-- 替代產業：Adtech, Defense Drones, Cloud Software。
-- 替代候選：PUBM (Adtech), SOFI (Fintech), PINS (Consumer Platforms), NOC (Defense), RTX (Defense)。
+- 名單：GEV(red)、IONQ(red)、MU(red)、RKLB(red)、SMR(red)。
 
 ### 市場主線
 **10 日主線：太空與衛星；廣度主線：廣告科技**
@@ -58,7 +55,7 @@
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-05-31T02:54:02-04:00 | local |  | 2026-05-29 | 2 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-05-31T03:07:59-04:00 | local |  | 2026-05-29 | 2 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
