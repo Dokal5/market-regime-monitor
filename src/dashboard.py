@@ -149,6 +149,10 @@ def build_dashboard_data(
         "return_5d",
         "return_10d",
         "return_20d",
+        "return_1m",
+        "return_3m",
+        "return_6m",
+        "return_1y",
         "latest_volume",
         "avg_volume_20d",
         "relative_volume",
@@ -240,6 +244,10 @@ def build_dashboard_data(
         "return_10d",
         "return_5d",
         "return_20d",
+        "return_1m",
+        "return_3m",
+        "return_6m",
+        "return_1y",
         "relative_volume",
         INDUSTRY_REGIME_COLUMN,
         INDUSTRY_RISK_FLAG_COLUMN,
@@ -288,6 +296,10 @@ def build_dashboard_data(
         "return_5d",
         "return_10d",
         "return_20d",
+        "return_1m",
+        "return_3m",
+        "return_6m",
+        "return_1y",
         "relative_volume",
         "max_drawdown_10d",
         "up_days_10d",
@@ -313,6 +325,11 @@ def build_dashboard_data(
         "price_zone",
         "return_5d",
         "return_10d",
+        "return_20d",
+        "return_1m",
+        "return_3m",
+        "return_6m",
+        "return_1y",
         "relative_strength_vs_industry",
         "relative_volume",
         "max_drawdown_10d",
@@ -348,6 +365,11 @@ def build_dashboard_data(
         "current_state",
         "return_5d",
         "return_10d",
+        "return_20d",
+        "return_1m",
+        "return_3m",
+        "return_6m",
+        "return_1y",
         "relative_strength_vs_industry",
         "latest_volume",
         "avg_volume_20d",
@@ -829,6 +851,47 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       margin: 0 0 10px;
       overflow-wrap: anywhere;
       padding: 11px 12px;
+    }
+
+    .candidate-chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(77, 116, 96, 0.28);
+      border-radius: 999px;
+      background: rgba(237, 247, 241, 0.92);
+      color: #183a2b;
+      font-size: 12px;
+      font-weight: 780;
+      line-height: 1;
+      margin: 0 2px;
+      padding: 4px 7px;
+      white-space: nowrap;
+    }
+
+    .candidate-chip:focus {
+      outline: 2px solid rgba(42, 103, 72, 0.34);
+      outline-offset: 2px;
+    }
+
+    .candidate-chip:hover::after,
+    .candidate-chip:focus::after {
+      content: attr(data-caption);
+      position: absolute;
+      left: 0;
+      top: calc(100% + 8px);
+      z-index: 40;
+      width: min(360px, 78vw);
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 16px 38px rgba(23, 33, 29, 0.18);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 620;
+      line-height: 1.45;
+      padding: 10px 11px;
+      white-space: normal;
     }
 
     .watchlist-alert-metrics {
@@ -1926,6 +1989,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       "Cybersecurity": "資安",
       "Cloud Software": "雲端軟體",
       "Adtech": "廣告科技",
+      "Quantum Computing": "量子運算",
       "Nuclear": "核能",
       "Renewables": "再生能源",
       "Energy Storage": "儲能",
@@ -2030,6 +2094,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       return5d: "最近 5 個交易日的報酬率，用來觀察短線動能。",
       return10d: "最近 10 個交易日的報酬率，這是主要排名依據。",
       return20d: "最近 20 個交易日的報酬率，用來對照較長週期趨勢。",
+      return1m: "約 1 個月的報酬率，用來看短中期趨勢背景。",
+      return3m: "約 1 季的報酬率，用來看季度趨勢背景。",
+      return6m: "約半年的報酬率，用來看中期趨勢背景。",
+      return1y: "約 1 年的報酬率；若下載資料不足完整一年，使用目前可用的最長區間。",
       latestVolume: "最新交易日成交量；用來觀察這個訊號背後的流動性基礎。",
       avgVolume20d: "最近 20 個交易日的平均成交量；可用來對照最新量是否異常放大。",
       relativeVolume: "最新成交量 / 20 日平均成交量；大於 1 代表量能高於近期平均。相對量看放大倍數，原始量看流動性基礎。",
@@ -2083,6 +2151,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "return_5d", label: "平均 5日", type: "percent", description: explanations.return5d },
           { key: "return_10d", label: "平均 10日", type: "percent", description: explanations.return10d },
           { key: "return_20d", label: "平均 20日", type: "percent", description: explanations.return20d },
+          { key: "return_1m", label: "平均 1月", type: "percent", description: explanations.return1m },
+          { key: "return_3m", label: "平均 1季", type: "percent", description: explanations.return3m },
+          { key: "return_6m", label: "平均 半年", type: "percent", description: explanations.return6m },
+          { key: "return_1y", label: "平均 1年", type: "percent", description: explanations.return1y },
           { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume },
           { key: "industry_regime", label: "狀態", description: explanations.industryRegime },
           { key: "industry_risk_flag", label: "風險", description: explanations.industryRiskFlag },
@@ -2378,6 +2450,11 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       { key: "watch_status", label: "觀察狀態", description: explanations.watchStatus },
       { key: "return_5d", label: "5日", type: "percent", description: explanations.return5d },
       { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d },
+      { key: "return_20d", label: "20日", type: "percent", description: explanations.return20d },
+      { key: "return_1m", label: "1月", type: "percent", description: explanations.return1m },
+      { key: "return_3m", label: "1季", type: "percent", description: explanations.return3m },
+      { key: "return_6m", label: "半年", type: "percent", description: explanations.return6m },
+      { key: "return_1y", label: "1年", type: "percent", description: explanations.return1y },
       { key: "relative_strength_vs_industry", label: "相對強度", type: "percent", description: explanations.relativeStrength },
       { key: "latest_volume", label: "最新量", type: "compactVolume", description: explanations.latestVolume },
       { key: "avg_volume_20d", label: "20日平均量", type: "compactVolume", description: explanations.avgVolume20d },
@@ -2466,6 +2543,60 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       });
     }
 
+    function allTickerRows() {
+      return Object.values(dashboardData.industry_constituents || {}).flat();
+    }
+
+    const tickerDetailMap = new Map(
+      allTickerRows()
+        .filter((row) => row?.ticker)
+        .map((row) => [String(row.ticker).toUpperCase(), row])
+    );
+
+    function parseCandidateText(text) {
+      return String(text || "")
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .map((label) => ({
+          label,
+          ticker: label.split(/\\s+/)[0].replace(/[()]/g, "").toUpperCase()
+        }));
+    }
+
+    function candidateCaption(candidate) {
+      const row = tickerDetailMap.get(candidate.ticker);
+      if (!row) return `${candidate.label}: 目前沒有完整資料。`;
+      const riskText = row.risk_warning === true ? "有風險提醒" : "無風險提醒";
+      return [
+        `${row.ticker} · ${row.company_name || "公司名稱未取得"} · ${displayText(row.industry_group) || "未知產業"}`,
+        `量能 ${formatCompactVolume(row.latest_volume) || "n/a"}，相對量 ${formatNumber(row.relative_volume, 2) || "n/a"}`,
+        `動能 5日 ${formatSignedPercent(row.return_5d) || "n/a"}，10日 ${formatSignedPercent(row.return_10d) || "n/a"}，20日 ${formatSignedPercent(row.return_20d) || "n/a"}`,
+        `趨勢 1月 ${formatSignedPercent(row.return_1m) || "n/a"}，1季 ${formatSignedPercent(row.return_3m) || "n/a"}，半年 ${formatSignedPercent(row.return_6m) || "n/a"}，1年 ${formatSignedPercent(row.return_1y) || "n/a"}`,
+        `狀態 ${watchStatusLabels[row.watch_status] || displayText(row.watch_status) || "n/a"}，${riskText}`
+      ].join("；");
+    }
+
+    function appendReplacementRoute(route, routeSource) {
+      const industries = routeSource.replacement_industries || "目前沒有替代產業";
+      const candidates = parseCandidateText(routeSource.replacement_candidates);
+      route.replaceChildren();
+      route.append(document.createTextNode(`整體替代路徑：先看產業動能較強的 ${industries}，再研究候選 `));
+      if (!candidates.length) {
+        route.append(document.createTextNode("目前沒有替代候選。"));
+        return;
+      }
+      candidates.forEach((candidate, index) => {
+        const chip = document.createElement("span");
+        chip.className = "candidate-chip";
+        chip.tabIndex = 0;
+        chip.textContent = candidate.label;
+        chip.setAttribute("data-caption", candidateCaption(candidate));
+        route.appendChild(chip);
+        route.append(document.createTextNode(index === candidates.length - 1 ? "。" : "、"));
+      });
+    }
+
     function appendText(parent, className, text) {
       const element = document.createElement("div");
       element.className = className;
@@ -2528,7 +2659,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         : "目前追蹤名單沒有明顯轉換警示，仍需用每日資料檢查是否轉弱。";
       const routeSource = reviewRows[0] || rows[0];
       route.hidden = false;
-      route.textContent = `整體替代路徑：先看產業動能較強的 ${routeSource.replacement_industries || "目前沒有替代產業"}，再研究候選 ${routeSource.replacement_candidates || "目前沒有替代候選"}。`;
+      appendReplacementRoute(route, routeSource);
 
       for (const row of focusRows) {
         const level = row.alert_level || "unknown";

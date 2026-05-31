@@ -27,6 +27,12 @@ def pct_return(series: pd.Series, days: int) -> float:
     return (latest / previous) - 1
 
 
+def pct_return_with_minimum(series: pd.Series, days: int, min_days: int) -> float:
+    if len(series) <= min_days:
+        return math.nan
+    return pct_return(series, min(days, len(series) - 1))
+
+
 def max_drawdown(series: pd.Series) -> float:
     if series.empty:
         return math.nan
@@ -67,6 +73,10 @@ def calculate_metrics(prices: pd.DataFrame) -> dict[str, Any]:
         "return_5d": pct_return(close, 5),
         "return_10d": pct_return(close, 10),
         "return_20d": pct_return(close, 20),
+        "return_1m": pct_return(close, 21),
+        "return_3m": pct_return(close, 63),
+        "return_6m": pct_return(close, 126),
+        "return_1y": pct_return_with_minimum(close, 252, 200),
         "avg_volume_3d": volume.tail(3).mean() if len(volume) >= 3 else math.nan,
         "avg_volume_5d": volume.tail(5).mean() if len(volume) >= 5 else math.nan,
         "avg_volume_20d": avg_volume_20d,
