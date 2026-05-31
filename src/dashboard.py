@@ -452,6 +452,7 @@ def build_dashboard_data(
         update_health_output = build_update_health_output(tickers)
     update_health_records = dataframe_records(update_health_output) if not update_health_output.empty else []
     update_health = update_health_records[0] if update_health_records else {}
+    watchlist_alert_records = dataframe_records(watchlist_alerts) if watchlist_alerts is not None and not watchlist_alerts.empty else []
 
     return {
         "summary": {
@@ -466,6 +467,7 @@ def build_dashboard_data(
             "risk_count": int(tickers["risk_warning"].sum()) if "risk_warning" in tickers.columns else 0,
         },
         "daily_brief": build_daily_brief(tickers, industries, update_health_output, watchlist_alerts),
+        "watchlist_alerts": watchlist_alert_records,
         "data_quality": {
             "summary": data_quality_summary,
             "issue_tickers": dataframe_records(data_quality_issues[data_quality_columns]),
@@ -651,8 +653,191 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     }
 
     .summary-grid,
+    .watchlist-alert-panel,
     .dashboard-section {
       scroll-margin-top: 170px;
+    }
+
+    .watchlist-alert-panel {
+      border: 1px solid rgba(194, 111, 0, 0.34);
+      border-radius: 8px;
+      background: #fffaf0;
+      box-shadow: var(--shadow);
+      margin: 0 0 18px;
+      padding: 16px;
+    }
+
+    .watchlist-alert-panel.healthy {
+      border-color: rgba(0, 122, 85, 0.28);
+      background: #f0fbf6;
+    }
+
+    .watchlist-alert-panel.unknown {
+      border-color: rgba(96, 111, 108, 0.28);
+      background: #f7f9f8;
+    }
+
+    .watchlist-alert-header {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 12px;
+    }
+
+    .watchlist-alert-kicker {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 780;
+    }
+
+    .watchlist-alert-title {
+      margin-top: 4px;
+      font-size: 22px;
+      font-weight: 780;
+      line-height: 1.25;
+    }
+
+    .watchlist-alert-subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .watchlist-alert-counts {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: end;
+      gap: 6px;
+    }
+
+    .alert-pill,
+    .alert-level {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 780;
+      line-height: 1;
+      padding: 5px 8px;
+      white-space: nowrap;
+    }
+
+    .alert-pill.red,
+    .alert-level.red {
+      background: #fee2e2;
+      color: var(--red);
+    }
+
+    .alert-pill.orange,
+    .alert-level.orange {
+      background: #ffedd5;
+      color: var(--amber);
+    }
+
+    .alert-pill.yellow,
+    .alert-level.yellow {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .alert-pill.green,
+    .alert-level.green {
+      background: #dcfce7;
+      color: var(--green);
+    }
+
+    .alert-pill.unknown,
+    .alert-level.unknown {
+      background: #e5e7eb;
+      color: var(--muted);
+    }
+
+    .watchlist-alert-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .watchlist-alert-card {
+      min-width: 0;
+      border: 1px solid rgba(217, 224, 220, 0.9);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.78);
+      padding: 13px;
+    }
+
+    .watchlist-alert-card.red {
+      border-color: rgba(185, 28, 28, 0.28);
+      background: rgba(254, 242, 242, 0.86);
+    }
+
+    .watchlist-alert-card.orange {
+      border-color: rgba(180, 83, 9, 0.30);
+      background: rgba(255, 247, 237, 0.9);
+    }
+
+    .watchlist-alert-card.yellow {
+      border-color: rgba(146, 64, 14, 0.26);
+      background: rgba(255, 251, 235, 0.88);
+    }
+
+    .watchlist-alert-card.green {
+      border-color: rgba(4, 120, 87, 0.24);
+      background: rgba(240, 253, 244, 0.86);
+    }
+
+    .watchlist-alert-card-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 9px;
+    }
+
+    .watchlist-alert-ticker {
+      min-width: 0;
+      font-size: 20px;
+      font-weight: 790;
+      overflow-wrap: anywhere;
+    }
+
+    .watchlist-alert-meta,
+    .watchlist-alert-reason,
+    .watchlist-alert-route {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .watchlist-alert-reason {
+      margin-top: 8px;
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .watchlist-alert-route {
+      margin-top: 7px;
+    }
+
+    .watchlist-alert-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 9px;
+    }
+
+    .watchlist-alert-metric {
+      border: 1px solid rgba(217, 224, 220, 0.86);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      padding: 5px 7px;
     }
 
     .summary-tile {
@@ -1283,7 +1468,12 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .watchlist-alert-grid {
+        grid-template-columns: 1fr;
+      }
+
       .summary-grid,
+      .watchlist-alert-panel,
       .dashboard-section {
         scroll-margin-top: 220px;
       }
@@ -1317,6 +1507,14 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         grid-template-columns: 1fr;
       }
 
+      .watchlist-alert-header {
+        flex-direction: column;
+      }
+
+      .watchlist-alert-counts {
+        justify-content: start;
+      }
+
       .industry-modal {
         padding: 10px;
       }
@@ -1346,6 +1544,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       }
 
       .summary-grid,
+      .watchlist-alert-panel,
       .dashboard-section {
         scroll-margin-top: 120px;
       }
@@ -1391,6 +1590,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       <div class="nav-panel">
         <select class="section-nav-select" id="section-jump" aria-label="跳到 dashboard 區塊">
           <option value="">跳到區塊</option>
+          <option value="#watchlist-alert">追蹤名單轉換提醒</option>
           <option value="#overview">總覽</option>
           <option value="#daily-brief">每日重點</option>
           <option value="#update-health">更新健康</option>
@@ -1409,6 +1609,18 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         </select>
       </div>
     </nav>
+
+    <section class="watchlist-alert-panel" id="watchlist-alert" aria-label="追蹤名單轉換提醒">
+      <div class="watchlist-alert-header">
+        <div>
+          <div class="watchlist-alert-kicker">開盤前優先資訊</div>
+          <h2 class="watchlist-alert-title" id="watchlist-alert-title">追蹤名單轉換提醒</h2>
+          <p class="watchlist-alert-subtitle" id="watchlist-alert-subtitle"></p>
+        </div>
+        <div class="watchlist-alert-counts" id="watchlist-alert-counts"></div>
+      </div>
+      <div class="watchlist-alert-grid" id="watchlist-alert-grid"></div>
+    </section>
 
     <section class="summary-grid" id="overview" data-summary-grid aria-label="動能摘要"></section>
 
@@ -2216,6 +2428,140 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       return value > 0 ? `+${formatted}` : formatted;
     }
 
+    const alertLevelLabels = {
+      red: "紅色",
+      orange: "橘色",
+      yellow: "黃色",
+      green: "綠色",
+      unknown: "未知"
+    };
+
+    const alertActionLabels = {
+      review_replacement: "優先檢查並評估轉換",
+      watch_transition: "觀察是否持續轉弱",
+      monitor: "保留觀察",
+      watch_ok: "暫無警示",
+      add_to_tickers: "補進追蹤資料"
+    };
+
+    function alertPriority(row) {
+      const levelRank = { red: 0, orange: 1, yellow: 2, green: 3, unknown: 4 };
+      return levelRank[row?.alert_level] ?? 9;
+    }
+
+    function sortedWatchlistAlerts(rows) {
+      return [...rows].sort((a, b) => {
+        const priorityDiff = alertPriority(a) - alertPriority(b);
+        if (priorityDiff !== 0) return priorityDiff;
+        return String(a.ticker || "").localeCompare(String(b.ticker || ""));
+      });
+    }
+
+    function appendText(parent, className, text) {
+      const element = document.createElement("div");
+      element.className = className;
+      element.textContent = text;
+      parent.appendChild(element);
+      return element;
+    }
+
+    function renderWatchlistAlert() {
+      const panel = document.getElementById("watchlist-alert");
+      const title = document.getElementById("watchlist-alert-title");
+      const subtitle = document.getElementById("watchlist-alert-subtitle");
+      const counts = document.getElementById("watchlist-alert-counts");
+      const grid = document.getElementById("watchlist-alert-grid");
+      const rows = sortedWatchlistAlerts(dashboardData.watchlist_alerts || []);
+      const redRows = rows.filter((row) => row.alert_level === "red");
+      const orangeRows = rows.filter((row) => row.alert_level === "orange");
+      const yellowRows = rows.filter((row) => row.alert_level === "yellow");
+      const greenRows = rows.filter((row) => row.alert_level === "green");
+      const unknownRows = rows.filter((row) => row.alert_level === "unknown");
+      const reviewRows = redRows.concat(orangeRows);
+      const focusRows = (reviewRows.length ? reviewRows : rows).slice(0, 6);
+      const panelClass = redRows.length || orangeRows.length ? "" : greenRows.length ? "healthy" : "unknown";
+
+      panel.className = `watchlist-alert-panel ${panelClass}`.trim();
+      counts.replaceChildren();
+      grid.replaceChildren();
+
+      const addPill = (level, label, value) => {
+        const pill = document.createElement("span");
+        pill.className = `alert-pill ${level}`;
+        pill.textContent = `${label} ${value}`;
+        counts.appendChild(pill);
+      };
+      addPill("red", "紅色", redRows.length);
+      addPill("orange", "橘色", orangeRows.length);
+      addPill("yellow", "黃色", yellowRows.length);
+      addPill("green", "綠色", greenRows.length);
+      if (unknownRows.length) addPill("unknown", "未知", unknownRows.length);
+
+      if (!rows.length) {
+        title.textContent = "追蹤名單尚未設定";
+        subtitle.textContent = "更新 watchlist.csv 後，這裡會直接顯示需要優先檢查的 ticker、原因與替代方向。";
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = "目前沒有追蹤名單資料。";
+        grid.appendChild(empty);
+        return;
+      }
+
+      const focusTickers = focusRows
+        .map((row) => `${row.ticker} ${alertLevelLabels[row.alert_level] || row.alert_level}`)
+        .join("、");
+      title.textContent = reviewRows.length ? `${reviewRows.length} 檔需開盤前檢查` : "追蹤名單目前沒有紅橘警示";
+      subtitle.textContent = reviewRows.length
+        ? `優先名單：${focusTickers}。先確認弱動能原因，再往強勢產業與領導候選移動。`
+        : "目前追蹤名單沒有明顯轉換警示，仍需用每日資料檢查是否轉弱。";
+
+      for (const row of focusRows) {
+        const level = row.alert_level || "unknown";
+        const card = document.createElement("article");
+        card.className = `watchlist-alert-card ${level}`;
+
+        const header = document.createElement("div");
+        header.className = "watchlist-alert-card-header";
+        const ticker = document.createElement("div");
+        ticker.className = "watchlist-alert-ticker";
+        ticker.textContent = row.ticker || "未命名";
+        const badge = document.createElement("span");
+        badge.className = `alert-level ${level}`;
+        badge.textContent = `${alertLevelLabels[level] || level} / ${alertActionLabels[row.action] || displayText(row.action)}`;
+        header.append(ticker, badge);
+        card.appendChild(header);
+
+        appendText(card, "watchlist-alert-meta", `${displayText(row.industry_group) || "未知產業"} · ${row.company_name || "公司名稱未取得"}`);
+
+        const metrics = document.createElement("div");
+        metrics.className = "watchlist-alert-metrics";
+        [
+          ["5日", formatSignedPercent(row.return_5d)],
+          ["10日", formatSignedPercent(row.return_10d)],
+          ["相對產業", formatSignedPercent(row.relative_strength_vs_industry)]
+        ].forEach(([label, value]) => {
+          const metric = document.createElement("span");
+          metric.className = "watchlist-alert-metric";
+          metric.textContent = `${label} ${value || "n/a"}`;
+          metrics.appendChild(metric);
+        });
+        card.appendChild(metrics);
+
+        appendText(
+          card,
+          "watchlist-alert-reason",
+          `因為 ${row.alert_reason || "目前沒有明確警示"}，所以列為「${alertActionLabels[row.action] || displayText(row.action)}」。`
+        );
+        appendText(
+          card,
+          "watchlist-alert-route",
+          `替代路徑：先看產業動能較強的 ${row.replacement_industries || "目前沒有替代產業"}，再研究候選 ${row.replacement_candidates || "目前沒有替代候選"}。`
+        );
+
+        grid.appendChild(card);
+      }
+    }
+
     function compactWithUnit(value, divisor, suffix, digits) {
       return `${(value / divisor).toFixed(digits).replace(/\\.0$/, "")}${suffix}`;
     }
@@ -2930,6 +3276,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       }
     });
 
+    renderWatchlistAlert();
     renderSummary();
     renderDailyBrief();
     renderUpdateHealth();
