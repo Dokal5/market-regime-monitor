@@ -55,7 +55,7 @@
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-05-31T04:53:59-04:00 | local |  | 2026-05-29 | 2 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-06-01T01:03:43-04:00 | local |  | 2026-05-29 | 3 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |

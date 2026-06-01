@@ -10,10 +10,12 @@ from src.config import (
     INTERNAL_COLUMNS,
     METRIC_COLUMNS,
     OPTIONAL_TICKER_COLUMNS,
+    PEG_COLUMNS,
     PRICE_POSITION_COLUMNS,
     TICKER_VOLUME_COLUMNS,
 )
 from src.data_loader import get_ticker_frame
+from src.valuation import calculate_peg_metrics
 
 
 def pct_return(series: pd.Series, days: int) -> float:
@@ -93,13 +95,19 @@ def calculate_metrics(prices: pd.DataFrame) -> dict[str, Any]:
     return {key: finite_or_none(value) for key, value in metrics.items()}
 
 
-def build_ticker_output(tickers: pd.DataFrame, downloaded_data: dict[str, pd.DataFrame]) -> pd.DataFrame:
+def build_ticker_output(
+    tickers: pd.DataFrame,
+    downloaded_data: dict[str, pd.DataFrame],
+    fundamentals: dict[str, dict[str, Any] | None] | None = None,
+) -> pd.DataFrame:
     rows = []
+    fundamentals = fundamentals or {}
 
     for ticker_info in tickers.to_dict("records"):
         ticker = ticker_info["ticker"]
         prices = get_ticker_frame(downloaded_data, ticker)
         metrics = calculate_metrics(prices)
+        peg_metrics = calculate_peg_metrics(fundamentals.get(ticker, {}))
 
         rows.append(
             {
@@ -107,6 +115,7 @@ def build_ticker_output(tickers: pd.DataFrame, downloaded_data: dict[str, pd.Dat
                 "latest_date": prices.index[-1].date().isoformat() if not prices.empty else None,
                 "data_points": int(len(prices)),
                 **metrics,
+                **peg_metrics,
             }
         )
 
@@ -118,5 +127,6 @@ def build_ticker_output(tickers: pd.DataFrame, downloaded_data: dict[str, pd.Dat
         + OPTIONAL_TICKER_COLUMNS
         + PRICE_POSITION_COLUMNS
         + TICKER_VOLUME_COLUMNS
+        + PEG_COLUMNS
     )
     return pd.DataFrame(rows, columns=output_columns)

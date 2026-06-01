@@ -136,6 +136,7 @@ Ticker output includes:
 - Distance from the 20 day moving average
 - Distance from the 52 week high
 - Position in the 52 week range
+- Forward PEG analysis from Yahoo Finance fundamentals: `forward_pe`, `earnings_growth`, `peg_ratio`, `peg_rating`, `peg_status`, and `peg_note`
 
 Industry output groups by `industry_group` and reports the mean of each ticker metric, plus ticker counts.
 
@@ -207,6 +208,7 @@ The filter only evaluates higher-quality leader metadata when the industry regim
 - `config.py`: paths, output names, lookback settings, and signal thresholds
 - `data_loader.py`: ticker input cleanup and `yfinance` downloads
 - `metrics.py`: ticker-level return, volume, moving average, drawdown, and up-day calculations
+- `valuation.py`: Yahoo Finance fundamentals download and forward PEG calculation
 - `signals.py`: ticker momentum signals, risk warning, and relative strength
 - `industry.py`: industry-level aggregation and confirmed signal percentages
 - `history.py`: dated snapshots, rotation history, and trend intelligence fields

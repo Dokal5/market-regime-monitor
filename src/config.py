@@ -59,6 +59,14 @@ METRIC_COLUMNS = [
     "up_days_10d",
 ]
 TICKER_VOLUME_COLUMNS = ["latest_volume"]
+PEG_COLUMNS = [
+    "forward_pe",
+    "earnings_growth",
+    "peg_ratio",
+    "peg_rating",
+    "peg_status",
+    "peg_note",
+]
 DATA_QUALITY_COLUMNS = ["data_status", "data_quality_note"]
 DATA_QUALITY_EXPORT_COLUMNS = [
     "ticker",

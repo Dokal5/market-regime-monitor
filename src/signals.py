@@ -12,6 +12,7 @@ from src.config import (
     INPUT_COLUMNS,
     METRIC_COLUMNS,
     OPTIONAL_TICKER_COLUMNS,
+    PEG_COLUMNS,
     PRICE_POSITION_COLUMNS,
     RISK_DRAWDOWN_THRESHOLD,
     RISK_EXTENSION_MULTIPLE,
@@ -31,6 +32,7 @@ def add_signal_columns(ticker_output: pd.DataFrame, industry_output: pd.DataFram
             + OPTIONAL_TICKER_COLUMNS
             + PRICE_POSITION_COLUMNS
             + TICKER_VOLUME_COLUMNS
+            + PEG_COLUMNS
         )
 
     signals = ticker_output.copy()
@@ -89,5 +91,6 @@ def add_signal_columns(ticker_output: pd.DataFrame, industry_output: pd.DataFram
         + OPTIONAL_TICKER_COLUMNS
         + PRICE_POSITION_COLUMNS
         + TICKER_VOLUME_COLUMNS
+        + PEG_COLUMNS
     )
     return signals[output_columns]

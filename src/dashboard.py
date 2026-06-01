@@ -15,6 +15,7 @@ from src.config import (
     INDUSTRY_RISK_FLAG_COLUMN,
     INDUSTRY_TREND_COLUMNS,
     METRIC_COLUMNS,
+    PEG_COLUMNS,
     ROTATION_TYPE_COLUMN,
 )
 from src.data_quality import build_data_quality_summary
@@ -166,10 +167,16 @@ def build_dashboard_data(
         "distance_from_20d_ma",
         "distance_from_52w_high",
         "position_in_52w_range",
+        "forward_pe",
+        "earnings_growth",
+        "peg_ratio",
     ]
     for column in ticker_numeric_columns:
         if column in tickers.columns:
             tickers[column] = pd.to_numeric(tickers[column], errors="coerce")
+    for column in ["forward_pe", "earnings_growth", "peg_ratio"]:
+        if column not in tickers.columns:
+            tickers[column] = math.nan
 
     for column in ["early_momentum_signal", "confirmed_momentum_signal", "strong_momentum_signal", "risk_warning"]:
         if column not in tickers.columns:
@@ -189,6 +196,9 @@ def build_dashboard_data(
         ("watch_status", "avoid_for_now"),
         ("data_status", "missing"),
         ("data_quality_note", ""),
+        ("peg_rating", "unavailable"),
+        ("peg_status", "missing_pe"),
+        ("peg_note", ""),
     ]:
         if column not in tickers.columns:
             tickers[column] = default
@@ -337,6 +347,7 @@ def build_dashboard_data(
         "distance_from_52w_high",
         "position_in_52w_range",
         "risk_warning",
+        *PEG_COLUMNS,
     ]
     leader_industry_columns = [
         "industry_group",
@@ -374,6 +385,7 @@ def build_dashboard_data(
         "latest_volume",
         "avg_volume_20d",
         "relative_volume",
+        *PEG_COLUMNS,
         "confirmed_momentum_signal",
         "strong_momentum_signal",
         "risk_warning",
@@ -2083,6 +2095,21 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       limited_history: "歷史不足"
     };
 
+    const pegRatingLabels = {
+      undervalued: "低於成長",
+      fair: "合理",
+      expensive: "偏貴",
+      unavailable: "無法判讀"
+    };
+
+    const pegStatusLabels = {
+      ok: "正常",
+      missing_pe: "缺 Forward P/E",
+      missing_growth: "缺成長率",
+      invalid_growth: "成長率無效",
+      fetch_error: "抓取失敗"
+    };
+
     const updateHealthLabels = {
       healthy: "正常",
       warning: "注意",
@@ -2127,7 +2154,12 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       watchStatus: "風險優先的確定性研究狀態，不代表投資建議。",
       distance20d: "最新價格相對 20 日均線的距離。",
       distance52wHigh: "最新價格相對 52 週高點的距離。",
-      position52wRange: "最新價格在 52 週高低區間中的位置，越接近 1 代表越靠近區間上緣。"
+      position52wRange: "最新價格在 52 週高低區間中的位置，越接近 1 代表越靠近區間上緣。",
+      forwardPe: "Yahoo Finance forwardPE；資料缺漏時不補值。",
+      earningsGrowth: "Yahoo Finance earningsGrowth，0.25 代表預期 EPS 成長 25%。",
+      pegRatio: "Forward PEG = Forward P/E / 預期 EPS 成長百分比；只在 P/E 與成長率皆為正值時產生。",
+      pegRating: "PEG < 1 為低於成長，1 到 2 為合理，大於 2 為偏貴；缺資料時不判讀。",
+      pegStatus: "PEG 資料狀態，用來辨識缺 P/E、缺成長率、成長率無效或抓取失敗。"
     };
 
     const tableConfigs = {
@@ -2325,6 +2357,8 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "industry_quality_score", label: "品質分數", type: "integer", description: explanations.industryQuality },
           { key: "current_state", label: "目前狀態", description: explanations.currentState },
           { key: "price_zone", label: "價格位置", description: explanations.priceZone },
+          { key: "peg_ratio", label: "PEG", type: "number", digits: 2, description: explanations.pegRatio },
+          { key: "peg_rating", label: "PEG判讀", description: explanations.pegRating },
           { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d },
           { key: "relative_strength_vs_industry", label: "相對強度", type: "percent", description: explanations.relativeStrength },
           { key: "relative_volume", label: "相對量", type: "number", digits: 2, description: explanations.relativeVolume }
@@ -2346,6 +2380,8 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "current_state", label: "目前狀態", description: explanations.currentState },
           { key: "short_term_price_zone", label: "短期位置", description: explanations.shortTermPriceZone },
           { key: "long_term_price_zone", label: "長期位置", description: explanations.longTermPriceZone },
+          { key: "peg_ratio", label: "PEG", type: "number", digits: 2, description: explanations.pegRatio },
+          { key: "peg_rating", label: "PEG判讀", description: explanations.pegRating },
           { key: "return_5d", label: "5日", type: "percent", description: explanations.return5d },
           { key: "max_drawdown_10d", label: "最大回撤", type: "warningPercent", description: explanations.maxDrawdown }
         ]
@@ -2364,6 +2400,8 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "leader_type", label: "領導類型", description: explanations.leaderType },
           { key: "current_state", label: "目前狀態", description: explanations.currentState },
           { key: "price_zone", label: "價格位置", description: explanations.priceZone },
+          { key: "peg_ratio", label: "PEG", type: "number", digits: 2, description: explanations.pegRatio },
+          { key: "peg_rating", label: "PEG判讀", description: explanations.pegRating },
           { key: "distance_from_20d_ma", label: "距20日均線", type: "percent", description: explanations.distance20d },
           { key: "position_in_52w_range", label: "52週位置", type: "percent", description: explanations.position52wRange },
           { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d }
@@ -2448,6 +2486,11 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       { key: "data_status", label: "資料狀態" },
       { key: "leader_type", label: "領導類型", description: explanations.leaderType },
       { key: "watch_status", label: "觀察狀態", description: explanations.watchStatus },
+      { key: "forward_pe", label: "Forward P/E", type: "number", digits: 2, description: explanations.forwardPe },
+      { key: "earnings_growth", label: "成長率", type: "percent", description: explanations.earningsGrowth },
+      { key: "peg_ratio", label: "PEG", type: "number", digits: 2, description: explanations.pegRatio },
+      { key: "peg_rating", label: "PEG判讀", description: explanations.pegRating },
+      { key: "peg_status", label: "PEG資料", description: explanations.pegStatus },
       { key: "return_5d", label: "5日", type: "percent", description: explanations.return5d },
       { key: "return_10d", label: "10日", type: "percent", description: explanations.return10d },
       { key: "return_20d", label: "20日", type: "percent", description: explanations.return20d },
@@ -2728,6 +2771,8 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       if (column.type === "dataStatus") return Number(value) > 0 ? "有資料" : "無資料";
       if (column.key === "industry_group") return displayText(value);
       if (column.key === "data_status") return dataStatusLabels[value] || displayText(value);
+      if (column.key === "peg_rating") return pegRatingLabels[value] || displayText(value);
+      if (column.key === "peg_status") return pegStatusLabels[value] || displayText(value);
       if (column.key === "industry_regime") return regimeLabels[value] || displayText(value);
       if (column.key === "industry_risk_flag") return industryRiskFlagLabels[value] || displayText(value);
       if (column.key === "rotation_type") return rotationTypeLabels[value] || displayText(value);
@@ -2754,6 +2799,9 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       if (column.type === "dataStatus" && Number(value) <= 0) classes.push("warning");
       if (column.key === "data_status" && ["missing", "stale"].includes(String(value))) classes.push("warning");
       if (column.key === "data_status" && String(value) === "limited_history") classes.push("negative");
+      if (column.key === "peg_rating" && String(value) === "undervalued") classes.push("positive");
+      if (column.key === "peg_rating" && String(value) === "expensive") classes.push("warning");
+      if (column.key === "peg_status" && String(value) !== "ok") classes.push("negative");
       if ((column.type === "percent" || column.type === "signedPercent" || column.type === "warningPercent" || column.type === "signedInteger") && !isMissing(value)) {
         if (value > 0) classes.push("positive");
         if (value < 0) classes.push(column.type === "warningPercent" ? "warning" : "negative");

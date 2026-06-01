@@ -29,6 +29,7 @@ from src.leader_filter import add_leader_filter_columns
 from src.metrics import build_ticker_output
 from src.signals import add_signal_columns
 from src.update_health import build_update_health_output
+from src.valuation import download_fundamentals
 from src.watchlist import build_watchlist_alerts, load_watchlist
 
 
@@ -38,7 +39,8 @@ def main() -> None:
 
     tickers = clean_tickers(pd.read_csv(TICKERS_PATH))
     downloaded_data = download_market_data(tickers["ticker"].tolist())
-    ticker_output = build_ticker_output(tickers, downloaded_data)
+    fundamentals = download_fundamentals(tickers["ticker"].tolist())
+    ticker_output = build_ticker_output(tickers, downloaded_data, fundamentals)
     industry_output = build_industry_output(ticker_output)
     ticker_output = add_signal_columns(ticker_output, industry_output)
     industry_output = add_breadth_columns(industry_output, ticker_output)
