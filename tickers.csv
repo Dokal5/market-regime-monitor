@@ -52,6 +52,7 @@ DDOG,Datadog Inc.,Cloud Software,infrastructure_leader,5
 MDB,MongoDB Inc.,Cloud Software,specialist,5
 WDAY,Workday Inc.,Cloud Software,specialist,5
 MSFT,Microsoft Corporation,Cloud Software,core_leader,5
+NOK,Nokia Oyj,Telecom Infrastructure,non_leader,3
 TTD,The Trade Desk Inc.,Adtech,core_leader,3
 APP,AppLovin Corporation,Adtech,challenger,3
 ROKU,Roku Inc.,Adtech,non_leader,3
@@ -114,3 +115,4 @@ DIA,SPDR Dow Jones Industrial Average ETF Trust,Market ETFs,non_leader,5
 VTI,Vanguard Total Stock Market ETF,Market ETFs,non_leader,5
 VOO,Vanguard S&P 500 ETF,Market ETFs,non_leader,5
 EWT,iShares MSCI Taiwan ETF,Market ETFs,non_leader,5
+VUAA.L,Vanguard S&P 500 UCITS ETF USD Acc,Market ETFs,non_leader,5

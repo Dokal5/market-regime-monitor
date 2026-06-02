@@ -38,6 +38,125 @@ def sorted_records(data: pd.DataFrame, sort_column: str, limit: int | None = Non
     return dataframe_records(sorted_data)
 
 
+def build_momentum_map(
+    tickers: pd.DataFrame,
+    industries: pd.DataFrame,
+    watchlist_alerts: pd.DataFrame | None = None,
+) -> dict[str, Any]:
+    industry_columns = [
+        "industry_group",
+        "return_10d",
+        "return_5d",
+        "breadth_score",
+        INDUSTRY_REGIME_COLUMN,
+        INDUSTRY_RISK_FLAG_COLUMN,
+        ROTATION_TYPE_COLUMN,
+    ]
+    holding_columns = [
+        "ticker",
+        "company_name",
+        "industry_group",
+        "return_10d",
+        "relative_strength_vs_industry",
+        "relative_volume",
+        "watch_status",
+        "alert_level",
+        INDUSTRY_REGIME_COLUMN,
+        INDUSTRY_RISK_FLAG_COLUMN,
+    ]
+    empty_map = {
+        "industry_bars": [],
+        "holding_alignment": [],
+        "summary": {
+            "strong_industry_holding_count": 0,
+            "lagging_holding_count": 0,
+            "priority_review_count": 0,
+            "momentum_exposure_gap_count": 0,
+        },
+        "momentum_exposure_gaps": [],
+    }
+    if industries.empty:
+        return empty_map
+
+    alerts = watchlist_alerts.copy() if watchlist_alerts is not None else pd.DataFrame()
+    if not alerts.empty:
+        alerts["ticker"] = alerts.get("ticker", "").fillna("").astype(str).str.upper()
+        alerts["alert_level"] = alerts.get("alert_level", "").fillna("").astype(str)
+
+    holdings = pd.DataFrame(columns=holding_columns)
+    if not alerts.empty and not tickers.empty:
+        ticker_details = tickers.drop(columns=["alert_level"], errors="ignore").copy()
+        holding_tickers = alerts[["ticker", "alert_level"]].drop_duplicates(subset=["ticker"])
+        holdings = holding_tickers.merge(ticker_details, on="ticker", how="left")
+        for column in holding_columns:
+            if column not in holdings.columns:
+                holdings[column] = math.nan if column in ["return_10d", "relative_strength_vs_industry", "relative_volume"] else ""
+        holdings = holdings[holding_columns].copy()
+        for column in ["return_10d", "relative_strength_vs_industry", "relative_volume"]:
+            holdings[column] = pd.to_numeric(holdings[column], errors="coerce")
+        for column in ["ticker", "company_name", "industry_group", "watch_status", "alert_level", INDUSTRY_REGIME_COLUMN, INDUSTRY_RISK_FLAG_COLUMN]:
+            holdings[column] = holdings[column].fillna("").astype(str)
+
+    holdings_by_industry: dict[str, list[str]] = {}
+    if not holdings.empty:
+        for industry_group, group in holdings.groupby("industry_group", dropna=False):
+            tickers_for_industry = sorted(group["ticker"].dropna().astype(str).tolist())
+            holdings_by_industry[str(industry_group)] = tickers_for_industry
+
+    industry_bars = industries[industry_columns].copy()
+    industry_bars = industry_bars.sort_values("return_10d", ascending=False, na_position="last")
+    industry_bars["holding_tickers"] = industry_bars["industry_group"].astype(str).map(
+        lambda industry_group: holdings_by_industry.get(industry_group, [])
+    )
+    industry_bars["watchlist_tickers"] = industry_bars["holding_tickers"]
+
+    strong_industries = industry_bars[
+        industry_bars[INDUSTRY_REGIME_COLUMN].isin(["momentum_leader", "early_recovery"])
+    ].copy()
+    holding_industries = set()
+    if not holdings.empty:
+        holding_industries = set(holdings["industry_group"].dropna().astype(str))
+
+    exposure_gaps = strong_industries[
+        ~strong_industries["industry_group"].astype(str).isin(holding_industries)
+    ].copy()
+    if not exposure_gaps.empty:
+        exposure_gaps["reason"] = "strong_or_recovering_industry_without_watchlist_exposure"
+
+    lagging_count = 0
+    priority_count = 0
+    strong_holding_count = 0
+    if not holdings.empty:
+        lagging_count = int((holdings["relative_strength_vs_industry"] < -0.10).sum())
+        priority_count = int(holdings["alert_level"].isin(["red", "orange"]).sum())
+        strong_holding_count = int(
+            holdings[INDUSTRY_REGIME_COLUMN].isin(["momentum_leader", "early_recovery"]).sum()
+        )
+
+    return {
+        "industry_bars": dataframe_records(industry_bars),
+        "holding_alignment": dataframe_records(holdings),
+        "summary": {
+            "strong_industry_holding_count": strong_holding_count,
+            "lagging_holding_count": lagging_count,
+            "priority_review_count": priority_count,
+            "momentum_exposure_gap_count": int(len(exposure_gaps)),
+        },
+        "momentum_exposure_gaps": dataframe_records(
+            exposure_gaps[
+                [
+                    "industry_group",
+                    "return_10d",
+                    "breadth_score",
+                    INDUSTRY_REGIME_COLUMN,
+                    INDUSTRY_RISK_FLAG_COLUMN,
+                    "reason",
+                ]
+            ]
+        ),
+    }
+
+
 def build_rotation_trends(rotation_history: pd.DataFrame) -> dict[str, Any]:
     empty_trends = {
         "date_count": 0,
@@ -500,6 +619,7 @@ def build_dashboard_data(
             "strong_count": int(tickers["strong_momentum_signal"].sum()) if "strong_momentum_signal" in tickers.columns else 0,
             "risk_count": int(tickers["risk_warning"].sum()) if "risk_warning" in tickers.columns else 0,
         },
+        "momentum_map": build_momentum_map(tickers, industries, watchlist_alerts),
         "daily_brief": build_daily_brief(tickers, industries, update_health_output, watchlist_alerts),
         "watchlist_alerts": watchlist_alert_records,
         "data_quality": {
@@ -687,9 +807,288 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     }
 
     .summary-grid,
+    .momentum-map-section,
     .watchlist-alert-panel,
     .dashboard-section {
       scroll-margin-top: 170px;
+    }
+
+    .momentum-map-section {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      margin: 0 0 18px;
+      padding: 16px;
+    }
+
+    .momentum-map-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .momentum-map-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .momentum-map-panel {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfb;
+      padding: 12px;
+    }
+
+    .momentum-map-panel-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .momentum-bars {
+      display: grid;
+      gap: 3px;
+    }
+
+    .momentum-bar-row {
+      display: grid;
+      grid-template-columns: minmax(118px, 168px) minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      min-height: 24px;
+      border-bottom: 1px solid rgba(217, 224, 220, 0.72);
+      padding: 2px 0;
+    }
+
+    .momentum-bar-row.has-risk {
+      border-bottom-color: rgba(180, 83, 9, 0.5);
+    }
+
+    .momentum-industry-label {
+      min-width: 0;
+      font-size: 12px;
+      font-weight: 760;
+      overflow-wrap: anywhere;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .momentum-industry-meta {
+      display: none;
+    }
+
+    .momentum-inline-tickers {
+      margin-left: 4px;
+      color: var(--blue);
+      font-size: 10px;
+      font-weight: 820;
+    }
+
+    .momentum-bar-track {
+      position: relative;
+      min-height: 18px;
+      border-radius: 5px;
+      background: #eef2ef;
+      overflow: hidden;
+    }
+
+    .momentum-zero-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(23, 33, 29, 0.28);
+    }
+
+    .momentum-bar-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      min-width: 2px;
+      border-radius: 5px;
+      background: var(--green);
+      opacity: 0.88;
+    }
+
+    .momentum-bar-fill.early_recovery {
+      background: var(--teal);
+    }
+
+    .momentum-bar-fill.neutral {
+      background: #8a9993;
+    }
+
+    .momentum-bar-fill.weak {
+      background: #b98989;
+    }
+
+    .momentum-bar-value {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      font-weight: 780;
+      color: var(--ink);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
+    }
+
+    .momentum-breadth-marker {
+      position: absolute;
+      top: 3px;
+      bottom: 3px;
+      width: 2px;
+      border-radius: 999px;
+      background: #17211d;
+      opacity: 0.46;
+    }
+
+    .momentum-chip-row {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 3px;
+      margin-top: 3px;
+      overflow: hidden;
+    }
+
+    .momentum-ticker-chip {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(29, 78, 216, 0.24);
+      border-radius: 999px;
+      background: rgba(239, 246, 255, 0.9);
+      color: var(--blue);
+      font-size: 9px;
+      font-weight: 780;
+      line-height: 1;
+      padding: 2px 5px;
+      white-space: nowrap;
+    }
+
+    .momentum-risk-badge {
+      display: inline-flex;
+      margin-left: 5px;
+      border-radius: 999px;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 9px;
+      font-weight: 780;
+      padding: 1px 4px;
+      vertical-align: middle;
+    }
+
+    .momentum-scatter {
+      position: relative;
+      min-height: 430px;
+      border: 1px solid rgba(217, 224, 220, 0.8);
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, transparent calc(50% - 0.5px), rgba(23, 33, 29, 0.24) calc(50% - 0.5px), rgba(23, 33, 29, 0.24) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+        linear-gradient(0deg, transparent calc(50% - 0.5px), rgba(23, 33, 29, 0.24) calc(50% - 0.5px), rgba(23, 33, 29, 0.24) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+        #ffffff;
+      overflow: hidden;
+    }
+
+    .momentum-scatter-axis {
+      position: absolute;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 680;
+      pointer-events: none;
+    }
+
+    .momentum-scatter-axis.x {
+      right: 10px;
+      bottom: 8px;
+    }
+
+    .momentum-scatter-axis.y {
+      left: 9px;
+      top: 8px;
+    }
+
+    .momentum-point {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      height: 24px;
+      border: 1px solid rgba(23, 33, 29, 0.22);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 11px;
+      font-weight: 790;
+      box-shadow: 0 7px 18px rgba(23, 33, 29, 0.12);
+      padding: 0 7px;
+      white-space: nowrap;
+    }
+
+    .momentum-point.red {
+      border-color: rgba(185, 28, 28, 0.35);
+      background: #fee2e2;
+      color: var(--red);
+    }
+
+    .momentum-point.orange,
+    .momentum-point.yellow {
+      border-color: rgba(180, 83, 9, 0.35);
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .momentum-point.green {
+      border-color: rgba(4, 120, 87, 0.30);
+      background: #dcfce7;
+      color: var(--green);
+    }
+
+    .momentum-point:hover::after,
+    .momentum-point:focus::after {
+      content: attr(data-caption);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      transform: translateX(-50%);
+      z-index: 45;
+      width: min(280px, 72vw);
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 16px 38px rgba(23, 33, 29, 0.18);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 620;
+      line-height: 1.45;
+      padding: 9px 10px;
+      white-space: normal;
+    }
+
+    .momentum-gap-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .momentum-gap-chip {
+      border: 1px solid rgba(15, 118, 110, 0.24);
+      border-radius: 999px;
+      background: rgba(240, 253, 250, 0.9);
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 760;
+      padding: 5px 8px;
     }
 
     .watchlist-alert-panel {
@@ -1547,6 +1946,14 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .momentum-map-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .momentum-map-grid {
+        grid-template-columns: 1fr;
+      }
+
       .daily-brief-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -1588,6 +1995,22 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
       .summary-grid {
         grid-template-columns: 1fr;
+      }
+
+      .momentum-map-section {
+        padding: 12px;
+      }
+
+      .momentum-map-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .momentum-bar-row {
+        grid-template-columns: 1fr;
+      }
+
+      .momentum-scatter {
+        min-height: 360px;
       }
 
       .watchlist-alert-header {
@@ -1673,6 +2096,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       <div class="nav-panel">
         <select class="section-nav-select" id="section-jump" aria-label="跳到 dashboard 區塊">
           <option value="">跳到區塊</option>
+          <option value="#momentum-map">動能地圖</option>
           <option value="#watchlist-alert">追蹤名單轉換提醒</option>
           <option value="#overview">總覽</option>
           <option value="#daily-brief">每日重點</option>
@@ -1692,6 +2116,30 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         </select>
       </div>
     </nav>
+
+    <section class="momentum-map-section" id="momentum-map" aria-label="動能地圖">
+      <div class="section-heading">
+        <h2>動能地圖</h2>
+      </div>
+      <div class="momentum-map-summary" id="momentum-map-summary"></div>
+      <div class="momentum-map-grid">
+        <section class="momentum-map-panel" aria-label="產業動能長條圖">
+          <div class="momentum-map-panel-header">
+            <h3>產業動能</h3>
+            <span class="row-count" id="momentum-map-industry-count"></span>
+          </div>
+          <div class="momentum-bars" id="momentum-industry-bars"></div>
+        </section>
+        <section class="momentum-map-panel" aria-label="持股相對產業位置">
+          <div class="momentum-map-panel-header">
+            <h3>持股相對產業</h3>
+            <span class="row-count" id="momentum-map-holding-count"></span>
+          </div>
+          <div class="momentum-scatter" id="momentum-alignment-scatter"></div>
+        </section>
+      </div>
+      <div class="momentum-gap-list" id="momentum-gap-list"></div>
+    </section>
 
     <section class="watchlist-alert-panel" id="watchlist-alert" aria-label="追蹤名單轉換提醒">
       <div class="watchlist-alert-header">
@@ -2992,6 +3440,181 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       });
     }
 
+    function finiteNumber(value) {
+      const number = Number(value);
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function renderMomentumMap() {
+      const momentumMap = dashboardData.momentum_map || {};
+      renderMomentumSummary(momentumMap.summary || {});
+      renderMomentumBars(momentumMap.industry_bars || []);
+      renderMomentumScatter(momentumMap.holding_alignment || []);
+      renderMomentumGaps(momentumMap.momentum_exposure_gaps || []);
+    }
+
+    function renderMomentumSummary(summary) {
+      const grid = document.getElementById("momentum-map-summary");
+      grid.replaceChildren();
+      const tiles = [
+        ["強勢產業曝險", summary.strong_industry_holding_count, "持股落在動能領先或早期修復產業的檔數。", ""],
+        ["落後同產業", summary.lagging_holding_count, "相對產業低於 -10% 的持股檔數。", Number(summary.lagging_holding_count || 0) > 0 ? "warning" : ""],
+        ["優先檢查", summary.priority_review_count, "alert level 為紅色或橘色的持股檔數。", Number(summary.priority_review_count || 0) > 0 ? "warning" : "healthy"],
+        ["曝險缺口", summary.momentum_exposure_gap_count, "目前強勢或修復產業中，watchlist 尚未映射到持股的產業數。", ""]
+      ];
+      for (const [label, value, description, stateClass] of tiles) {
+        appendQualityTile(grid, label, formatInteger(value), description, stateClass);
+      }
+    }
+
+    function renderMomentumBars(rows) {
+      const container = document.getElementById("momentum-industry-bars");
+      const count = document.getElementById("momentum-map-industry-count");
+      container.replaceChildren();
+      count.textContent = `${rows.length} 個產業`;
+      if (!rows.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = "目前沒有產業動能資料。";
+        container.appendChild(empty);
+        return;
+      }
+
+      const values = rows.map((row) => finiteNumber(row.return_10d)).filter((value) => value !== null);
+      const minValue = Math.min(0, ...values);
+      const maxValue = Math.max(0, ...values);
+      const range = maxValue - minValue || 1;
+      const zeroPct = ((0 - minValue) / range) * 100;
+      const visibleRows = window.innerWidth <= 520 ? rows.slice(0, 10) : rows;
+
+      visibleRows.forEach((row) => {
+        const value = finiteNumber(row.return_10d) ?? 0;
+        const startPct = ((Math.min(0, value) - minValue) / range) * 100;
+        const endPct = ((Math.max(0, value) - minValue) / range) * 100;
+        const widthPct = Math.max(1, endPct - startPct);
+        const breadth = finiteNumber(row.breadth_score);
+        const riskFlag = String(row.industry_risk_flag || "none");
+        const regime = String(row.industry_regime || "neutral");
+        const tickersForIndustry = Array.isArray(row.holding_tickers) ? row.holding_tickers : [];
+        const rowEl = document.createElement("div");
+        rowEl.className = `momentum-bar-row ${riskFlag !== "none" ? "has-risk" : ""}`.trim();
+        rowEl.title = `${displayText(row.industry_group)} · 10日 ${formatSignedPercent(row.return_10d) || "n/a"} · 5日 ${formatSignedPercent(row.return_5d) || "n/a"} · 廣度 ${formatPercent(row.breadth_score) || "n/a"} · ${regimeLabels[regime] || displayText(regime) || "n/a"}${tickersForIndustry.length ? ` · 持股 ${tickersForIndustry.join(", ")}` : ""}`;
+
+        const label = document.createElement("div");
+        label.className = "momentum-industry-label";
+        label.textContent = displayText(row.industry_group);
+        if (riskFlag !== "none") {
+          const badge = document.createElement("span");
+          badge.className = "momentum-risk-badge";
+          badge.textContent = industryRiskFlagLabels[riskFlag] || displayText(riskFlag);
+          label.appendChild(badge);
+        }
+        if (tickersForIndustry.length) {
+          const tickerText = document.createElement("span");
+          tickerText.className = "momentum-inline-tickers";
+          tickerText.textContent = tickersForIndustry.join(",");
+          label.appendChild(tickerText);
+        }
+        const meta = document.createElement("div");
+        meta.className = "momentum-industry-meta";
+        const tickerSummary = tickersForIndustry.length ? ` · 持股 ${tickersForIndustry.join(", ")}` : "";
+        meta.textContent = `5日 ${formatSignedPercent(row.return_5d) || "n/a"} · 廣度 ${formatPercent(row.breadth_score) || "n/a"} · ${regimeLabels[regime] || displayText(regime) || "n/a"}${tickerSummary}`;
+        label.appendChild(meta);
+
+        const track = document.createElement("div");
+        track.className = "momentum-bar-track";
+        track.title = `${displayText(row.industry_group)} · 10日 ${formatSignedPercent(row.return_10d) || "n/a"} · 廣度 ${formatPercent(row.breadth_score) || "n/a"}`;
+        const zero = document.createElement("div");
+        zero.className = "momentum-zero-line";
+        zero.style.left = `${zeroPct}%`;
+        const fill = document.createElement("div");
+        fill.className = `momentum-bar-fill ${regime}`.trim();
+        fill.style.left = `${startPct}%`;
+        fill.style.width = `${widthPct}%`;
+        const valueLabel = document.createElement("div");
+        valueLabel.className = "momentum-bar-value";
+        valueLabel.textContent = formatSignedPercent(row.return_10d) || "n/a";
+        track.append(zero, fill, valueLabel);
+        if (breadth !== null) {
+          const marker = document.createElement("div");
+          marker.className = "momentum-breadth-marker";
+          marker.style.left = `${Math.max(0, Math.min(100, breadth * 100))}%`;
+          marker.title = `廣度 ${formatPercent(row.breadth_score)}`;
+          track.appendChild(marker);
+        }
+
+        rowEl.append(label, track);
+        container.appendChild(rowEl);
+      });
+    }
+
+    function renderMomentumScatter(rows) {
+      const scatter = document.getElementById("momentum-alignment-scatter");
+      const count = document.getElementById("momentum-map-holding-count");
+      scatter.replaceChildren();
+      count.textContent = `${rows.length} 檔持股`;
+      const xAxis = document.createElement("div");
+      xAxis.className = "momentum-scatter-axis x";
+      xAxis.textContent = "相對產業 →";
+      const yAxis = document.createElement("div");
+      yAxis.className = "momentum-scatter-axis y";
+      yAxis.textContent = "10日報酬 ↑";
+      scatter.append(xAxis, yAxis);
+
+      const plottedRows = rows.filter((row) => finiteNumber(row.relative_strength_vs_industry) !== null && finiteNumber(row.return_10d) !== null);
+      if (!plottedRows.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = "目前沒有可視覺化的持股相對產業資料。";
+        scatter.appendChild(empty);
+        return;
+      }
+
+      const xs = plottedRows.map((row) => finiteNumber(row.relative_strength_vs_industry));
+      const ys = plottedRows.map((row) => finiteNumber(row.return_10d));
+      const xPad = 0.04;
+      const yPad = 0.04;
+      const minX = Math.min(-0.10, 0, ...xs) - xPad;
+      const maxX = Math.max(0.10, 0, ...xs) + xPad;
+      const minY = Math.min(-0.05, 0, ...ys) - yPad;
+      const maxY = Math.max(0.05, 0, ...ys) + yPad;
+      const xRange = maxX - minX || 1;
+      const yRange = maxY - minY || 1;
+
+      plottedRows.forEach((row) => {
+        const x = finiteNumber(row.relative_strength_vs_industry);
+        const y = finiteNumber(row.return_10d);
+        const left = 8 + (((x - minX) / xRange) * 84);
+        const top = 92 - (((y - minY) / yRange) * 84);
+        const point = document.createElement("button");
+        point.type = "button";
+        point.className = `momentum-point ${row.alert_level || ""}`.trim();
+        point.style.left = `${Math.max(8, Math.min(92, left))}%`;
+        point.style.top = `${Math.max(8, Math.min(92, top))}%`;
+        point.textContent = row.ticker || "";
+        const alertLabel = alertLevelLabels[row.alert_level] || displayText(row.alert_level) || "n/a";
+        const watchLabel = watchStatusLabels[row.watch_status] || displayText(row.watch_status) || "n/a";
+        point.setAttribute(
+          "data-caption",
+          `${row.ticker || ""} · ${displayText(row.industry_group) || "n/a"} · 10日 ${formatSignedPercent(row.return_10d) || "n/a"} · 相對產業 ${formatSignedPercent(row.relative_strength_vs_industry) || "n/a"} · 相對量 ${formatNumber(row.relative_volume, 2) || "n/a"} · ${alertLabel} · ${watchLabel}`
+        );
+        scatter.appendChild(point);
+      });
+    }
+
+    function renderMomentumGaps(rows) {
+      const container = document.getElementById("momentum-gap-list");
+      container.replaceChildren();
+      if (!rows.length) return;
+      rows.slice(0, 6).forEach((row) => {
+        const chip = document.createElement("span");
+        chip.className = "momentum-gap-chip";
+        chip.textContent = `${displayText(row.industry_group)} exposure gap · 10日 ${formatSignedPercent(row.return_10d) || "n/a"}`;
+        chip.title = `${regimeLabels[row.industry_regime] || displayText(row.industry_regime)} · ${industryRiskFlagLabels[row.industry_risk_flag] || displayText(row.industry_risk_flag) || "無風險旗標"}`;
+        container.appendChild(chip);
+      });
+    }
+
     function renderSummary() {
       const summary = dashboardData.summary;
       const grid = document.querySelector("[data-summary-grid]");
@@ -3464,6 +4087,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       }
     });
 
+    renderMomentumMap();
     renderWatchlistAlert();
     renderSummary();
     renderDailyBrief();

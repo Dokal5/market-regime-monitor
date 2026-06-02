@@ -7,12 +7,23 @@ import pandas as pd
 from src.config import DATA_QUALITY_COLUMNS, DATA_QUALITY_EXPORT_COLUMNS, LIMITED_HISTORY_MIN_DATA_POINTS
 
 
+def benchmark_tickers(ticker_output: pd.DataFrame) -> pd.DataFrame:
+    if "ticker" not in ticker_output.columns:
+        return ticker_output
+
+    tickers = ticker_output.copy()
+    ticker_symbols = tickers["ticker"].fillna("").astype(str)
+    primary_market = tickers[~ticker_symbols.str.contains(".", regex=False)]
+    return primary_market if not primary_market.empty else tickers
+
+
 def latest_market_date(ticker_output: pd.DataFrame) -> str | None:
     if ticker_output.empty or "latest_date" not in ticker_output.columns:
         return None
 
-    data_points = pd.to_numeric(ticker_output.get("data_points", 0), errors="coerce").fillna(0)
-    latest_dates = ticker_output.loc[data_points > 0, "latest_date"].dropna().astype(str)
+    benchmark = benchmark_tickers(ticker_output)
+    data_points = pd.to_numeric(benchmark.get("data_points", 0), errors="coerce").fillna(0)
+    latest_dates = benchmark.loc[data_points > 0, "latest_date"].dropna().astype(str)
     if latest_dates.empty:
         return None
     return str(latest_dates.max())
@@ -29,6 +40,9 @@ def classify_data_quality(row: pd.Series, market_date: str | None) -> tuple[str,
 
     if market_date and latest_date and latest_date < market_date:
         return "stale", f"最新資料日期 {latest_date} 早於本次市場日期 {market_date}。"
+
+    if market_date and latest_date and latest_date > market_date:
+        return "ok", f"資料日期 {latest_date} 晚於美股基準日期 {market_date}；跨市場交易日差異視為正常。"
 
     if data_points_value < LIMITED_HISTORY_MIN_DATA_POINTS:
         return "limited_history", f"僅有 {data_points_value} 筆日線資料；長週期位置需保守解讀。"
