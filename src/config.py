@@ -77,10 +77,11 @@ DATA_QUALITY_EXPORT_COLUMNS = [
     "data_status",
     "data_quality_note",
 ]
-WATCHLIST_COLUMNS = ["ticker", "theme", "notes"]
+WATCHLIST_COLUMNS = ["ticker", "theme", "holding_status", "notes"]
 WATCHLIST_ALERT_COLUMNS = [
     "ticker",
     "theme",
+    "holding_status",
     "notes",
     "company_name",
     "industry_group",

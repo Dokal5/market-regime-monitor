@@ -15,7 +15,14 @@ QCOM,Qualcomm Incorporated,Semiconductors,specialist,5
 INTC,Intel Corporation,Semiconductors,challenger,5
 ARM,Arm Holdings plc,Semiconductors,specialist,5
 AMAT,Applied Materials Inc.,Semiconductors,infrastructure_leader,5
+LRCX,Lam Research Corporation,Semiconductors,infrastructure_leader,5
+KLAC,KLA Corporation,Semiconductors,infrastructure_leader,5
 TXN,Texas Instruments Incorporated,Semiconductors,specialist,5
+ADI,Analog Devices Inc.,Semiconductors,specialist,5
+NXPI,NXP Semiconductors N.V.,Semiconductors,specialist,5
+MCHP,Microchip Technology Inc.,Semiconductors,specialist,5
+ON,ON Semiconductor Corporation,Semiconductors,specialist,5
+MRVL,Marvell Technology Inc.,Semiconductors,challenger,5
 AVAV,AeroVironment Inc.,Defense Drones,core_leader,3
 KTOS,Kratos Defense & Security Solutions Inc.,Defense Drones,challenger,3
 RCAT,Red Cat Holdings Inc.,Defense Drones,emerging_leader,3
@@ -52,6 +59,7 @@ DDOG,Datadog Inc.,Cloud Software,infrastructure_leader,5
 MDB,MongoDB Inc.,Cloud Software,specialist,5
 WDAY,Workday Inc.,Cloud Software,specialist,5
 MSFT,Microsoft Corporation,Cloud Software,core_leader,5
+ORCL,Oracle Corporation,Cloud Software,core_leader,5
 NOK,Nokia Oyj,Telecom Infrastructure,non_leader,3
 TTD,The Trade Desk Inc.,Adtech,core_leader,3
 APP,AppLovin Corporation,Adtech,challenger,3
@@ -91,11 +99,16 @@ COIN,Coinbase Global Inc.,Fintech,challenger,3
 SOFI,SoFi Technologies Inc.,Fintech,emerging_leader,3
 AFRM,Affirm Holdings Inc.,Fintech,specialist,3
 NFLX,Netflix Inc.,Consumer Platforms,core_leader,4
+AMZN,Amazon.com Inc.,Consumer Platforms,core_leader,5
+GOOGL,Alphabet Inc.,Consumer Platforms,core_leader,5
+META,Meta Platforms Inc.,Consumer Platforms,core_leader,5
 UBER,Uber Technologies Inc.,Consumer Platforms,core_leader,4
 ABNB,Airbnb Inc.,Consumer Platforms,challenger,4
 DASH,DoorDash Inc.,Consumer Platforms,challenger,4
 SPOT,Spotify Technology S.A.,Consumer Platforms,challenger,4
 PINS,Pinterest Inc.,Consumer Platforms,non_leader,4
+AAPL,Apple Inc.,Consumer Hardware,core_leader,5
+TSLA,Tesla Inc.,Electric Vehicles,core_leader,4
 JNJ,Johnson & Johnson,Defensive Healthcare,core_leader,4
 MRK,Merck & Co. Inc.,Defensive Healthcare,core_leader,4
 PFE,Pfizer Inc.,Defensive Healthcare,specialist,4

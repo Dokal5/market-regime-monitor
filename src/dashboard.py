@@ -61,6 +61,7 @@ def build_momentum_map(
         "relative_volume",
         "watch_status",
         "alert_level",
+        "holding_status",
         INDUSTRY_REGIME_COLUMN,
         INDUSTRY_RISK_FLAG_COLUMN,
     ]
@@ -82,11 +83,14 @@ def build_momentum_map(
     if not alerts.empty:
         alerts["ticker"] = alerts.get("ticker", "").fillna("").astype(str).str.upper()
         alerts["alert_level"] = alerts.get("alert_level", "").fillna("").astype(str)
+        if "holding_status" not in alerts.columns:
+            alerts["holding_status"] = "watchlist"
+        alerts["holding_status"] = alerts["holding_status"].fillna("watchlist").astype(str).str.lower()
 
     holdings = pd.DataFrame(columns=holding_columns)
     if not alerts.empty and not tickers.empty:
         ticker_details = tickers.drop(columns=["alert_level"], errors="ignore").copy()
-        holding_tickers = alerts[["ticker", "alert_level"]].drop_duplicates(subset=["ticker"])
+        holding_tickers = alerts[["ticker", "alert_level", "holding_status"]].drop_duplicates(subset=["ticker"])
         holdings = holding_tickers.merge(ticker_details, on="ticker", how="left")
         for column in holding_columns:
             if column not in holdings.columns:
@@ -94,28 +98,38 @@ def build_momentum_map(
         holdings = holdings[holding_columns].copy()
         for column in ["return_10d", "relative_strength_vs_industry", "relative_volume"]:
             holdings[column] = pd.to_numeric(holdings[column], errors="coerce")
-        for column in ["ticker", "company_name", "industry_group", "watch_status", "alert_level", INDUSTRY_REGIME_COLUMN, INDUSTRY_RISK_FLAG_COLUMN]:
+        for column in ["ticker", "company_name", "industry_group", "watch_status", "alert_level", "holding_status", INDUSTRY_REGIME_COLUMN, INDUSTRY_RISK_FLAG_COLUMN]:
             holdings[column] = holdings[column].fillna("").astype(str)
 
     holdings_by_industry: dict[str, list[str]] = {}
+    watchlist_by_industry: dict[str, list[str]] = {}
     if not holdings.empty:
-        for industry_group, group in holdings.groupby("industry_group", dropna=False):
+        owned = holdings[holdings["holding_status"] == "holding"].copy()
+        watched = holdings[holdings["holding_status"] != "holding"].copy()
+        for industry_group, group in owned.groupby("industry_group", dropna=False):
             tickers_for_industry = sorted(group["ticker"].dropna().astype(str).tolist())
             holdings_by_industry[str(industry_group)] = tickers_for_industry
+        for industry_group, group in watched.groupby("industry_group", dropna=False):
+            tickers_for_industry = sorted(group["ticker"].dropna().astype(str).tolist())
+            watchlist_by_industry[str(industry_group)] = tickers_for_industry
 
     industry_bars = industries[industry_columns].copy()
     industry_bars = industry_bars.sort_values("return_10d", ascending=False, na_position="last")
     industry_bars["holding_tickers"] = industry_bars["industry_group"].astype(str).map(
         lambda industry_group: holdings_by_industry.get(industry_group, [])
     )
-    industry_bars["watchlist_tickers"] = industry_bars["holding_tickers"]
+    industry_bars["watchlist_tickers"] = industry_bars["industry_group"].astype(str).map(
+        lambda industry_group: watchlist_by_industry.get(industry_group, [])
+    )
 
     strong_industries = industry_bars[
         industry_bars[INDUSTRY_REGIME_COLUMN].isin(["momentum_leader", "early_recovery"])
     ].copy()
     holding_industries = set()
     if not holdings.empty:
-        holding_industries = set(holdings["industry_group"].dropna().astype(str))
+        holding_industries = set(
+            holdings.loc[holdings["holding_status"] == "holding", "industry_group"].dropna().astype(str)
+        )
 
     exposure_gaps = strong_industries[
         ~strong_industries["industry_group"].astype(str).isin(holding_industries)
@@ -827,6 +841,23 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       grid-template-columns: repeat(4, minmax(130px, 1fr));
       gap: 10px;
       margin-bottom: 12px;
+    }
+
+    .momentum-map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: -4px 0 12px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .momentum-map-legend span {
+      border: 1px solid rgba(217, 224, 220, 0.86);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.74);
+      padding: 3px 7px;
+      white-space: nowrap;
     }
 
     .momentum-map-grid {
@@ -2120,6 +2151,12 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
     <section class="momentum-map-section" id="momentum-map" aria-label="動能地圖">
       <div class="section-heading">
         <h2>動能地圖</h2>
+      </div>
+      <div class="momentum-map-legend" aria-label="動能地圖圖例">
+        <span>bar = 10 日產業動能</span>
+        <span>細線 = 產業廣度</span>
+        <span>ticker = 持股 / watchlist 曝險</span>
+        <span>警示框 = 產業風險旗標</span>
       </div>
       <div class="momentum-map-summary" id="momentum-map-summary"></div>
       <div class="momentum-map-grid">
@@ -3496,9 +3533,14 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         const riskFlag = String(row.industry_risk_flag || "none");
         const regime = String(row.industry_regime || "neutral");
         const tickersForIndustry = Array.isArray(row.holding_tickers) ? row.holding_tickers : [];
+        const watchlistTickers = Array.isArray(row.watchlist_tickers) ? row.watchlist_tickers : [];
+        const exposureSummary = [
+          tickersForIndustry.length ? `持股 ${tickersForIndustry.join(", ")}` : "",
+          watchlistTickers.length ? `觀察 ${watchlistTickers.join(", ")}` : ""
+        ].filter(Boolean).join(" · ");
         const rowEl = document.createElement("div");
         rowEl.className = `momentum-bar-row ${riskFlag !== "none" ? "has-risk" : ""}`.trim();
-        rowEl.title = `${displayText(row.industry_group)} · 10日 ${formatSignedPercent(row.return_10d) || "n/a"} · 5日 ${formatSignedPercent(row.return_5d) || "n/a"} · 廣度 ${formatPercent(row.breadth_score) || "n/a"} · ${regimeLabels[regime] || displayText(regime) || "n/a"}${tickersForIndustry.length ? ` · 持股 ${tickersForIndustry.join(", ")}` : ""}`;
+        rowEl.title = `${displayText(row.industry_group)} · 10日 ${formatSignedPercent(row.return_10d) || "n/a"} · 5日 ${formatSignedPercent(row.return_5d) || "n/a"} · 廣度 ${formatPercent(row.breadth_score) || "n/a"} · ${regimeLabels[regime] || displayText(regime) || "n/a"}${exposureSummary ? ` · ${exposureSummary}` : ""}`;
 
         const label = document.createElement("div");
         label.className = "momentum-industry-label";
@@ -3509,15 +3551,15 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           badge.textContent = industryRiskFlagLabels[riskFlag] || displayText(riskFlag);
           label.appendChild(badge);
         }
-        if (tickersForIndustry.length) {
+        if (tickersForIndustry.length || watchlistTickers.length) {
           const tickerText = document.createElement("span");
           tickerText.className = "momentum-inline-tickers";
-          tickerText.textContent = tickersForIndustry.join(",");
+          tickerText.textContent = tickersForIndustry.concat(watchlistTickers.map((ticker) => `觀察:${ticker}`)).join(",");
           label.appendChild(tickerText);
         }
         const meta = document.createElement("div");
         meta.className = "momentum-industry-meta";
-        const tickerSummary = tickersForIndustry.length ? ` · 持股 ${tickersForIndustry.join(", ")}` : "";
+        const tickerSummary = exposureSummary ? ` · ${exposureSummary}` : "";
         meta.textContent = `5日 ${formatSignedPercent(row.return_5d) || "n/a"} · 廣度 ${formatPercent(row.breadth_score) || "n/a"} · ${regimeLabels[regime] || displayText(regime) || "n/a"}${tickerSummary}`;
         label.appendChild(meta);
 

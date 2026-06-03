@@ -47,6 +47,8 @@ def clean_watchlist(watchlist_input: pd.DataFrame) -> pd.DataFrame:
     watchlist = watchlist[watchlist["ticker"] != ""].copy()
     for column in ["theme", "notes"]:
         watchlist[column] = watchlist[column].fillna("").astype(str)
+    watchlist["holding_status"] = watchlist["holding_status"].fillna("watchlist").astype(str).str.strip().str.lower()
+    watchlist.loc[watchlist["holding_status"] == "", "holding_status"] = "watchlist"
 
     return watchlist[WATCHLIST_COLUMNS]
 
@@ -257,6 +259,7 @@ def build_watchlist_alerts(
             {
                 "ticker": current_ticker,
                 "theme": row.get("theme"),
+                "holding_status": row.get("holding_status"),
                 "notes": row.get("notes"),
                 "company_name": row.get("company_name"),
                 "industry_group": row.get("industry_group"),

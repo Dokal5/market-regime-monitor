@@ -10,7 +10,16 @@ def test_clean_watchlist_normalizes_tickers_and_optional_columns() -> None:
 
     assert watchlist.loc[0, "ticker"] == "VRT"
     assert "theme" in watchlist.columns
+    assert "holding_status" in watchlist.columns
     assert "notes" in watchlist.columns
+    assert watchlist.loc[0, "holding_status"] == "watchlist"
+
+
+def test_clean_watchlist_preserves_holding_status() -> None:
+    watchlist = clean_watchlist(pd.DataFrame([{"ticker": "msft", "holding_status": " Holding "}]))
+
+    assert watchlist.loc[0, "ticker"] == "MSFT"
+    assert watchlist.loc[0, "holding_status"] == "holding"
 
 
 def test_build_watchlist_alerts_flags_weak_ticker_for_replacement() -> None:
@@ -86,6 +95,7 @@ def test_build_watchlist_alerts_flags_weak_ticker_for_replacement() -> None:
 
     assert alerts.loc[0, "alert_level"] == "red"
     assert alerts.loc[0, "action"] == "review_replacement"
+    assert alerts.loc[0, "holding_status"] == "watchlist"
     assert "risk_warning" in alerts.loc[0, "alert_reason"]
     assert "SPOT" in alerts.loc[0, "replacement_candidates"]
 

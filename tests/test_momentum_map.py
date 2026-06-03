@@ -30,6 +30,17 @@ def sample_tickers() -> pd.DataFrame:
                 "industry_regime": "neutral",
                 "industry_risk_flag": "momentum_exhaustion",
             },
+            {
+                "ticker": "MSFT",
+                "company_name": "Microsoft Corporation",
+                "industry_group": "Cloud Software",
+                "return_10d": 0.18,
+                "relative_strength_vs_industry": -0.02,
+                "relative_volume": 1.10,
+                "watch_status": "early_recovery",
+                "industry_regime": "momentum_leader",
+                "industry_risk_flag": "none",
+            },
         ]
     )
 
@@ -71,8 +82,8 @@ def sample_industries() -> pd.DataFrame:
 def sample_alerts() -> pd.DataFrame:
     return pd.DataFrame(
         [
-            {"ticker": "SMR", "alert_level": "yellow"},
-            {"ticker": "TSM", "alert_level": "red"},
+            {"ticker": "SMR", "alert_level": "yellow", "holding_status": "holding"},
+            {"ticker": "TSM", "alert_level": "red", "holding_status": "holding"},
         ]
     )
 
@@ -83,6 +94,21 @@ def test_momentum_map_maps_watchlist_tickers_to_industries() -> None:
 
     assert bars["Nuclear"]["holding_tickers"] == ["SMR"]
     assert bars["Semiconductors"]["holding_tickers"] == ["TSM"]
+
+
+def test_momentum_map_separates_holdings_from_watchlist() -> None:
+    alerts = pd.DataFrame(
+        [
+            {"ticker": "TSM", "alert_level": "yellow", "holding_status": "holding"},
+            {"ticker": "MSFT", "alert_level": "yellow", "holding_status": "watchlist"},
+        ]
+    )
+    momentum_map = build_momentum_map(sample_tickers(), sample_industries(), alerts)
+    bars = {row["industry_group"]: row for row in momentum_map["industry_bars"]}
+
+    assert bars["Semiconductors"]["holding_tickers"] == ["TSM"]
+    assert bars["Cloud Software"]["holding_tickers"] == []
+    assert bars["Cloud Software"]["watchlist_tickers"] == ["MSFT"]
 
 
 def test_momentum_map_detects_lagging_holdings() -> None:
