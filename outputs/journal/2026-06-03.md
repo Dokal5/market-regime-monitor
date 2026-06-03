@@ -2,7 +2,7 @@
 
 ## Daily Brief
 ### 資料狀態
-**資料狀態正常，最新市場日期 2026-06-02**
+**資料狀態正常，最新市場日期 2026-06-03**
 - 成功率 100.00%；缺資料 0，資料落後 0。
 - 排程輸出與資料新鮮度目前正常。
 
@@ -11,57 +11,57 @@
 - 名單：GEV(red)、IONQ(red)、MU(red)、NOK(red)、RKLB(red)。
 
 ### 市場主線
-**10 日主線：Quantum Computing；廣度主線：AI 基礎設施**
-- Quantum Computing 10 日報酬 44.80%。
-- AI 基礎設施 廣度分數 71.67%。
+**10 日主線：Quantum Computing；廣度主線：資安**
+- Quantum Computing 10 日報酬 40.85%。
+- 資安 廣度分數 81.67%。
 - 主線偏廣：10 日報酬領先產業的廣度高於產業中位數。
 
 ### 輪動變化
-**改善最強：核能、AI 基礎設施、機器人與自動化**
-- 排名或加速轉強：核能、AI 基礎設施、機器人與自動化。
-- 排名轉弱：消費平台、太空與衛星、國防。
-- 可能動能衰竭：10 個產業。
+**改善最強：核能、AI 基礎設施、半導體**
+- 排名或加速轉強：核能、AI 基礎設施、半導體。
+- 排名轉弱：太空與衛星、國防、消費平台。
+- 可能動能衰竭：12 個產業。
 
 ### 研究候選
-**研究候選：VST、MSFT**
-- 研究候選：VST、MSFT。
-- 強勢動能：SPCE、MRVL、DELL、SNOW、OKTA。
-- 早期動能且無風險提醒：HOOD、NXT、UEC、AVGO、CRM。
+**研究候選：NVDA**
+- 研究候選：NVDA。
+- 強勢動能：MRVL、OKTA、HPE、SMR、CRWD。
+- 早期動能且無風險提醒：ORCL、WDAY、AVGO、AMAT、MGNI。
 
 ### 風險焦點
-**54 檔風險提醒；20 檔同時有早期動能與風險**
-- 最大回撤代表：SPCE -38.96%、ZS -31.52%、ASTS -20.62%、RDW -20.54%、SPIR -19.31%。
-- 動能與風險重疊：RCAT、HPE、SNOW、OKTA、DELL。
+**64 檔風險提醒；9 檔同時有早期動能與風險**
+- 最大回撤代表：SPCE -42.95%、ZS -31.52%、RDW -28.11%、BKSY -27.41%、SATL -27.00%。
+- 動能與風險重疊：MRVL、HPE、OKTA、MDB、TENB。
 - 讀法提醒：不能只依賴單一候選名單，需要同時檢查風險欄位。
 
 ## Watchlist Alerts
 | ticker | theme | industry_group | alert_level | action | alert_reason | replacement_industries | replacement_candidates |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| MU | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；產業狀態 neutral；產業風險 momentum_exhaustion | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
-| RKLB | Space | Space | red | review_replacement | 已有 risk_warning；5 日報酬 -13.88%；10 日報酬 -5.98%；相對產業 -24.97%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 neutral；產業風險 momentum_exhaustion | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
-| SMR | Nuclear | Nuclear | red | review_replacement | 已有 risk_warning | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
-| TSM | Semiconductors | Semiconductors | yellow | monitor | 相對產業 -9.05%；產業狀態 neutral；產業風險 momentum_exhaustion | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
-| NOK | Telecom Infrastructure | Telecom Infrastructure | red | review_replacement | 已有 risk_warning；產業狀態 neutral | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
-| IONQ | Quantum Computing | Quantum Computing | red | review_replacement | 已有 risk_warning；產業風險 momentum_exhaustion | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
-| GEV | Renewables | Renewables | red | review_replacement | 已有 risk_warning；5 日報酬 -9.42%；10 日報酬 -4.21%；相對產業 -16.83%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 neutral；產業風險 momentum_exhaustion | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
-| MSFT | Cloud Software | Cloud Software | yellow | monitor | 相對產業 -19.95% | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
-| EWT | Market ETFs | Market ETFs | yellow | monitor | 產業狀態 neutral；產業風險 momentum_exhaustion | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
-| VUAA.L | Market ETFs | Market ETFs | yellow | monitor | 相對產業 -1.88%；產業狀態 neutral；產業風險 momentum_exhaustion | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
+| MU | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning | Semiconductors | PANW (Cybersecurity), ORCL (Cloud Software), ABNB (Consumer Platforms), MGNI (Adtech), TER (Robotics Automation) |
+| RKLB | Space | Space | red | review_replacement | 已有 risk_warning；5 日報酬 -23.65%；10 日報酬 -9.90%；相對產業 -18.99%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 neutral；產業風險 momentum_exhaustion | Semiconductors | PANW (Cybersecurity), ORCL (Cloud Software), ABNB (Consumer Platforms), MGNI (Adtech), TER (Robotics Automation) |
+| SMR | Nuclear | Nuclear | red | review_replacement | 已有 risk_warning；產業狀態 neutral；產業風險 momentum_exhaustion | Semiconductors | PANW (Cybersecurity), ORCL (Cloud Software), ABNB (Consumer Platforms), MGNI (Adtech), TER (Robotics Automation) |
+| TSM | Semiconductors | Semiconductors | yellow | monitor | 相對產業 -12.92% | Semiconductors | PANW (Cybersecurity), ORCL (Cloud Software), ABNB (Consumer Platforms), MGNI (Adtech), TER (Robotics Automation) |
+| NOK | Telecom Infrastructure | Telecom Infrastructure | red | review_replacement | 已有 risk_warning；產業狀態 neutral | Semiconductors | PANW (Cybersecurity), ORCL (Cloud Software), ABNB (Consumer Platforms), MGNI (Adtech), TER (Robotics Automation) |
+| IONQ | Quantum Computing | Quantum Computing | red | review_replacement | 已有 risk_warning；產業風險 momentum_exhaustion | Semiconductors | PANW (Cybersecurity), ORCL (Cloud Software), ABNB (Consumer Platforms), MGNI (Adtech), TER (Robotics Automation) |
+| GEV | Renewables | Renewables | red | review_replacement | 已有 risk_warning；5 日報酬 -7.03%；10 日報酬 -5.18%；相對產業 -19.84%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 neutral；產業風險 momentum_exhaustion | Semiconductors | PANW (Cybersecurity), ORCL (Cloud Software), ABNB (Consumer Platforms), MGNI (Adtech), TER (Robotics Automation) |
+| MSFT | Cloud Software | Cloud Software | yellow | monitor | 相對產業 -14.13%；產業狀態 neutral；產業風險 momentum_exhaustion | Semiconductors | PANW (Cybersecurity), ORCL (Cloud Software), ABNB (Consumer Platforms), MGNI (Adtech), TER (Robotics Automation) |
+| EWT | Market ETFs | Market ETFs | yellow | monitor | watch_status=avoid_for_now；產業風險 momentum_exhaustion | Semiconductors | PANW (Cybersecurity), ORCL (Cloud Software), ABNB (Consumer Platforms), MGNI (Adtech), TER (Robotics Automation) |
+| VUAA.L | Market ETFs | Market ETFs | yellow | monitor | 相對產業 -2.50%；watch_status=avoid_for_now；產業風險 momentum_exhaustion | Semiconductors | PANW (Cybersecurity), ORCL (Cloud Software), ABNB (Consumer Platforms), MGNI (Adtech), TER (Robotics Automation) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-06-03 | 130 | 130 | 41 | 65 | 13 | 54 |
+| 2026-06-03 | 130 | 130 | 22 | 56 | 7 | 64 |
 
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-06-03T04:29:33-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/26872992816 | 2026-06-02 | 1 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-06-03T18:19:05-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/26916512901 | 2026-06-03 | 0 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Yahoo Finance via yfinance | 2026-06-02 | 130 | 130 | 100.00% | 0 | 0 | 0 |
+| Yahoo Finance via yfinance | 2026-06-03 | 130 | 130 | 100.00% | 0 | 0 | 0 |
 
 | ticker | company_name | industry_group | latest_date | data_points | data_status | data_quality_note |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -70,69 +70,69 @@
 ## Leading Industries
 | industry_group | return_10d | return_5d | relative_volume | breadth_score | confirmed_signal_pct |
 | --- | --- | --- | --- | --- | --- |
-| Quantum Computing | 44.80% | 12.23% | 0.77 | 70.00% | 100.00% |
-| AI Infrastructure | 41.20% | 23.88% | 1.58 | 71.67% | 83.33% |
-| Defense Drones | 38.47% | 26.02% | 0.97 | 66.00% | 60.00% |
-| Energy Storage | 31.40% | 10.19% | 1.18 | 71.00% | 80.00% |
-| Cloud Software | 24.37% | 23.72% | 1.12 | 70.62% | 62.50% |
+| Quantum Computing | 40.85% | 4.33% | 0.84 | 70.00% | 100.00% |
+| AI Infrastructure | 40.40% | 21.77% | 0.97 | 70.83% | 83.33% |
+| Defense Drones | 29.99% | 9.83% | 1.01 | 60.00% | 60.00% |
+| Energy Storage | 28.76% | 1.26% | 0.73 | 52.00% | 60.00% |
+| Semiconductors | 24.15% | 9.69% | 1.02 | 58.06% | 66.67% |
 
 ## Broad Strength Industries
 | industry_group | breadth_score | positive_5d_pct | positive_10d_pct | confirmed_signal_pct | strong_signal_pct | high_relative_volume_pct |
 | --- | --- | --- | --- | --- | --- | --- |
-| AI Infrastructure | 71.67% | 100.00% | 83.33% | 83.33% | 33.33% | 33.33% |
-| Cybersecurity | 71.67% | 83.33% | 83.33% | 83.33% | 33.33% | 66.67% |
-| Nuclear | 71.25% | 75.00% | 100.00% | 75.00% | 25.00% | 75.00% |
-| Energy Storage | 71.00% | 80.00% | 100.00% | 80.00% | 20.00% | 60.00% |
-| Cloud Software | 70.62% | 100.00% | 100.00% | 62.50% | 25.00% | 50.00% |
+| Cybersecurity | 81.67% | 100.00% | 83.33% | 83.33% | 66.67% | 66.67% |
+| AI Infrastructure | 70.83% | 100.00% | 100.00% | 83.33% | 16.67% | 16.67% |
+| Quantum Computing | 70.00% | 100.00% | 100.00% | 100.00% | 0.00% | 0.00% |
+| Market ETFs | 64.38% | 87.50% | 100.00% | 87.50% | 0.00% | 0.00% |
+| Defense Drones | 60.00% | 100.00% | 100.00% | 60.00% | 0.00% | 0.00% |
 
 ## Strongest Relative Strength Stocks
 | ticker | company_name | industry_group | return_10d | relative_strength_vs_industry | relative_volume | risk_warning |
 | --- | --- | --- | --- | --- | --- | --- |
-| ARM | Arm Holdings plc | Semiconductors | 87.20% | 65.34% | 1.14 | true |
-| SPCE | Virgin Galactic Holdings Inc. | Space | 77.91% | 58.91% | 2.92 | true |
-| MRVL | Marvell Technology Inc. | Semiconductors | 72.14% | 50.27% | 3.22 | true |
-| DELL | Dell Technologies Inc. | AI Infrastructure | 82.88% | 41.68% | 1.43 | true |
-| SNOW | Snowflake Inc. | Cloud Software | 59.00% | 34.63% | 1.20 | true |
-| MU | Micron Technology Inc. | Semiconductors | 56.13% | 34.27% | 0.84 | true |
-| OKTA | Okta Inc. | Cybersecurity | 55.47% | 33.20% | 1.63 | true |
-| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 70.15% | 28.95% | 4.67 | true |
-| RCAT | Red Cat Holdings Inc. | Defense Drones | 67.41% | 28.94% | 1.21 | true |
-| RDW | Redwire Corporation | Space | 47.42% | 28.43% | 0.64 | true |
+| SPCE | Virgin Galactic Holdings Inc. | Space | 71.60% | 62.51% | 1.19 | true |
+| ARM | Arm Holdings plc | Semiconductors | 84.55% | 60.41% | 0.84 | true |
+| MRVL | Marvell Technology Inc. | Semiconductors | 71.13% | 46.98% | 2.86 | true |
+| DELL | Dell Technologies Inc. | AI Infrastructure | 78.98% | 38.59% | 1.20 | true |
+| RCAT | Red Cat Holdings Inc. | Defense Drones | 61.29% | 31.30% | 0.91 | true |
+| MU | Micron Technology Inc. | Semiconductors | 54.50% | 30.36% | 0.71 | true |
+| OKTA | Okta Inc. | Cybersecurity | 45.45% | 30.04% | 1.27 | true |
+| FSLR | First Solar Inc. | Renewables | 43.54% | 28.89% | 0.89 | true |
+| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 69.07% | 28.67% | 1.61 | true |
+| SNOW | Snowflake Inc. | Cloud Software | 42.31% | 25.58% | 0.88 | true |
 
 ## Early Momentum Candidates
 | ticker | company_name | industry_group | return_3d | return_5d | return_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- | --- |
-| RCAT | Red Cat Holdings Inc. | Defense Drones | 5.65% | 53.02% | 67.41% | 1.21 |
-| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 46.95% | 47.53% | 70.15% | 4.67 |
-| SNOW | Snowflake Inc. | Cloud Software | 9.17% | 47.04% | 59.00% | 1.20 |
-| OKTA | Okta Inc. | Cybersecurity | 42.86% | 44.25% | 55.47% | 1.63 |
-| DELL | Dell Technologies Inc. | AI Infrastructure | 37.30% | 42.69% | 82.88% | 1.43 |
-| MRVL | Marvell Technology Inc. | Semiconductors | 41.97% | 39.63% | 72.14% | 3.22 |
-| ONDS | Ondas Holdings Inc. | Defense Drones | 2.49% | 39.00% | 40.00% | 1.06 |
-| SMCI | Super Micro Computer Inc. | AI Infrastructure | 21.48% | 35.23% | 62.63% | 1.14 |
-| FLNC | Fluence Energy Inc. | Energy Storage | 30.66% | 30.85% | 42.84% | 1.37 |
-| MDB | MongoDB Inc. | Cloud Software | 22.35% | 29.64% | 20.75% | 0.82 |
+| MRVL | Marvell Technology Inc. | Semiconductors | 47.15% | 51.81% | 71.13% | 2.86 |
+| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 28.14% | 48.25% | 69.07% | 1.61 |
+| OKTA | Okta Inc. | Cybersecurity | 1.12% | 39.27% | 45.45% | 1.27 |
+| MDB | MongoDB Inc. | Cloud Software | 9.77% | 25.08% | 10.05% | 0.66 |
+| TENB | Tenable Holdings Inc. | Cybersecurity | 5.17% | 21.43% | 17.58% | 1.51 |
+| ORCL | Oracle Corporation | Cloud Software | 2.02% | 20.62% | 26.93% | 1.03 |
+| WDAY | Workday Inc. | Cloud Software | 0.49% | 17.99% | 13.58% | 0.77 |
+| CRWD | CrowdStrike Holdings Inc. | Cybersecurity | 2.27% | 15.84% | 21.19% | 1.35 |
+| FTNT | Fortinet Inc. | Cybersecurity | 6.17% | 14.50% | 14.76% | 1.07 |
+| AVGO | Broadcom Inc. | Semiconductors | 7.27% | 13.60% | 16.58% | 1.61 |
 
 ## Risk Warnings
 | ticker | company_name | industry_group | return_10d | max_drawdown_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- |
-| SPCE | Virgin Galactic Holdings Inc. | Space | 77.91% | -38.96% | 2.92 |
-| ZS | Zscaler Inc. | Cybersecurity | -17.48% | -31.52% | 1.24 |
-| ASTS | AST SpaceMobile Inc. | Space | 36.09% | -20.62% | 0.78 |
-| RDW | Redwire Corporation | Space | 47.42% | -20.54% | 0.64 |
-| SPIR | Spire Global Inc. | Space | 11.20% | -19.31% | 0.69 |
-| SATL | Satellogic Inc. | Space | -9.01% | -19.27% | 0.78 |
-| RKLB | Rocket Lab USA Inc. | Space | -5.98% | -18.53% | 0.62 |
-| BKSY | BlackSky Technology Inc. | Space | 2.12% | -17.92% | 0.58 |
-| LUNR | Intuitive Machines Inc. | Space | 17.80% | -16.39% | 0.58 |
-| VSAT | Viasat Inc. | Space | 1.52% | -16.24% | 1.15 |
+| SPCE | Virgin Galactic Holdings Inc. | Space | 71.60% | -42.95% | 1.19 |
+| ZS | Zscaler Inc. | Cybersecurity | -23.33% | -31.52% | 1.06 |
+| RDW | Redwire Corporation | Space | 33.86% | -28.11% | 0.71 |
+| BKSY | BlackSky Technology Inc. | Space | -17.02% | -27.41% | 1.02 |
+| SATL | Satellogic Inc. | Space | -18.84% | -27.00% | 0.82 |
+| LUNR | Intuitive Machines Inc. | Space | 4.22% | -25.97% | 0.93 |
+| SPIR | Spire Global Inc. | Space | -0.47% | -25.27% | 0.77 |
+| RKLB | Rocket Lab USA Inc. | Space | -9.90% | -23.65% | 0.67 |
+| ASTS | AST SpaceMobile Inc. | Space | 22.28% | -20.62% | 0.64 |
+| VSAT | Viasat Inc. | Space | -1.87% | -19.69% | 1.38 |
 
 ## Deterministic System Interpretation
-- The leading industry by 10 day return is Quantum Computing at 44.80%.
-- The strongest industry by breadth score is AI Infrastructure at 71.67%.
-- Risk warnings are elevated relative to strong momentum signals (54 risk warnings versus 13 strong signals).
+- The leading industry by 10 day return is Quantum Computing at 40.85%.
+- The strongest industry by breadth score is Cybersecurity at 81.67%.
+- Risk warnings are elevated relative to strong momentum signals (64 risk warnings versus 7 strong signals).
 - Leadership appears broad because the return leader has above-median industry breadth.
-- No notable early recovery industries are present under the current rule set.
+- Notable early recovery industries by the current rule set: Cybersecurity.
 
 ## My Interpretation
 
