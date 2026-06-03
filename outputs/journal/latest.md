@@ -46,7 +46,7 @@
 | GEV | Renewables | Renewables | red | review_replacement | 已有 risk_warning；5 日報酬 -9.42%；10 日報酬 -4.21%；相對產業 -16.83%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 neutral；產業風險 momentum_exhaustion | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
 | MSFT | Cloud Software | Cloud Software | yellow | monitor | 相對產業 -19.95% | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
 | EWT | Market ETFs | Market ETFs | yellow | monitor | 產業狀態 neutral；產業風險 momentum_exhaustion | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
-| VUAA.L | Market ETFs | Market ETFs | yellow | monitor | 相對產業 -1.87%；產業狀態 neutral；產業風險 momentum_exhaustion | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
+| VUAA.L | Market ETFs | Market ETFs | yellow | monitor | 相對產業 -1.88%；產業狀態 neutral；產業風險 momentum_exhaustion | AI Infrastructure, Cybersecurity, Nuclear | DV (Adtech), OKLO (Nuclear), HOOD (Fintech), SOFI (Fintech), PINS (Consumer Platforms) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
@@ -56,7 +56,7 @@
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-06-03T04:27:18-04:00 | local |  | 2026-06-02 | 1 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-06-03T04:29:33-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/26872992816 | 2026-06-02 | 1 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
