@@ -1,2 +1,2 @@
 generated_at_utc,generated_at_new_york,run_context,github_workflow,github_run_id,github_run_url,git_sha,latest_market_date,market_data_age_days,success_rate,missing_count,stale_count,limited_history_count,update_health_status,update_health_note
-2026-06-04T06:24:36+00:00,2026-06-04T02:24:36-04:00,local,,,,5bbb98df0ca15e33559cad49d8d4cf2bfb0d51e5,2026-06-03,1,1.000000,0,0,0,healthy,排程輸出與資料新鮮度目前正常。
+2026-06-04T06:29:06+00:00,2026-06-04T02:29:06-04:00,local,,,,0821c5bf5497889fb0e99a851eebd36e48426e24,2026-06-03,1,1.000000,0,0,0,healthy,排程輸出與資料新鮮度目前正常。
