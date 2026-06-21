@@ -1,9 +1,8 @@
 ticker,theme,holding_status,notes
 MU,Semiconductors,holding,Micron holding
-RKLB,Space,holding,Rocket Lab holding
-MRVL,Semiconductors,holding,Marvell Technology holding
 TSM,Semiconductors,holding,Taiwan Semiconductor ADR holding
-GOOGL,Consumer Platforms,holding,Alphabet A holding
-NOK,Telecom Infrastructure,holding,Nokia ADR holding
+RKLB,Space,holding,Rocket Lab holding
+AVGO,Semiconductors,holding,Broadcom holding
+NBIS,AI Infrastructure,holding,Nebius Group holding
+MRVL,Semiconductors,holding,Marvell Technology holding
 EWT,Market ETFs,holding,iShares MSCI Taiwan ETF holding
-VUAA.L,Market ETFs,holding,Vanguard S&P 500 UCITS ETF USD Acc holding
