@@ -44,7 +44,7 @@
 | AVGO | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -4.87%；10 日報酬 -8.11%；相對產業 -0.56%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Fintech, Consumer Platforms, Cloud Software | ISRG (Robotics Automation), CGNX (Robotics Automation), DASH (Consumer Platforms), ZBRA (Robotics Automation), PUBM (Adtech) |
 | NBIS | AI Infrastructure | AI Infrastructure | red | review_replacement | 已有 risk_warning；5 日報酬 -15.98%；10 日報酬 -23.24%；相對產業 -15.13%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Fintech, Consumer Platforms, Cloud Software | ISRG (Robotics Automation), CGNX (Robotics Automation), DASH (Consumer Platforms), ZBRA (Robotics Automation), PUBM (Adtech) |
 | MRVL | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -12.79%；10 日報酬 -15.28%；相對產業 -7.73%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Fintech, Consumer Platforms, Cloud Software | ISRG (Robotics Automation), CGNX (Robotics Automation), DASH (Consumer Platforms), ZBRA (Robotics Automation), PUBM (Adtech) |
-| EWT | Market ETFs | Market ETFs | red | review_replacement | 5 日報酬 -0.05%；10 日報酬 -0.24%；相對產業 -1.08%；產業狀態 neutral | Fintech, Consumer Platforms, Cloud Software | ISRG (Robotics Automation), CGNX (Robotics Automation), DASH (Consumer Platforms), ZBRA (Robotics Automation), PUBM (Adtech) |
+| EWT | Market ETFs | Market ETFs | red | review_replacement | 5 日報酬 -0.05%；10 日報酬 -0.24%；相對產業 -1.09%；產業狀態 neutral | Fintech, Consumer Platforms, Cloud Software | ISRG (Robotics Automation), CGNX (Robotics Automation), DASH (Consumer Platforms), ZBRA (Robotics Automation), PUBM (Adtech) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
@@ -54,7 +54,7 @@
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| warning | 市場資料已落後 4 天。 | 2026-07-06T04:33:31-04:00 | local |  | 2026-07-02 | 4 | 100.00% |
+| warning | 市場資料已落後 4 天。 | 2026-07-06T04:35:49-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/28778612016 | 2026-07-02 | 4 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
@@ -78,8 +78,8 @@
 | industry_group | breadth_score | positive_5d_pct | positive_10d_pct | confirmed_signal_pct | strong_signal_pct | high_relative_volume_pct |
 | --- | --- | --- | --- | --- | --- | --- |
 | Cybersecurity | 70.00% | 100.00% | 100.00% | 100.00% | 0.00% | 0.00% |
-| Fintech | 61.67% | 100.00% | 100.00% | 66.67% | 0.00% | 0.00% |
 | Defensive Healthcare | 61.67% | 100.00% | 83.33% | 83.33% | 0.00% | 0.00% |
+| Fintech | 61.67% | 100.00% | 100.00% | 66.67% | 0.00% | 0.00% |
 | Robotics Automation | 60.83% | 66.67% | 83.33% | 66.67% | 33.33% | 33.33% |
 | Adtech | 57.50% | 100.00% | 100.00% | 50.00% | 0.00% | 0.00% |
 
