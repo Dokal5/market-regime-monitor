@@ -18,9 +18,9 @@
 - 主線偏廣：10 日報酬領先產業同時也是廣度分數領先產業。
 
 ### 輪動變化
-**改善最強：資安、雲端軟體、太空與衛星**
-- 排名或加速轉強：資安、雲端軟體、太空與衛星。
-- 排名轉弱：半導體、國防、防禦型必需消費。
+**改善最強：雲端軟體、消費平台、Consumer Hardware**
+- 排名或加速轉強：雲端軟體、消費平台、Consumer Hardware。
+- 排名轉弱：AI 基礎設施、半導體、Electric Vehicles。
 - 可能動能衰竭：3 個產業。
 
 ### 研究候選
@@ -44,7 +44,7 @@
 | AVGO | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -4.87%；10 日報酬 -8.11%；相對產業 -0.56%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Fintech, Consumer Platforms, Cloud Software | ISRG (Robotics Automation), CGNX (Robotics Automation), DASH (Consumer Platforms), ZBRA (Robotics Automation), PUBM (Adtech) |
 | NBIS | AI Infrastructure | AI Infrastructure | red | review_replacement | 已有 risk_warning；5 日報酬 -15.98%；10 日報酬 -23.24%；相對產業 -15.13%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Fintech, Consumer Platforms, Cloud Software | ISRG (Robotics Automation), CGNX (Robotics Automation), DASH (Consumer Platforms), ZBRA (Robotics Automation), PUBM (Adtech) |
 | MRVL | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -12.79%；10 日報酬 -15.28%；相對產業 -7.73%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Fintech, Consumer Platforms, Cloud Software | ISRG (Robotics Automation), CGNX (Robotics Automation), DASH (Consumer Platforms), ZBRA (Robotics Automation), PUBM (Adtech) |
-| EWT | Market ETFs | Market ETFs | red | review_replacement | 5 日報酬 -0.05%；10 日報酬 -0.24%；相對產業 -1.09%；產業狀態 neutral | Fintech, Consumer Platforms, Cloud Software | ISRG (Robotics Automation), CGNX (Robotics Automation), DASH (Consumer Platforms), ZBRA (Robotics Automation), PUBM (Adtech) |
+| EWT | Market ETFs | Market ETFs | red | review_replacement | 5 日報酬 -0.05%；10 日報酬 -0.24%；相對產業 -1.08%；產業狀態 neutral | Fintech, Consumer Platforms, Cloud Software | ISRG (Robotics Automation), CGNX (Robotics Automation), DASH (Consumer Platforms), ZBRA (Robotics Automation), PUBM (Adtech) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
@@ -54,7 +54,7 @@
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| warning | 市場資料已落後 4 天。 | 2026-07-06T04:28:42-04:00 | local |  | 2026-07-02 | 4 | 100.00% |
+| warning | 市場資料已落後 4 天。 | 2026-07-06T04:33:31-04:00 | local |  | 2026-07-02 | 4 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
