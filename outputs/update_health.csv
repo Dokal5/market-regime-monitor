@@ -1,2 +1,2 @@
 generated_at_utc,generated_at_new_york,run_context,github_workflow,github_run_id,github_run_url,git_sha,latest_market_date,market_data_age_days,success_rate,missing_count,stale_count,limited_history_count,update_health_status,update_health_note
-2026-06-21T08:25:02+00:00,2026-06-21T04:25:02-04:00,local,,,,8e2ee386a27d8b4ec8320f423cc7698d06890fa3,2026-06-18,3,1.000000,0,9,0,warning,9 檔資料落後。
+2026-07-06T08:28:42+00:00,2026-07-06T04:28:42-04:00,local,,,,042fa85e43390b87826767bc6a8b71d6458da505,2026-07-02,4,1.000000,0,0,0,warning,市場資料已落後 4 天。

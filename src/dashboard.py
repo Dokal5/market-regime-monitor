@@ -171,6 +171,227 @@ def build_momentum_map(
     }
 
 
+def build_research_workbench(
+    tickers: pd.DataFrame,
+    industries: pd.DataFrame,
+    watchlist_alerts: pd.DataFrame | None = None,
+) -> dict[str, Any]:
+    command_cards = [
+        {
+            "workflow": "財報季",
+            "commands": "/earnings-preview /earnings",
+            "use_case": "財報前做情境推演，財報後快速更新重點與模型假設。",
+        },
+        {
+            "workflow": "深度研究",
+            "commands": "/initiate /model-update /thesis",
+            "use_case": "把新標的、持股論點與財務模型拆成可維護的研究流程。",
+        },
+        {
+            "workflow": "每日靈感",
+            "commands": "/morning-note /sector /screen /catalysts",
+            "use_case": "盤前整理市場主線、產業輪動、候選名單與事件催化劑。",
+        },
+    ]
+    empty_workbench = {
+        "summary": {
+            "high_priority_count": 0,
+            "ticker_task_count": 0,
+            "industry_task_count": 0,
+            "data_gap_count": 0,
+        },
+        "command_cards": command_cards,
+        "tasks": [],
+    }
+
+    if tickers.empty and industries.empty and (watchlist_alerts is None or watchlist_alerts.empty):
+        return empty_workbench
+
+    ticker_rows = tickers.copy()
+    if not ticker_rows.empty:
+        for column in [
+            "ticker",
+            "company_name",
+            "industry_group",
+            "watch_status",
+            "current_state",
+            "leader_type",
+            "data_status",
+        ]:
+            if column not in ticker_rows.columns:
+                ticker_rows[column] = ""
+            ticker_rows[column] = ticker_rows[column].fillna("").astype(str)
+        for column in ["relative_strength_vs_industry", "return_10d", "relative_volume"]:
+            if column not in ticker_rows.columns:
+                ticker_rows[column] = math.nan
+            ticker_rows[column] = pd.to_numeric(ticker_rows[column], errors="coerce")
+        for column in ["strong_momentum_signal", "risk_warning"]:
+            if column not in ticker_rows.columns:
+                ticker_rows[column] = False
+            ticker_rows[column] = ticker_rows[column].fillna(False).astype(bool)
+
+    industry_rows = industries.copy()
+    if not industry_rows.empty:
+        for column in ["industry_group", INDUSTRY_REGIME_COLUMN, INDUSTRY_RISK_FLAG_COLUMN]:
+            if column not in industry_rows.columns:
+                industry_rows[column] = ""
+            industry_rows[column] = industry_rows[column].fillna("").astype(str)
+        for column in ["return_10d", "breadth_score", "momentum_acceleration"]:
+            if column not in industry_rows.columns:
+                industry_rows[column] = math.nan
+            industry_rows[column] = pd.to_numeric(industry_rows[column], errors="coerce")
+
+    alerts = watchlist_alerts.copy() if watchlist_alerts is not None else pd.DataFrame()
+    if not alerts.empty:
+        for column in ["ticker", "company_name", "industry_group", "alert_level", "action", "alert_reason", "holding_status"]:
+            if column not in alerts.columns:
+                alerts[column] = ""
+            alerts[column] = alerts[column].fillna("").astype(str)
+
+    tasks: list[dict[str, Any]] = []
+    seen: set[tuple[str, str, str]] = set()
+
+    def add_task(
+        *,
+        target: str,
+        target_type: str,
+        company_name: str,
+        industry_group: str,
+        workflow: str,
+        command: str,
+        priority: str,
+        reason: str,
+        data_gap: str = "",
+        source: str = "",
+    ) -> None:
+        if not target:
+            return
+        key = (target_type, target, command)
+        if key in seen:
+            return
+        seen.add(key)
+        tasks.append(
+            {
+                "target": target,
+                "target_type": target_type,
+                "company_name": company_name,
+                "industry_group": industry_group,
+                "workflow": workflow,
+                "command": command,
+                "priority": priority,
+                "reason": reason,
+                "data_gap": data_gap,
+                "source": source,
+            }
+        )
+
+    for _, row in alerts.iterrows():
+        level = str(row.get("alert_level", ""))
+        if level not in ["red", "orange"]:
+            continue
+        ticker = str(row.get("ticker", "")).upper()
+        command = "/thesis" if str(row.get("holding_status", "")).lower() == "holding" else "/catalysts"
+        add_task(
+            target=ticker,
+            target_type="ticker",
+            company_name=str(row.get("company_name", "")),
+            industry_group=str(row.get("industry_group", "")),
+            workflow="深度研究" if command == "/thesis" else "每日靈感",
+            command=command,
+            priority="high",
+            reason=str(row.get("alert_reason") or row.get("action") or "追蹤名單出現優先檢查提醒。"),
+            data_gap="需要最新財報/電話會議/事件資料" if command == "/thesis" else "需要未來事件日曆",
+            source="watchlist_alert",
+        )
+
+    if not ticker_rows.empty:
+        research_candidates = ticker_rows[ticker_rows["watch_status"] == "research_candidate"].sort_values(
+            ["relative_strength_vs_industry", "return_10d"], ascending=[False, False], na_position="last"
+        )
+        for _, row in research_candidates.head(8).iterrows():
+            add_task(
+                target=str(row.get("ticker", "")).upper(),
+                target_type="ticker",
+                company_name=str(row.get("company_name", "")),
+                industry_group=str(row.get("industry_group", "")),
+                workflow="深度研究",
+                command="/initiate",
+                priority="high",
+                reason="領導股篩選列為研究候選，適合建立首次覆蓋報告。",
+                data_gap="需要基本面、估值、同業與管理層資料",
+                source="leader_accumulation",
+            )
+
+        strong_candidates = ticker_rows[
+            (ticker_rows["strong_momentum_signal"])
+            & (~ticker_rows["risk_warning"])
+            & (ticker_rows["relative_volume"] >= 1.2)
+        ].sort_values(["relative_strength_vs_industry", "relative_volume"], ascending=[False, False], na_position="last")
+        for _, row in strong_candidates.head(6).iterrows():
+            add_task(
+                target=str(row.get("ticker", "")).upper(),
+                target_type="ticker",
+                company_name=str(row.get("company_name", "")),
+                industry_group=str(row.get("industry_group", "")),
+                workflow="每日靈感",
+                command="/catalysts",
+                priority="medium",
+                reason="強勢動能且相對量放大，適合檢查近期事件催化劑。",
+                data_gap="需要法說會、產品、監管或產業事件日曆",
+                source="strong_momentum",
+            )
+
+    holding_industries: set[str] = set()
+    if not alerts.empty:
+        holding_industries = set(
+            alerts.loc[alerts["holding_status"].str.lower() == "holding", "industry_group"].dropna().astype(str)
+        )
+    if industry_rows.empty:
+        strong_industries = pd.DataFrame()
+    else:
+        strong_industries = industry_rows[
+            industry_rows[INDUSTRY_REGIME_COLUMN].isin(["momentum_leader", "early_recovery"])
+        ].sort_values(["return_10d", "breadth_score"], ascending=[False, False], na_position="last")
+    for _, row in strong_industries.head(8).iterrows():
+        industry_group = str(row.get("industry_group", ""))
+        if industry_group in holding_industries:
+            continue
+        add_task(
+            target=industry_group,
+            target_type="industry",
+            company_name="",
+            industry_group=industry_group,
+            workflow="每日靈感",
+            command="/sector",
+            priority="medium",
+            reason="產業處於領先或修復狀態，但目前持股沒有直接曝險。",
+            data_gap="需要產業基本面與同業名單",
+            source="momentum_exposure_gap",
+        )
+
+    priority_order = {"high": 0, "medium": 1, "low": 2}
+    tasks = sorted(
+        tasks,
+        key=lambda task: (
+            priority_order.get(str(task.get("priority")), 9),
+            str(task.get("target_type")),
+            str(task.get("target")),
+            str(task.get("command")),
+        ),
+    )[:24]
+
+    return {
+        "summary": {
+            "high_priority_count": sum(1 for task in tasks if task["priority"] == "high"),
+            "ticker_task_count": sum(1 for task in tasks if task["target_type"] == "ticker"),
+            "industry_task_count": sum(1 for task in tasks if task["target_type"] == "industry"),
+            "data_gap_count": sum(1 for task in tasks if task["data_gap"]),
+        },
+        "command_cards": command_cards,
+        "tasks": tasks,
+    }
+
+
 def build_rotation_trends(rotation_history: pd.DataFrame) -> dict[str, Any]:
     empty_trends = {
         "date_count": 0,
@@ -634,6 +855,7 @@ def build_dashboard_data(
             "risk_count": int(tickers["risk_warning"].sum()) if "risk_warning" in tickers.columns else 0,
         },
         "momentum_map": build_momentum_map(tickers, industries, watchlist_alerts),
+        "research_workbench": build_research_workbench(tickers, industries, watchlist_alerts),
         "daily_brief": build_daily_brief(tickers, industries, update_health_output, watchlist_alerts),
         "watchlist_alerts": watchlist_alert_records,
         "data_quality": {
@@ -1353,6 +1575,48 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       padding: 5px 7px;
     }
 
+    .research-workbench-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .research-command-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .research-command-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 13px 14px;
+    }
+
+    .research-command-title {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 780;
+    }
+
+    .research-command-code {
+      margin-top: 7px;
+      color: var(--blue);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      font-weight: 760;
+      overflow-wrap: anywhere;
+    }
+
+    .research-command-use {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
     .summary-tile {
       min-height: 78px;
       border: 1px solid var(--line);
@@ -1985,6 +2249,10 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
         grid-template-columns: 1fr;
       }
 
+      .research-workbench-grid {
+        grid-template-columns: 1fr;
+      }
+
       .daily-brief-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -2129,6 +2397,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           <option value="">跳到區塊</option>
           <option value="#momentum-map">動能地圖</option>
           <option value="#watchlist-alert">追蹤名單轉換提醒</option>
+          <option value="#research-workbench">AI 研究工作台</option>
           <option value="#overview">總覽</option>
           <option value="#daily-brief">每日重點</option>
           <option value="#update-health">更新健康</option>
@@ -2189,6 +2458,24 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       </div>
       <div class="watchlist-alert-route" id="watchlist-alert-route"></div>
       <div class="watchlist-alert-grid" id="watchlist-alert-grid"></div>
+    </section>
+
+    <section class="dashboard-section" id="research-workbench">
+      <div class="section-heading">
+        <h2>AI 研究工作台</h2>
+        <span class="row-count" data-count-for="research-tasks"></span>
+      </div>
+      <p class="section-note">把現有動能、產業輪動、持股提醒與領導股篩選轉成下一步研究指令。這裡只做研究任務排序，不自動呼叫 AI，也不是投資建議。</p>
+      <div class="research-workbench-grid">
+        <div>
+          <div class="quality-grid" id="research-workbench-summary"></div>
+        </div>
+        <div class="research-command-list" id="research-command-list"></div>
+      </div>
+      <div class="table-wrap">
+        <table data-table="research-tasks"></table>
+      </div>
+      <p class="empty-state" data-empty-for="research-tasks" hidden>目前沒有需要優先排程的 AI 研究任務。</p>
     </section>
 
     <section class="summary-grid" id="overview" data-summary-grid aria-label="動能摘要"></section>
@@ -2658,6 +2945,19 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
           { key: "data_points", label: "資料筆數", type: "integer" },
           { key: "data_status", label: "資料狀態" },
           { key: "data_quality_note", label: "資料註記" }
+        ]
+      },
+      "research-tasks": {
+        rows: dashboardData.research_workbench?.tasks || [],
+        columns: [
+          { key: "__rank", label: "#", type: "rank" },
+          { key: "priority", label: "優先級" },
+          { key: "target", label: "研究對象" },
+          { key: "target_type", label: "類型" },
+          { key: "workflow", label: "流程" },
+          { key: "command", label: "建議指令" },
+          { key: "reason", label: "觸發原因" },
+          { key: "data_gap", label: "資料缺口" }
         ]
       },
       "industry-momentum": {
@@ -3490,6 +3790,46 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
       renderMomentumGaps(momentumMap.momentum_exposure_gaps || []);
     }
 
+    function renderResearchWorkbench() {
+      const workbench = dashboardData.research_workbench || {};
+      const summary = workbench.summary || {};
+      const summaryGrid = document.getElementById("research-workbench-summary");
+      const commandList = document.getElementById("research-command-list");
+      summaryGrid.replaceChildren();
+      commandList.replaceChildren();
+
+      const tiles = [
+        ["高優先研究", summary.high_priority_count, "由持股警示或研究候選觸發的高優先級任務。", Number(summary.high_priority_count || 0) > 0 ? "warning" : ""],
+        ["個股任務", summary.ticker_task_count, "針對單一 ticker 的財報、論點、首次覆蓋或催化劑研究。", ""],
+        ["產業任務", summary.industry_task_count, "針對強勢或修復產業的 sector/screen 研究。", ""],
+        ["資料缺口", summary.data_gap_count, "執行 AI 研究前需要補齊的外部資料項目。", Number(summary.data_gap_count || 0) > 0 ? "warning" : "healthy"]
+      ];
+      for (const [label, value, description, stateClass] of tiles) {
+        appendQualityTile(summaryGrid, label, formatInteger(value), description, stateClass);
+      }
+
+      const cards = Array.isArray(workbench.command_cards) ? workbench.command_cards : [];
+      for (const card of cards) {
+        const element = document.createElement("article");
+        element.className = "research-command-card";
+
+        const title = document.createElement("div");
+        title.className = "research-command-title";
+        title.textContent = card.workflow || "研究流程";
+
+        const commands = document.createElement("div");
+        commands.className = "research-command-code";
+        commands.textContent = card.commands || "";
+
+        const useCase = document.createElement("div");
+        useCase.className = "research-command-use";
+        useCase.textContent = card.use_case || "";
+
+        element.append(title, commands, useCase);
+        commandList.appendChild(element);
+      }
+    }
+
     function renderMomentumSummary(summary) {
       const grid = document.getElementById("momentum-map-summary");
       grid.replaceChildren();
@@ -4131,6 +4471,7 @@ def build_dashboard_html(dashboard_data: dict[str, Any]) -> str:
 
     renderMomentumMap();
     renderWatchlistAlert();
+    renderResearchWorkbench();
     renderSummary();
     renderDailyBrief();
     renderUpdateHealth();
