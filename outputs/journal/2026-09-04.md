@@ -2,10 +2,9 @@
 
 ## Daily Brief
 ### 資料狀態
-**資料狀態為「注意」，本日訊號需先保守解讀**
-- 最新市場日期 2026-09-04；成功率 100.00%。
-- 缺資料 0，資料落後 1，歷史不足 0。
-- 1 檔資料落後。
+**資料狀態正常，最新市場日期 2026-09-04**
+- 成功率 100.00%；缺資料 0，資料落後 0。
+- 排程輸出與資料新鮮度目前正常。
 
 ### 追蹤名單轉換提醒
 **4 檔需開盤前檢查；紅色 4、橘色 0**
@@ -38,78 +37,78 @@
 ## Watchlist Alerts
 | ticker | theme | industry_group | alert_level | action | alert_reason | replacement_industries | replacement_candidates |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| MU | Semiconductors | Semiconductors | yellow | monitor | watch_status=avoid_for_now | Consumer Hardware, Market ETFs, AI Infrastructure | TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear), CEG (Nuclear) |
-| TSM | Semiconductors | Semiconductors | green | watch_ok | 追蹤 ticker 動能與產業狀態暫無明顯警示 | Consumer Hardware, Market ETFs, AI Infrastructure | MU (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear), CEG (Nuclear) |
-| RKLB | Space | Space | red | review_replacement | 已有 risk_warning；5 日報酬 -0.20%；10 日報酬 -11.45%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Consumer Hardware, Market ETFs, AI Infrastructure | MU (Semiconductors), TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear) |
-| AVGO | Semiconductors | Semiconductors | red | review_replacement | 5 日報酬 -2.95%；10 日報酬 -2.86%；相對產業 -3.17% | Consumer Hardware, Market ETFs, AI Infrastructure | MU (Semiconductors), TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear) |
-| NBIS | AI Infrastructure | AI Infrastructure | red | review_replacement | 已有 risk_warning；相對產業 -1.44%；watch_status=avoid_for_now | Consumer Hardware, Market ETFs, AI Infrastructure | MU (Semiconductors), TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear) |
-| MRVL | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；10 日報酬 -5.69%；相對產業 -6.00%；watch_status=avoid_for_now | Consumer Hardware, Market ETFs, AI Infrastructure | MU (Semiconductors), TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear) |
-| EWT | Market ETFs | Market ETFs | yellow | monitor | watch_status=avoid_for_now | Consumer Hardware, Market ETFs, AI Infrastructure | MU (Semiconductors), TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear) |
+| MU | Semiconductors | Semiconductors | yellow | monitor | watch_status=avoid_for_now | Consumer Hardware, AI Infrastructure, Defensive Healthcare | TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear), CEG (Nuclear) |
+| TSM | Semiconductors | Semiconductors | green | watch_ok | 追蹤 ticker 動能與產業狀態暫無明顯警示 | Consumer Hardware, AI Infrastructure, Defensive Healthcare | MU (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear), CEG (Nuclear) |
+| RKLB | Space | Space | red | review_replacement | 已有 risk_warning；5 日報酬 -0.20%；10 日報酬 -11.45%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Consumer Hardware, AI Infrastructure, Defensive Healthcare | MU (Semiconductors), TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear) |
+| AVGO | Semiconductors | Semiconductors | red | review_replacement | 5 日報酬 -2.95%；10 日報酬 -2.86%；相對產業 -3.17% | Consumer Hardware, AI Infrastructure, Defensive Healthcare | MU (Semiconductors), TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear) |
+| NBIS | AI Infrastructure | AI Infrastructure | red | review_replacement | 已有 risk_warning；相對產業 -1.44%；watch_status=avoid_for_now | Consumer Hardware, AI Infrastructure, Defensive Healthcare | MU (Semiconductors), TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear) |
+| MRVL | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；10 日報酬 -5.69%；相對產業 -6.00%；watch_status=avoid_for_now | Consumer Hardware, AI Infrastructure, Defensive Healthcare | MU (Semiconductors), TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear) |
+| EWT | Market ETFs | Market ETFs | yellow | monitor | watch_status=avoid_for_now | Consumer Hardware, AI Infrastructure, Defensive Healthcare | MU (Semiconductors), TSM (Semiconductors), SEDG (Energy Storage), META (Consumer Platforms), VST (Nuclear) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-09-04 | 131 | 131 | 58 | 25 | 4 | 45 |
+| 2026-09-04 | 131 | 131 | 58 | 24 | 4 | 45 |
 
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| warning | 1 檔資料落後。 | 2026-09-04T19:08:13-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/33928255369 | 2026-09-04 | 0 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-09-07T19:38:03-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/34170639531 | 2026-09-04 | 3 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Yahoo Finance via yfinance | 2026-09-04 | 131 | 131 | 100.00% | 0 | 1 | 0 |
+| Yahoo Finance via yfinance | 2026-09-04 | 131 | 131 | 100.00% | 0 | 0 | 0 |
 
 | ticker | company_name | industry_group | latest_date | data_points | data_status | data_quality_note |
 | --- | --- | --- | --- | --- | --- | --- |
-| VUAA.L | Vanguard S&P 500 UCITS ETF USD Acc | Market ETFs | 2026-09-03 | 252 | stale | 最新資料日期 2026-09-03 早於本次市場日期 2026-09-04。 |
+| None |  |  |  |  |  |  |
 
 ## Leading Industries
 | industry_group | return_10d | return_5d | relative_volume | breadth_score | confirmed_signal_pct |
 | --- | --- | --- | --- | --- | --- |
 | AI Infrastructure | 4.76% | 5.66% | 1.01 | 48.57% | 42.86% |
-| Cybersecurity | 4.21% | -5.48% | 1.01 | 17.50% | 0.00% |
-| Consumer Hardware | 3.43% | 0.08% | 0.97 | 70.00% | 100.00% |
-| Adtech | 2.79% | 0.95% | 0.74 | 35.00% | 16.67% |
+| Cybersecurity | 4.21% | -5.48% | 1.02 | 17.50% | 0.00% |
+| Consumer Hardware | 3.43% | 0.08% | 1.00 | 70.00% | 100.00% |
+| Adtech | 2.79% | 0.95% | 0.75 | 35.00% | 16.67% |
 | Cloud Software | 2.61% | -3.46% | 0.89 | 27.50% | 12.50% |
 
 ## Broad Strength Industries
 | industry_group | breadth_score | positive_5d_pct | positive_10d_pct | confirmed_signal_pct | strong_signal_pct | high_relative_volume_pct |
 | --- | --- | --- | --- | --- | --- | --- |
 | Consumer Hardware | 70.00% | 100.00% | 100.00% | 100.00% | 0.00% | 0.00% |
-| Market ETFs | 48.75% | 87.50% | 87.50% | 37.50% | 0.00% | 0.00% |
 | AI Infrastructure | 48.57% | 71.43% | 71.43% | 42.86% | 14.29% | 28.57% |
-| Defensive Healthcare | 45.00% | 100.00% | 66.67% | 33.33% | 0.00% | 0.00% |
+| Defensive Healthcare | 46.67% | 100.00% | 66.67% | 33.33% | 0.00% | 16.67% |
 | Semiconductors | 43.89% | 83.33% | 55.56% | 33.33% | 11.11% | 27.78% |
+| Market ETFs | 43.12% | 75.00% | 87.50% | 25.00% | 0.00% | 0.00% |
 
 ## Strongest Relative Strength Stocks
 | ticker | company_name | industry_group | return_10d | relative_strength_vs_industry | relative_volume | risk_warning |
 | --- | --- | --- | --- | --- | --- | --- |
-| DPRO | Draganfly Inc. | Defense Drones | 36.30% | 39.36% | 1.43 | true |
-| OKTA | Okta Inc. | Cybersecurity | 26.24% | 22.03% | 0.59 | false |
-| CRM | Salesforce Inc. | Cloud Software | 23.93% | 21.33% | 0.63 | true |
-| HOOD | Robinhood Markets Inc. | Fintech | 12.93% | 14.22% | 1.14 | true |
+| DPRO | Draganfly Inc. | Defense Drones | 36.30% | 39.36% | 1.44 | true |
+| OKTA | Okta Inc. | Cybersecurity | 26.24% | 22.03% | 0.60 | false |
+| CRM | Salesforce Inc. | Cloud Software | 23.93% | 21.33% | 0.64 | true |
+| HOOD | Robinhood Markets Inc. | Fintech | 12.93% | 14.19% | 1.14 | true |
 | SEDG | SolarEdge Technologies Inc. | Energy Storage | 10.93% | 13.92% | 0.59 | false |
-| DELL | Dell Technologies Inc. | AI Infrastructure | 18.56% | 13.81% | 1.32 | true |
-| META | Meta Platforms Inc. | Consumer Platforms | 12.16% | 13.78% | 0.98 | false |
+| DELL | Dell Technologies Inc. | AI Infrastructure | 18.56% | 13.81% | 1.34 | true |
+| META | Meta Platforms Inc. | Consumer Platforms | 12.16% | 13.77% | 1.00 | false |
 | VSAT | Viasat Inc. | Space | 0.80% | 13.00% | 0.96 | true |
-| SPCE | Virgin Galactic Holdings Inc. | Space | -1.30% | 10.89% | 0.74 | false |
-| VST | Vistra Corp. | Nuclear | 9.61% | 10.05% | 1.16 | false |
+| SPCE | Virgin Galactic Holdings Inc. | Space | -1.30% | 10.89% | 0.75 | false |
+| VST | Vistra Corp. | Nuclear | 9.61% | 10.05% | 1.17 | false |
 
 ## Early Momentum Candidates
 | ticker | company_name | industry_group | return_3d | return_5d | return_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- | --- |
-| DPRO | Draganfly Inc. | Defense Drones | 13.75% | 37.07% | 36.30% | 1.43 |
+| DPRO | Draganfly Inc. | Defense Drones | 13.75% | 37.07% | 36.30% | 1.44 |
 | HOOD | Robinhood Markets Inc. | Fintech | 17.97% | 17.12% | 12.93% | 1.14 |
-| DELL | Dell Technologies Inc. | AI Infrastructure | 23.33% | 14.88% | 18.56% | 1.32 |
+| DELL | Dell Technologies Inc. | AI Infrastructure | 23.33% | 14.88% | 18.56% | 1.34 |
 | VSAT | Viasat Inc. | Space | 13.64% | 11.80% | 0.80% | 0.96 |
 | VRT | Vertiv Holdings Co. | AI Infrastructure | 9.59% | 9.12% | 7.09% | 0.83 |
-| MU | Micron Technology Inc. | Semiconductors | 8.91% | 8.98% | 5.15% | 1.26 |
-| VST | Vistra Corp. | Nuclear | 8.13% | 8.91% | 9.61% | 1.16 |
+| MU | Micron Technology Inc. | Semiconductors | 8.91% | 8.98% | 5.15% | 1.27 |
+| VST | Vistra Corp. | Nuclear | 8.13% | 8.91% | 9.61% | 1.17 |
 | SEDG | SolarEdge Technologies Inc. | Energy Storage | 5.26% | 8.88% | 10.93% | 0.59 |
 | NBIS | Nebius Group N.V. | AI Infrastructure | 13.46% | 8.23% | 3.31% | 0.68 |
-| CEG | Constellation Energy Corporation | Nuclear | 6.65% | 8.03% | 9.56% | 1.14 |
+| CEG | Constellation Energy Corporation | Nuclear | 6.65% | 8.03% | 9.56% | 1.18 |
 
 ## Risk Warnings
 | ticker | company_name | industry_group | return_10d | max_drawdown_10d | relative_volume |
@@ -117,9 +116,9 @@
 | BKSY | BlackSky Technology Inc. | Space | -26.13% | -19.89% | 1.02 |
 | ONDS | Ondas Holdings Inc. | Defense Drones | -12.51% | -19.54% | 0.61 |
 | MDB | MongoDB Inc. | Cloud Software | -14.41% | -18.67% | 1.06 |
-| PL | Planet Labs PBC | Space | -18.71% | -15.99% | 4.09 |
-| PYPL | PayPal Holdings Inc. | Fintech | -10.71% | -15.85% | 1.03 |
-| MRVL | Marvell Technology Inc. | Semiconductors | -5.69% | -15.76% | 0.85 |
+| PL | Planet Labs PBC | Space | -18.71% | -15.99% | 4.10 |
+| PYPL | PayPal Holdings Inc. | Fintech | -10.49% | -15.85% | 1.05 |
+| MRVL | Marvell Technology Inc. | Semiconductors | -5.69% | -15.76% | 0.86 |
 | UEC | Uranium Energy Corp. | Nuclear | -9.56% | -15.49% | 0.63 |
 | SPIR | Spire Global Inc. | Space | -14.06% | -15.14% | 0.55 |
 | PANW | Palo Alto Networks Inc. | Cybersecurity | -6.88% | -14.20% | 0.91 |

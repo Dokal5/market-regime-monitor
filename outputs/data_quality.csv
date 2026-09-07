@@ -129,4 +129,4 @@ DIA,SPDR Dow Jones Industrial Average ETF Trust,Market ETFs,2026-09-04,252,ok,�
 VTI,Vanguard Total Stock Market ETF,Market ETFs,2026-09-04,252,ok,資料日期與本次市場日期一致。
 VOO,Vanguard S&P 500 ETF,Market ETFs,2026-09-04,252,ok,資料日期與本次市場日期一致。
 EWT,iShares MSCI Taiwan ETF,Market ETFs,2026-09-04,252,ok,資料日期與本次市場日期一致。
-VUAA.L,Vanguard S&P 500 UCITS ETF USD Acc,Market ETFs,2026-09-03,252,stale,最新資料日期 2026-09-03 早於本次市場日期 2026-09-04。
+VUAA.L,Vanguard S&P 500 UCITS ETF USD Acc,Market ETFs,2026-09-04,251,ok,資料日期與本次市場日期一致。
