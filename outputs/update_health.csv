@@ -1,2 +1,2 @@
 generated_at_utc,generated_at_new_york,run_context,github_workflow,github_run_id,github_run_url,git_sha,latest_market_date,market_data_age_days,success_rate,missing_count,stale_count,limited_history_count,update_health_status,update_health_note
-2026-09-11T23:25:15+00:00,2026-09-11T19:25:15-04:00,github_actions,Daily Momentum Update,34657904466,https://github.com/Dokal5/market-regime-monitor/actions/runs/34657904466,8b8921bf50607985f64c5aaf694cade9aba396be,2026-09-11,0,1.000000,0,1,0,warning,1 檔資料落後。
+2026-09-14T23:56:06+00:00,2026-09-14T19:56:06-04:00,github_actions,Daily Momentum Update,34910945567,https://github.com/Dokal5/market-regime-monitor/actions/runs/34910945567,8f6ec2db4c96aca5ca346fef7fa691811cc8f1ba,2026-09-14,0,1.000000,0,1,0,warning,1 檔資料落後。
