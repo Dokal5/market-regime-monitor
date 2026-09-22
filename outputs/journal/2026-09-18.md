@@ -2,10 +2,9 @@
 
 ## Daily Brief
 ### 資料狀態
-**資料狀態為「注意」，本日訊號需先保守解讀**
-- 最新市場日期 2026-09-18；成功率 100.00%。
-- 缺資料 0，資料落後 1，歷史不足 0。
-- 1 檔資料落後。
+**資料狀態正常，最新市場日期 2026-09-18**
+- 成功率 100.00%；缺資料 0，資料落後 0。
+- 排程輸出與資料新鮮度目前正常。
 
 ### 追蹤名單轉換提醒
 **3 檔需開盤前檢查；紅色 2、橘色 1**
@@ -49,30 +48,30 @@
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-09-18 | 131 | 131 | 30 | 15 | 13 | 49 |
+| 2026-09-18 | 131 | 131 | 29 | 15 | 13 | 49 |
 
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| warning | 1 檔資料落後。 | 2026-09-18T19:26:59-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/35405586133 | 2026-09-18 | 0 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-09-21T20:12:45-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/35670909425 | 2026-09-18 | 3 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Yahoo Finance via yfinance | 2026-09-18 | 131 | 131 | 100.00% | 0 | 1 | 0 |
+| Yahoo Finance via yfinance | 2026-09-18 | 131 | 131 | 100.00% | 0 | 0 | 0 |
 
 | ticker | company_name | industry_group | latest_date | data_points | data_status | data_quality_note |
 | --- | --- | --- | --- | --- | --- | --- |
-| VUAA.L | Vanguard S&P 500 UCITS ETF USD Acc | Market ETFs | 2026-09-17 | 252 | stale | 最新資料日期 2026-09-17 早於本次市場日期 2026-09-18。 |
+| None |  |  |  |  |  |  |
 
 ## Leading Industries
 | industry_group | return_10d | return_5d | relative_volume | breadth_score | confirmed_signal_pct |
 | --- | --- | --- | --- | --- | --- |
 | Telecom Infrastructure | 9.31% | -4.04% | 2.03 | 35.00% | 0.00% |
 | Cybersecurity | 8.24% | 13.47% | 1.62 | 60.83% | 16.67% |
-| Semiconductors | 5.42% | 0.07% | 1.96 | 44.44% | 16.67% |
+| Semiconductors | 5.42% | 0.07% | 1.97 | 44.44% | 16.67% |
 | AI Infrastructure | 5.02% | -1.13% | 1.51 | 35.00% | 14.29% |
-| Consumer Hardware | 2.41% | 1.16% | 1.98 | 55.00% | 0.00% |
+| Consumer Hardware | 2.41% | 1.16% | 1.99 | 55.00% | 0.00% |
 
 ## Broad Strength Industries
 | industry_group | breadth_score | positive_5d_pct | positive_10d_pct | confirmed_signal_pct | strong_signal_pct | high_relative_volume_pct |
@@ -87,13 +86,13 @@
 | ticker | company_name | industry_group | return_10d | relative_strength_vs_industry | relative_volume | risk_warning |
 | --- | --- | --- | --- | --- | --- | --- |
 | GNRC | Generac Holdings Inc. | Energy Storage | 13.34% | 19.99% | 2.09 | false |
-| AMD | Advanced Micro Devices Inc. | Semiconductors | 22.72% | 17.31% | 1.66 | false |
-| META | Meta Platforms Inc. | Consumer Platforms | 9.02% | 15.06% | 1.47 | false |
-| AVAV | AeroVironment Inc. | Defense Drones | 8.65% | 14.53% | 1.05 | false |
+| AMD | Advanced Micro Devices Inc. | Semiconductors | 22.72% | 17.31% | 1.67 | false |
+| META | Meta Platforms Inc. | Consumer Platforms | 9.02% | 15.06% | 1.48 | false |
+| AVAV | AeroVironment Inc. | Defense Drones | 8.65% | 14.53% | 1.06 | false |
 | INTC | Intel Corporation | Semiconductors | 18.47% | 13.05% | 1.78 | true |
-| MRVL | Marvell Technology Inc. | Semiconductors | 16.96% | 11.54% | 1.05 | false |
+| MRVL | Marvell Technology Inc. | Semiconductors | 16.96% | 11.54% | 1.06 | false |
 | DDOG | Datadog Inc. | Cloud Software | 7.06% | 10.86% | 1.41 | false |
-| SATL | Satellogic Inc. | Space | 10.37% | 9.94% | 3.02 | true |
+| SATL | Satellogic Inc. | Space | 10.37% | 9.94% | 3.03 | true |
 | SEDG | SolarEdge Technologies Inc. | Energy Storage | 2.60% | 9.25% | 0.97 | false |
 | ARM | Arm Holdings plc | Semiconductors | 13.61% | 8.19% | 1.70 | true |
 
@@ -103,10 +102,10 @@
 | ZS | Zscaler Inc. | Cybersecurity | 1.76% | 19.92% | 10.97% | 1.35 |
 | GNRC | Generac Holdings Inc. | Energy Storage | 18.52% | 10.94% | 13.34% | 2.09 |
 | COIN | Coinbase Global Inc. | Fintech | 12.86% | 10.84% | 0.80% | 1.98 |
-| AVAV | AeroVironment Inc. | Defense Drones | 1.89% | 9.02% | 8.65% | 1.05 |
-| SATL | Satellogic Inc. | Space | 0.79% | 6.68% | 10.37% | 3.02 |
-| ISRG | Intuitive Surgical Inc. | Robotics Automation | 4.29% | 6.55% | 6.35% | 2.10 |
-| IONQ | IonQ Inc. | Quantum Computing | 5.61% | 6.48% | 0.28% | 1.20 |
+| AVAV | AeroVironment Inc. | Defense Drones | 1.89% | 9.02% | 8.65% | 1.06 |
+| SATL | Satellogic Inc. | Space | 0.79% | 6.68% | 10.37% | 3.03 |
+| ISRG | Intuitive Surgical Inc. | Robotics Automation | 4.29% | 6.55% | 6.35% | 2.12 |
+| IONQ | IonQ Inc. | Quantum Computing | 5.61% | 6.48% | 0.28% | 1.21 |
 | HOOD | Robinhood Markets Inc. | Fintech | 8.48% | 6.44% | -3.93% | 1.59 |
 | PUBM | PubMatic Inc. | Adtech | 4.59% | 6.43% | 3.48% | 1.88 |
 | MDB | MongoDB Inc. | Cloud Software | 1.56% | 5.89% | -0.23% | 0.65 |
@@ -117,13 +116,13 @@
 | FLNC | Fluence Energy Inc. | Energy Storage | -28.24% | -33.70% | 1.98 |
 | SMR | NuScale Power Corporation | Nuclear | -15.18% | -26.03% | 1.60 |
 | LEU | Centrus Energy Corp. | Nuclear | -14.80% | -25.07% | 1.96 |
-| RCAT | Red Cat Holdings Inc. | Defense Drones | -20.96% | -22.37% | 3.26 |
+| RCAT | Red Cat Holdings Inc. | Defense Drones | -20.96% | -22.37% | 3.27 |
 | STEM | Stem Inc. | Energy Storage | -16.33% | -20.74% | 1.12 |
 | VRT | Vertiv Holdings Co. | AI Infrastructure | -7.21% | -19.31% | 1.47 |
 | NNE | NANO Nuclear Energy Inc. | Nuclear | -10.88% | -19.17% | 2.68 |
 | OKLO | Oklo Inc. | Nuclear | -4.62% | -17.76% | 1.27 |
-| UEC | Uranium Energy Corp. | Nuclear | -14.77% | -17.49% | 1.87 |
-| LRCX | Lam Research Corporation | Semiconductors | -1.55% | -15.98% | 2.30 |
+| UEC | Uranium Energy Corp. | Nuclear | -14.77% | -17.49% | 1.88 |
+| LRCX | Lam Research Corporation | Semiconductors | -1.55% | -15.98% | 2.31 |
 
 ## Deterministic System Interpretation
 - The leading industry by 10 day return is Telecom Infrastructure at 9.31%.
