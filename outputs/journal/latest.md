@@ -2,196 +2,134 @@
 
 ## Daily Brief
 ### 資料狀態
-**資料狀態為「注意」，本日訊號需先保守解讀**
-- 最新市場日期 2026-10-06；成功率 100.00%。
-- 缺資料 0，資料落後 62，歷史不足 0。
-- 62 檔資料落後。
+**資料狀態正常，最新市場日期 2026-10-06**
+- 成功率 100.00%；缺資料 0，資料落後 0。
+- 排程輸出與資料新鮮度目前正常。
 
 ### 追蹤名單轉換提醒
-**2 檔需開盤前檢查；紅色 1、橘色 1**
-- 名單：MU(red)、NBIS(orange)、AVGO(yellow)、EWT(yellow)、RKLB(yellow)。
+**1 檔需開盤前檢查；紅色 1、橘色 0**
+- 名單：MU(red)、AVGO(yellow)、EWT(yellow)、MRVL(green)、NBIS(green)。
 
 ### 市場主線
 **10 日主線：資安；廣度主線：資安**
-- 資安 10 日報酬 7.74%。
-- 資安 廣度分數 61.67%。
+- 資安 10 日報酬 9.25%。
+- 資安 廣度分數 67.50%。
 - 主線偏廣：10 日報酬領先產業同時也是廣度分數領先產業。
 
 ### 輪動變化
-**改善最強：儲能、Electric Vehicles、消費平台**
-- 排名或加速轉強：儲能、Electric Vehicles、消費平台。
-- 排名轉弱：太空與衛星、防禦型醫療、廣告科技。
-- 可能動能衰竭：2 個產業。
+**改善最強：儲能、再生能源、消費平台**
+- 排名或加速轉強：儲能、再生能源、消費平台。
+- 排名轉弱：太空與衛星、金融科技、防禦型醫療。
+- 可能動能衰竭：1 個產業。
 
 ### 研究候選
-**研究候選：SMCI、CCJ、AMZN、GOOGL、DASH**
-- 研究候選：SMCI、CCJ、AMZN、GOOGL、DASH。
-- 強勢動能：MRVL。
-- 早期動能且無風險提醒：ON、TENB、AFRM、CGNX、HPE。
+**研究候選：NOW、SMCI、AVGO、CRM、ISRG**
+- 研究候選：NOW、SMCI、AVGO、CRM、ISRG。
+- 強勢動能：VST、CEG、STEM、MRVL。
+- 早期動能且無風險提醒：HPE、VST、ON、CEG、TENB。
 
 ### 風險焦點
-**31 檔風險提醒；11 檔同時有早期動能與風險**
-- 最大回撤代表：MDB -21.87%、DPRO -20.97%、APP -18.41%、ARM -14.97%、SEDG -14.44%。
-- 動能與風險重疊：LEU、SEDG、ENPH、MDB、ARM。
+**23 檔風險提醒；13 檔同時有早期動能與風險**
+- 最大回撤代表：MDB -21.87%、DPRO -20.97%、APP -14.92%、ARM -14.80%、SATL -13.78%。
+- 動能與風險重疊：PL、LEU、ZS、MDB、ORCL。
 - 讀法提醒：不能只依賴單一候選名單，需要同時檢查風險欄位。
 
 ## Watchlist Alerts
 | ticker | theme | industry_group | alert_level | action | alert_reason | replacement_industries | replacement_candidates |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| MU | Semiconductors | Semiconductors | red | review_replacement | 5 日報酬 -1.83%；10 日報酬 -4.62%；相對產業 -8.68% | Robotics Automation, Semiconductors, Telecom Infrastructure | MRVL (Semiconductors), ON (Semiconductors), GNRC (Energy Storage), CGNX (Robotics Automation), MSFT (Cloud Software) |
-| TSM | Semiconductors | Semiconductors | green | watch_ok | 追蹤 ticker 動能與產業狀態暫無明顯警示 | Robotics Automation, Semiconductors, Telecom Infrastructure | MRVL (Semiconductors), ON (Semiconductors), GNRC (Energy Storage), CGNX (Robotics Automation), MSFT (Cloud Software) |
-| RKLB | Space | Space | yellow | monitor | 產業狀態 weak | Robotics Automation, Semiconductors, Telecom Infrastructure | MRVL (Semiconductors), ON (Semiconductors), GNRC (Energy Storage), CGNX (Robotics Automation), MSFT (Cloud Software) |
-| AVGO | Semiconductors | Semiconductors | yellow | monitor | 相對產業 -0.98% | Robotics Automation, Semiconductors, Telecom Infrastructure | MRVL (Semiconductors), ON (Semiconductors), GNRC (Energy Storage), CGNX (Robotics Automation), MSFT (Cloud Software) |
-| NBIS | AI Infrastructure | AI Infrastructure | orange | watch_transition | 10 日報酬 -0.10%；相對產業 -2.05% | Robotics Automation, Semiconductors, Telecom Infrastructure | MRVL (Semiconductors), ON (Semiconductors), GNRC (Energy Storage), CGNX (Robotics Automation), MSFT (Cloud Software) |
-| MRVL | Semiconductors | Semiconductors | green | watch_ok | 追蹤 ticker 動能與產業狀態暫無明顯警示 | Robotics Automation, Semiconductors, Telecom Infrastructure | ON (Semiconductors), GNRC (Energy Storage), CGNX (Robotics Automation), MSFT (Cloud Software), TXN (Semiconductors) |
-| EWT | Market ETFs | Market ETFs | yellow | monitor | 產業狀態 neutral | Robotics Automation, Semiconductors, Telecom Infrastructure | MRVL (Semiconductors), ON (Semiconductors), GNRC (Energy Storage), CGNX (Robotics Automation), MSFT (Cloud Software) |
+| MU | Semiconductors | Semiconductors | red | review_replacement | 5 日報酬 -1.83%；10 日報酬 -4.62%；相對產業 -8.52% | Cybersecurity, AI Infrastructure, Energy Storage | VST (Nuclear), CEG (Nuclear), MRVL (Semiconductors), ON (Semiconductors), HPE (AI Infrastructure) |
+| TSM | Semiconductors | Semiconductors | green | watch_ok | 追蹤 ticker 動能與產業狀態暫無明顯警示 | Cybersecurity, AI Infrastructure, Energy Storage | VST (Nuclear), CEG (Nuclear), MRVL (Semiconductors), ON (Semiconductors), HPE (AI Infrastructure) |
+| RKLB | Space | Space | green | watch_ok | 追蹤 ticker 動能與產業狀態暫無明顯警示 | Cybersecurity, AI Infrastructure, Energy Storage | VST (Nuclear), CEG (Nuclear), MRVL (Semiconductors), ON (Semiconductors), HPE (AI Infrastructure) |
+| AVGO | Semiconductors | Semiconductors | yellow | monitor | 相對產業 -0.81% | Cybersecurity, AI Infrastructure, Energy Storage | VST (Nuclear), CEG (Nuclear), MRVL (Semiconductors), ON (Semiconductors), HPE (AI Infrastructure) |
+| NBIS | AI Infrastructure | AI Infrastructure | green | watch_ok | 追蹤 ticker 動能與產業狀態暫無明顯警示 | Cybersecurity, AI Infrastructure, Energy Storage | VST (Nuclear), CEG (Nuclear), MRVL (Semiconductors), ON (Semiconductors), HPE (AI Infrastructure) |
+| MRVL | Semiconductors | Semiconductors | green | watch_ok | 追蹤 ticker 動能與產業狀態暫無明顯警示 | Cybersecurity, AI Infrastructure, Energy Storage | VST (Nuclear), CEG (Nuclear), ON (Semiconductors), HPE (AI Infrastructure), PINS (Consumer Platforms) |
+| EWT | Market ETFs | Market ETFs | yellow | monitor | 產業狀態 neutral | Cybersecurity, AI Infrastructure, Energy Storage | VST (Nuclear), CEG (Nuclear), MRVL (Semiconductors), ON (Semiconductors), HPE (AI Infrastructure) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-10-06 | 131 | 131 | 69 | 26 | 1 | 31 |
+| 2026-10-06 | 131 | 131 | 77 | 33 | 4 | 23 |
 
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| warning | 62 檔資料落後。 | 2026-10-06T20:52:55-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/37554129844 | 2026-10-06 | 0 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-10-07T21:08:34-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/37711318066 | 2026-10-06 | 1 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Yahoo Finance via yfinance | 2026-10-06 | 131 | 131 | 100.00% | 0 | 62 | 0 |
+| Yahoo Finance via yfinance | 2026-10-06 | 131 | 131 | 100.00% | 0 | 0 | 0 |
 
 | ticker | company_name | industry_group | latest_date | data_points | data_status | data_quality_note |
 | --- | --- | --- | --- | --- | --- | --- |
-| ABBV | AbbVie Inc. | Defensive Healthcare | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| ABNB | Airbnb Inc. | Consumer Platforms | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| AFRM | Affirm Holdings Inc. | Fintech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| ANET | Arista Networks Inc. | AI Infrastructure | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| APP | AppLovin Corporation | Adtech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| ARM | Arm Holdings plc | Semiconductors | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| ARRY | Array Technologies Inc. | Renewables | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| ASTS | AST SpaceMobile Inc. | Space | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| BKSY | BlackSky Technology Inc. | Space | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| CEG | Constellation Energy Corporation | Nuclear | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| COIN | Coinbase Global Inc. | Fintech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| CRWD | CrowdStrike Holdings Inc. | Cybersecurity | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| DASH | DoorDash Inc. | Consumer Platforms | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| DDOG | Datadog Inc. | Cloud Software | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| DELL | Dell Technologies Inc. | AI Infrastructure | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| DPRO | Draganfly Inc. | Defense Drones | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| DV | DoubleVerify Holdings Inc. | Adtech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| ENPH | Enphase Energy Inc. | Energy Storage | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| FLNC | Fluence Energy Inc. | Energy Storage | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| GEV | GE Vernova Inc. | Renewables | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| HOOD | Robinhood Markets Inc. | Fintech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| IONQ | IonQ Inc. | Quantum Computing | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| LUNR | Intuitive Machines Inc. | Space | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| MDB | MongoDB Inc. | Cloud Software | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| META | Meta Platforms Inc. | Consumer Platforms | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| MGNI | Magnite Inc. | Adtech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| NBIS | Nebius Group N.V. | AI Infrastructure | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| NNE | NANO Nuclear Energy Inc. | Nuclear | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| NOW | ServiceNow Inc. | Cloud Software | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| NXT | Nextracker Inc. | Renewables | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| OKLO | Oklo Inc. | Nuclear | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| OKTA | Okta Inc. | Cybersecurity | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| ONDS | Ondas Holdings Inc. | Defense Drones | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| PANW | Palo Alto Networks Inc. | Cybersecurity | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| PINS | Pinterest Inc. | Consumer Platforms | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| PL | Planet Labs PBC | Space | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| PUBM | PubMatic Inc. | Adtech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| PYPL | PayPal Holdings Inc. | Fintech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| RCAT | Red Cat Holdings Inc. | Defense Drones | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| RDW | Redwire Corporation | Space | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| RKLB | Rocket Lab USA Inc. | Space | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| ROKU | Roku Inc. | Adtech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| SATL | Satellogic Inc. | Space | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| SEDG | SolarEdge Technologies Inc. | Energy Storage | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| SMR | NuScale Power Corporation | Nuclear | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| SNOW | Snowflake Inc. | Cloud Software | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| SOFI | SoFi Technologies Inc. | Fintech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| SPCE | Virgin Galactic Holdings Inc. | Space | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| SPIR | Spire Global Inc. | Space | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| SPOT | Spotify Technology S.A. | Consumer Platforms | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| STEM | Stem Inc. | Energy Storage | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| SYM | Symbotic Inc. | Robotics Automation | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| TENB | Tenable Holdings Inc. | Cybersecurity | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| TTD | The Trade Desk Inc. | Adtech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| UBER | Uber Technologies Inc. | Consumer Platforms | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| VRT | Vertiv Holdings Co. | AI Infrastructure | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| VST | Vistra Corp. | Nuclear | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| VUAA.L | Vanguard S&P 500 UCITS ETF USD Acc | Market ETFs | 2026-10-05 | 252 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| WDAY | Workday Inc. | Cloud Software | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| XYZ | Block Inc. | Fintech | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
-| ZS | Zscaler Inc. | Cybersecurity | 2026-10-05 | 250 | stale | 最新資料日期 2026-10-05 早於本次市場日期 2026-10-06。 |
+| None |  |  |  |  |  |  |
 
 ## Leading Industries
 | industry_group | return_10d | return_5d | relative_volume | breadth_score | confirmed_signal_pct |
 | --- | --- | --- | --- | --- | --- |
-| Cybersecurity | 7.74% | 6.42% | 0.75 | 61.67% | 83.33% |
-| Quantum Computing | 6.07% | -3.61% | 0.66 | 25.00% | 0.00% |
-| Robotics Automation | 5.14% | 4.22% | 0.92 | 50.00% | 50.00% |
-| Semiconductors | 4.07% | 3.97% | 0.93 | 49.72% | 50.00% |
-| AI Infrastructure | 1.95% | 3.52% | 0.75 | 41.43% | 14.29% |
+| Cybersecurity | 9.25% | 8.25% | 0.91 | 67.50% | 83.33% |
+| Quantum Computing | 6.26% | -1.41% | 0.69 | 25.00% | 0.00% |
+| Energy Storage | 6.03% | 4.95% | 0.85 | 51.00% | 40.00% |
+| Robotics Automation | 5.21% | 4.93% | 0.95 | 50.00% | 50.00% |
+| AI Infrastructure | 5.13% | 6.15% | 0.94 | 55.00% | 42.86% |
 
 ## Broad Strength Industries
 | industry_group | breadth_score | positive_5d_pct | positive_10d_pct | confirmed_signal_pct | strong_signal_pct | high_relative_volume_pct |
 | --- | --- | --- | --- | --- | --- | --- |
-| Cybersecurity | 61.67% | 100.00% | 83.33% | 83.33% | 0.00% | 0.00% |
+| Cybersecurity | 67.50% | 100.00% | 100.00% | 83.33% | 0.00% | 16.67% |
+| AI Infrastructure | 55.00% | 100.00% | 85.71% | 42.86% | 0.00% | 28.57% |
+| Energy Storage | 51.00% | 100.00% | 60.00% | 40.00% | 20.00% | 20.00% |
 | Robotics Automation | 50.00% | 83.33% | 83.33% | 50.00% | 0.00% | 0.00% |
 | Semiconductors | 49.72% | 77.78% | 77.78% | 50.00% | 5.56% | 11.11% |
-| Electric Vehicles | 45.00% | 100.00% | 100.00% | 0.00% | 0.00% | 0.00% |
-| Telecom Infrastructure | 45.00% | 100.00% | 100.00% | 0.00% | 0.00% | 0.00% |
 
 ## Strongest Relative Strength Stocks
 | ticker | company_name | industry_group | return_10d | relative_strength_vs_industry | relative_volume | risk_warning |
 | --- | --- | --- | --- | --- | --- | --- |
-| ON | ON Semiconductor Corporation | Semiconductors | 17.27% | 13.20% | 0.72 | false |
-| DDOG | Datadog Inc. | Cloud Software | 12.80% | 13.06% | 0.71 | false |
-| RKLB | Rocket Lab USA Inc. | Space | 4.48% | 8.83% | 0.89 | false |
-| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 10.70% | 8.76% | 0.69 | false |
-| PUBM | PubMatic Inc. | Adtech | 4.03% | 8.40% | 0.87 | false |
-| AMAT | Applied Materials Inc. | Semiconductors | 12.24% | 8.17% | 0.79 | false |
-| GNRC | Generac Holdings Inc. | Energy Storage | 8.46% | 8.06% | 0.69 | false |
-| ONDS | Ondas Holdings Inc. | Defense Drones | 0.54% | 7.89% | 0.60 | false |
-| GEV | GE Vernova Inc. | Renewables | 4.63% | 7.54% | 0.77 | false |
-| AFRM | Affirm Holdings Inc. | Fintech | 5.21% | 7.47% | 1.05 | false |
+| VST | Vistra Corp. | Nuclear | 14.31% | 13.96% | 2.98 | false |
+| CEG | Constellation Energy Corporation | Nuclear | 14.02% | 13.68% | 3.77 | false |
+| ON | ON Semiconductor Corporation | Semiconductors | 17.27% | 13.37% | 0.72 | false |
+| DDOG | Datadog Inc. | Cloud Software | 12.43% | 12.91% | 0.56 | false |
+| STEM | Stem Inc. | Energy Storage | 18.36% | 12.33% | 1.32 | true |
+| PL | Planet Labs PBC | Space | 9.82% | 12.33% | 1.47 | true |
+| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 15.48% | 10.35% | 0.75 | false |
+| PINS | Pinterest Inc. | Consumer Platforms | 8.92% | 8.92% | 0.99 | false |
+| AMAT | Applied Materials Inc. | Semiconductors | 12.24% | 8.33% | 0.79 | false |
+| GEV | GE Vernova Inc. | Renewables | 8.31% | 7.75% | 1.15 | false |
 
 ## Early Momentum Candidates
 | ticker | company_name | industry_group | return_3d | return_5d | return_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- | --- |
+| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 9.14% | 14.62% | 15.48% | 0.75 |
+| VST | Vistra Corp. | Nuclear | 14.85% | 13.97% | 14.31% | 2.98 |
 | ON | ON Semiconductor Corporation | Semiconductors | 7.78% | 13.64% | 17.27% | 0.72 |
-| TENB | Tenable Holdings Inc. | Cybersecurity | 5.83% | 11.72% | 6.38% | 0.71 |
+| CEG | Constellation Energy Corporation | Nuclear | 16.02% | 13.54% | 14.02% | 3.77 |
+| PL | Planet Labs PBC | Space | 15.06% | 13.37% | 9.82% | 1.47 |
+| TENB | Tenable Holdings Inc. | Cybersecurity | 9.30% | 12.80% | 9.91% | 0.70 |
 | LEU | Centrus Energy Corp. | Nuclear | 10.62% | 11.36% | -2.50% | 1.83 |
-| AFRM | Affirm Holdings Inc. | Fintech | 7.97% | 11.22% | 5.21% | 1.05 |
 | CGNX | Cognex Corporation | Robotics Automation | 6.64% | 11.19% | 12.51% | 1.17 |
-| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 7.00% | 9.15% | 10.70% | 0.69 |
-| SEDG | SolarEdge Technologies Inc. | Energy Storage | 7.88% | 9.04% | -3.45% | 0.93 |
-| MRVL | Marvell Technology Inc. | Semiconductors | 7.06% | 9.02% | 9.40% | 2.72 |
-| PINS | Pinterest Inc. | Consumer Platforms | 6.19% | 8.96% | 3.62% | 0.75 |
-| UEC | Uranium Energy Corp. | Nuclear | 8.01% | 8.83% | -2.13% | 1.60 |
+| NXT | Nextracker Inc. | Renewables | 10.83% | 11.07% | 6.75% | 1.46 |
+| MRVL | Marvell Technology Inc. | Semiconductors | 7.06% | 9.02% | 9.40% | 2.73 |
 
 ## Risk Warnings
 | ticker | company_name | industry_group | return_10d | max_drawdown_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- |
-| MDB | MongoDB Inc. | Cloud Software | -11.80% | -21.87% | 0.93 |
-| DPRO | Draganfly Inc. | Defense Drones | -13.58% | -20.97% | 1.12 |
-| APP | AppLovin Corporation | Adtech | -14.60% | -18.41% | 1.27 |
-| ARM | Arm Holdings plc | Semiconductors | -6.19% | -14.97% | 0.49 |
-| SEDG | SolarEdge Technologies Inc. | Energy Storage | -3.45% | -14.44% | 0.93 |
-| SATL | Satellogic Inc. | Space | -4.66% | -13.78% | 1.33 |
-| SMR | NuScale Power Corporation | Nuclear | -12.63% | -13.61% | 0.47 |
-| LUNR | Intuitive Machines Inc. | Space | -9.10% | -13.49% | 0.96 |
-| STEM | Stem Inc. | Energy Storage | -2.75% | -12.85% | 0.56 |
+| MDB | MongoDB Inc. | Cloud Software | -15.66% | -21.87% | 0.51 |
+| DPRO | Draganfly Inc. | Defense Drones | -9.75% | -20.97% | 0.57 |
+| APP | AppLovin Corporation | Adtech | -15.19% | -14.92% | 0.80 |
+| ARM | Arm Holdings plc | Semiconductors | -9.20% | -14.80% | 0.58 |
+| SATL | Satellogic Inc. | Space | -4.01% | -13.78% | 0.81 |
+| STEM | Stem Inc. | Energy Storage | 18.36% | -12.85% | 1.32 |
 | AVAV | AeroVironment Inc. | Defense Drones | -8.08% | -12.14% | 0.70 |
+| INTC | Intel Corporation | Semiconductors | -9.17% | -11.69% | 0.93 |
+| SMR | NuScale Power Corporation | Nuclear | -9.79% | -11.52% | 1.19 |
+| SPIR | Spire Global Inc. | Space | -10.07% | -11.17% | 1.33 |
 
 ## Deterministic System Interpretation
-- The leading industry by 10 day return is Cybersecurity at 7.74%.
-- The strongest industry by breadth score is Cybersecurity at 61.67%.
-- Risk warnings are elevated relative to strong momentum signals (31 risk warnings versus 1 strong signals).
+- The leading industry by 10 day return is Cybersecurity at 9.25%.
+- The strongest industry by breadth score is Cybersecurity at 67.50%.
+- Risk warnings are elevated relative to strong momentum signals (23 risk warnings versus 4 strong signals).
 - Leadership appears broad because the 10 day return leader also has the strongest breadth score.
-- Notable early recovery industries by the current rule set: AI Infrastructure, Renewables, Market ETFs.
+- Notable early recovery industries by the current rule set: Nuclear, AI Infrastructure, Renewables.
 
 ## My Interpretation
 
