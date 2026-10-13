@@ -1,135 +1,136 @@
-# Market Regime Monitor Journal: 2026-10-08
+# Market Regime Monitor Journal: 2026-10-12
 
 ## Daily Brief
 ### 資料狀態
-**資料狀態正常，最新市場日期 2026-10-08**
-- 成功率 100.00%；缺資料 0，資料落後 0。
-- 排程輸出與資料新鮮度目前正常。
+**資料狀態為「注意」，本日訊號需先保守解讀**
+- 最新市場日期 2026-10-12；成功率 100.00%。
+- 缺資料 0，資料落後 1，歷史不足 0。
+- 1 檔資料落後。
 
 ### 追蹤名單轉換提醒
-**3 檔需開盤前檢查；紅色 3、橘色 0**
-- 名單：MU(red)、NBIS(red)、RKLB(red)、AVGO(yellow)、EWT(yellow)。
+**5 檔需開盤前檢查；紅色 4、橘色 1**
+- 名單：MU(red)、NBIS(red)、RKLB(red)、TSM(red)、EWT(orange)。
 
 ### 市場主線
-**10 日主線：儲能；廣度主線：Consumer Hardware**
-- 儲能 10 日報酬 4.58%。
+**10 日主線：資安；廣度主線：Consumer Hardware**
+- 資安 10 日報酬 9.62%。
 - Consumer Hardware 廣度分數 70.00%。
 - 主線偏廣：10 日報酬領先產業的廣度高於產業中位數。
 
 ### 輪動變化
-**改善最強：儲能、再生能源、防禦型必需消費**
-- 排名或加速轉強：儲能、再生能源、防禦型必需消費。
-- 排名轉弱：Quantum Computing、金融科技、半導體。
-- 可能動能衰竭：0 個產業。
+**改善最強：消費平台、再生能源、雲端軟體**
+- 排名或加速轉強：消費平台、再生能源、雲端軟體。
+- 排名轉弱：Quantum Computing、半導體、儲能。
+- 可能動能衰竭：3 個產業。
 
 ### 研究候選
-**研究候選：CEG、COST、NOW、ISRG、PG**
-- 研究候選：CEG、COST、NOW、ISRG、PG。
-- 強勢動能：VST、AFRM、MRVL、ABBV、PG。
-- 早期動能且無風險提醒：VST、CEG、HPE、AFRM、ZS。
+**研究候選：WMT、GD、SPOT、PG、TSLA**
+- 研究候選：WMT、GD、SPOT、PG、TSLA。
+- 強勢動能：ABBV。
+- 早期動能且無風險提醒：ZS、SPOT、WMT、SNOW、ABBV。
 
 ### 風險焦點
-**31 檔風險提醒；1 檔同時有早期動能與風險**
-- 最大回撤代表：DPRO -26.29%、MDB -18.46%、SATL -17.67%、RDW -16.01%、SPIR -14.07%。
-- 動能與風險重疊：MDB。
+**41 檔風險提醒；0 檔同時有早期動能與風險**
+- 最大回撤代表：DPRO -32.26%、ASTS -19.26%、SATL -17.80%、IONQ -17.55%、ARM -16.99%。
+- 動能與風險重疊：目前沒有符合條件的標的。
 - 讀法提醒：不能只依賴單一候選名單，需要同時檢查風險欄位。
 
 ## Watchlist Alerts
 | ticker | theme | industry_group | alert_level | action | alert_reason | replacement_industries | replacement_candidates |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| MU | Semiconductors | Semiconductors | red | review_replacement | 5 日報酬 -5.61%；10 日報酬 -4.14%；相對產業 -4.93%；產業狀態 neutral | Consumer Hardware, Defensive Staples, Cybersecurity | VST (Nuclear), AFRM (Fintech), ABBV (Defensive Healthcare), PG (Defensive Staples), MRVL (Semiconductors) |
-| TSM | Semiconductors | Semiconductors | yellow | monitor | 5 日報酬 -0.26%；產業狀態 neutral | Consumer Hardware, Defensive Staples, Cybersecurity | VST (Nuclear), AFRM (Fintech), ABBV (Defensive Healthcare), PG (Defensive Staples), MRVL (Semiconductors) |
-| RKLB | Space | Space | red | review_replacement | 已有 risk_warning；5 日報酬 -2.92%；10 日報酬 -7.08%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Consumer Hardware, Defensive Staples, Cybersecurity | VST (Nuclear), AFRM (Fintech), ABBV (Defensive Healthcare), PG (Defensive Staples), MRVL (Semiconductors) |
-| AVGO | Semiconductors | Semiconductors | yellow | monitor | 產業狀態 neutral | Consumer Hardware, Defensive Staples, Cybersecurity | VST (Nuclear), AFRM (Fintech), ABBV (Defensive Healthcare), PG (Defensive Staples), MRVL (Semiconductors) |
-| NBIS | AI Infrastructure | AI Infrastructure | red | review_replacement | 已有 risk_warning；5 日報酬 -5.41%；10 日報酬 -9.76%；相對產業 -11.28%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 neutral | Consumer Hardware, Defensive Staples, Cybersecurity | VST (Nuclear), AFRM (Fintech), ABBV (Defensive Healthcare), PG (Defensive Staples), MRVL (Semiconductors) |
-| MRVL | Semiconductors | Semiconductors | yellow | monitor | 產業狀態 neutral | Consumer Hardware, Defensive Staples, Cybersecurity | VST (Nuclear), AFRM (Fintech), ABBV (Defensive Healthcare), PG (Defensive Staples), QQQ (Market ETFs) |
-| EWT | Market ETFs | Market ETFs | yellow | monitor | 相對產業 -0.18%；watch_status=avoid_for_now | Consumer Hardware, Defensive Staples, Cybersecurity | VST (Nuclear), AFRM (Fintech), ABBV (Defensive Healthcare), PG (Defensive Staples), MRVL (Semiconductors) |
+| MU | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -7.04%；10 日報酬 -6.16%；相對產業 -3.97%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
+| TSM | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -8.53%；10 日報酬 -1.88%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
+| RKLB | Space | Space | red | review_replacement | 已有 risk_warning；5 日報酬 -10.01%；10 日報酬 -8.98%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
+| AVGO | Semiconductors | Semiconductors | yellow | monitor | 5 日報酬 -2.15%；產業狀態 weak | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
+| NBIS | AI Infrastructure | AI Infrastructure | red | review_replacement | 已有 risk_warning；5 日報酬 -9.68%；10 日報酬 -9.41%；相對產業 -10.07%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 neutral | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
+| MRVL | Semiconductors | Semiconductors | yellow | monitor | 5 日報酬 -1.97%；產業狀態 weak | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
+| EWT | Market ETFs | Market ETFs | orange | watch_transition | 5 日報酬 -3.16%；相對產業 -0.81%；產業狀態 neutral | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-10-08 | 131 | 131 | 37 | 28 | 6 | 31 |
+| 2026-10-12 | 131 | 131 | 32 | 29 | 1 | 41 |
 
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-10-09T21:04:09-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/38011607151 | 2026-10-08 | 1 | 100.00% |
+| warning | 1 檔資料落後。 | 2026-10-12T22:39:51-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/38337818285 | 2026-10-12 | 0 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Yahoo Finance via yfinance | 2026-10-08 | 131 | 131 | 100.00% | 0 | 0 | 0 |
+| Yahoo Finance via yfinance | 2026-10-12 | 131 | 131 | 100.00% | 0 | 1 | 0 |
 
 | ticker | company_name | industry_group | latest_date | data_points | data_status | data_quality_note |
 | --- | --- | --- | --- | --- | --- | --- |
-| None |  |  |  |  |  |  |
+| VUAA.L | Vanguard S&P 500 UCITS ETF USD Acc | Market ETFs | 2026-10-09 | 251 | stale | 最新資料日期 2026-10-09 早於本次市場日期 2026-10-12。 |
 
 ## Leading Industries
 | industry_group | return_10d | return_5d | relative_volume | breadth_score | confirmed_signal_pct |
 | --- | --- | --- | --- | --- | --- |
-| Energy Storage | 4.58% | 3.00% | 0.94 | 41.00% | 20.00% |
-| Cybersecurity | 4.27% | 4.31% | 0.90 | 54.17% | 50.00% |
-| Defensive Staples | 2.48% | 3.77% | 1.24 | 60.00% | 50.00% |
-| Consumer Platforms | 2.25% | 3.68% | 0.92 | 52.22% | 55.56% |
-| Robotics Automation | 2.14% | -0.89% | 1.12 | 35.00% | 16.67% |
+| Cybersecurity | 9.62% | 3.72% | 0.74 | 50.83% | 50.00% |
+| Cloud Software | 6.30% | 2.59% | 0.80 | 49.38% | 50.00% |
+| Consumer Platforms | 6.15% | 3.32% | 0.74 | 59.44% | 66.67% |
+| Electric Vehicles | 5.76% | -0.18% | 0.57 | 25.00% | 0.00% |
+| Defensive Staples | 2.72% | 4.25% | 0.76 | 53.33% | 50.00% |
 
 ## Broad Strength Industries
 | industry_group | breadth_score | positive_5d_pct | positive_10d_pct | confirmed_signal_pct | strong_signal_pct | high_relative_volume_pct |
 | --- | --- | --- | --- | --- | --- | --- |
 | Consumer Hardware | 70.00% | 100.00% | 100.00% | 100.00% | 0.00% | 0.00% |
-| Defensive Staples | 60.00% | 100.00% | 83.33% | 50.00% | 16.67% | 33.33% |
-| Cybersecurity | 54.17% | 83.33% | 100.00% | 50.00% | 0.00% | 0.00% |
-| Consumer Platforms | 52.22% | 88.89% | 77.78% | 55.56% | 0.00% | 11.11% |
-| Market ETFs | 45.63% | 87.50% | 75.00% | 12.50% | 12.50% | 37.50% |
+| Consumer Platforms | 59.44% | 88.89% | 100.00% | 66.67% | 0.00% | 0.00% |
+| Defensive Staples | 53.33% | 100.00% | 83.33% | 50.00% | 0.00% | 0.00% |
+| Cybersecurity | 50.83% | 66.67% | 100.00% | 50.00% | 0.00% | 0.00% |
+| Cloud Software | 49.38% | 75.00% | 87.50% | 50.00% | 0.00% | 0.00% |
 
 ## Strongest Relative Strength Stocks
 | ticker | company_name | industry_group | return_10d | relative_strength_vs_industry | relative_volume | risk_warning |
 | --- | --- | --- | --- | --- | --- | --- |
-| VST | Vistra Corp. | Nuclear | 13.19% | 15.65% | 1.66 | false |
-| AFRM | Affirm Holdings Inc. | Fintech | 7.80% | 11.42% | 1.31 | false |
-| CEG | Constellation Energy Corporation | Nuclear | 8.96% | 11.42% | 1.61 | false |
-| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 11.78% | 10.26% | 0.73 | false |
-| GNRC | Generac Holdings Inc. | Energy Storage | 13.30% | 8.73% | 1.13 | false |
-| PYPL | PayPal Holdings Inc. | Fintech | 4.60% | 8.22% | 1.18 | false |
-| ON | ON Semiconductor Corporation | Semiconductors | 8.56% | 7.76% | 0.92 | false |
-| PINS | Pinterest Inc. | Consumer Platforms | 9.67% | 7.42% | 0.87 | false |
-| DDOG | Datadog Inc. | Cloud Software | 6.57% | 7.18% | 0.98 | false |
-| PL | Planet Labs PBC | Space | -2.44% | 6.90% | 1.75 | false |
+| VST | Vistra Corp. | Nuclear | 14.57% | 17.25% | 0.92 | false |
+| AFRM | Affirm Holdings Inc. | Fintech | 16.99% | 15.58% | 0.73 | false |
+| CEG | Constellation Energy Corporation | Nuclear | 12.85% | 15.53% | 0.64 | false |
+| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 12.29% | 11.64% | 0.98 | false |
+| PINS | Pinterest Inc. | Consumer Platforms | 16.35% | 10.20% | 0.72 | false |
+| IRDM | Iridium Communications Inc. | Space | -2.61% | 10.03% | 0.57 | false |
+| KTOS | Kratos Defense & Security Solutions Inc. | Defense Drones | -5.56% | 8.72% | 0.77 | false |
+| TENB | Tenable Holdings Inc. | Cybersecurity | 18.28% | 8.66% | 0.63 | false |
+| MGNI | Magnite Inc. | Adtech | 7.18% | 8.28% | 0.59 | false |
+| GNRC | Generac Holdings Inc. | Energy Storage | 6.41% | 8.09% | 0.63 | false |
 
 ## Early Momentum Candidates
 | ticker | company_name | industry_group | return_3d | return_5d | return_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- | --- |
-| VST | Vistra Corp. | Nuclear | 7.76% | 11.73% | 13.19% | 1.66 |
-| CEG | Constellation Energy Corporation | Nuclear | 6.52% | 10.10% | 8.96% | 1.61 |
-| HPE | Hewlett Packard Enterprise Co. | AI Infrastructure | 3.86% | 9.94% | 11.78% | 0.73 |
-| AFRM | Affirm Holdings Inc. | Fintech | 3.21% | 9.54% | 7.80% | 1.31 |
-| ZS | Zscaler Inc. | Cybersecurity | 7.44% | 9.07% | 1.01% | 1.13 |
-| TENB | Tenable Holdings Inc. | Cybersecurity | 1.30% | 8.03% | 8.72% | 0.96 |
-| GNRC | Generac Holdings Inc. | Energy Storage | 4.28% | 7.93% | 13.30% | 1.13 |
-| NXT | Nextracker Inc. | Renewables | 2.76% | 7.27% | 6.61% | 0.84 |
-| SPOT | Spotify Technology S.A. | Consumer Platforms | 8.98% | 7.13% | 2.94% | 1.12 |
-| DELL | Dell Technologies Inc. | AI Infrastructure | 4.03% | 6.06% | 7.19% | 0.65 |
+| ZS | Zscaler Inc. | Cybersecurity | 5.73% | 11.88% | 13.24% | 0.85 |
+| SPOT | Spotify Technology S.A. | Consumer Platforms | 3.10% | 9.47% | 6.29% | 0.71 |
+| WMT | Walmart Inc. | Defensive Staples | 4.55% | 7.62% | 4.00% | 0.64 |
+| SNOW | Snowflake Inc. | Cloud Software | 8.27% | 6.31% | 9.83% | 0.99 |
+| ABBV | AbbVie Inc. | Defensive Healthcare | 3.60% | 5.78% | 5.57% | 1.22 |
+| ISRG | Intuitive Surgical Inc. | Robotics Automation | 3.17% | 5.21% | 3.10% | 0.76 |
+| PG | Procter & Gamble Co. | Defensive Staples | 3.64% | 4.97% | 2.80% | 0.78 |
+| FTNT | Fortinet Inc. | Cybersecurity | 1.93% | 4.78% | 9.42% | 0.62 |
+| NFLX | Netflix Inc. | Consumer Platforms | 1.31% | 4.61% | 1.99% | 0.65 |
+| MDT | Medtronic plc | Defensive Healthcare | 7.51% | 4.50% | 2.72% | 1.29 |
 
 ## Risk Warnings
 | ticker | company_name | industry_group | return_10d | max_drawdown_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- |
-| DPRO | Draganfly Inc. | Defense Drones | -17.95% | -26.29% | 0.65 |
-| MDB | MongoDB Inc. | Cloud Software | -11.88% | -18.46% | 0.60 |
-| SATL | Satellogic Inc. | Space | -14.48% | -17.67% | 0.65 |
-| RDW | Redwire Corporation | Space | -15.86% | -16.01% | 0.79 |
-| SPIR | Spire Global Inc. | Space | -15.33% | -14.07% | 0.94 |
-| APP | AppLovin Corporation | Adtech | -10.35% | -13.69% | 1.11 |
-| IONQ | IonQ Inc. | Quantum Computing | -12.29% | -13.26% | 0.97 |
-| SMR | NuScale Power Corporation | Nuclear | -13.58% | -13.06% | 1.11 |
-| INTC | Intel Corporation | Semiconductors | -15.94% | -12.94% | 1.09 |
-| QCOM | Qualcomm Incorporated | Semiconductors | -9.39% | -12.85% | 0.69 |
+| DPRO | Draganfly Inc. | Defense Drones | -24.93% | -32.26% | 0.66 |
+| ASTS | AST SpaceMobile Inc. | Space | -15.64% | -19.26% | 1.52 |
+| SATL | Satellogic Inc. | Space | -22.15% | -17.80% | 0.67 |
+| IONQ | IonQ Inc. | Quantum Computing | -18.64% | -17.55% | 1.31 |
+| ARM | Arm Holdings plc | Semiconductors | -9.91% | -16.99% | 0.62 |
+| RCAT | Red Cat Holdings Inc. | Defense Drones | -17.08% | -16.56% | 0.68 |
+| SMR | NuScale Power Corporation | Nuclear | -15.30% | -16.46% | 1.13 |
+| OKLO | Oklo Inc. | Nuclear | -13.20% | -16.45% | 1.02 |
+| NBIS | Nebius Group N.V. | AI Infrastructure | -9.41% | -15.93% | 0.87 |
+| INTC | Intel Corporation | Semiconductors | -12.65% | -15.70% | 0.68 |
 
 ## Deterministic System Interpretation
-- The leading industry by 10 day return is Energy Storage at 4.58%.
+- The leading industry by 10 day return is Cybersecurity at 9.62%.
 - The strongest industry by breadth score is Consumer Hardware at 70.00%.
-- Risk warnings are elevated relative to strong momentum signals (31 risk warnings versus 6 strong signals).
+- Risk warnings are elevated relative to strong momentum signals (41 risk warnings versus 1 strong signals).
 - Leadership appears broad because the return leader has above-median industry breadth.
-- Notable early recovery industries by the current rule set: Electric Vehicles, Defensive Staples, Consumer Platforms.
+- Notable early recovery industries by the current rule set: Defensive Staples, Defense, Defensive Healthcare.
 
 ## My Interpretation
 
