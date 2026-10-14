@@ -2,10 +2,9 @@
 
 ## Daily Brief
 ### 資料狀態
-**資料狀態為「注意」，本日訊號需先保守解讀**
-- 最新市場日期 2026-10-12；成功率 100.00%。
-- 缺資料 0，資料落後 1，歷史不足 0。
-- 1 檔資料落後。
+**資料狀態正常，最新市場日期 2026-10-12**
+- 成功率 100.00%；缺資料 0，資料落後 0。
+- 排程輸出與資料新鮮度目前正常。
 
 ### 追蹤名單轉換提醒
 **5 檔需開盤前檢查；紅色 4、橘色 1**
@@ -44,32 +43,32 @@
 | AVGO | Semiconductors | Semiconductors | yellow | monitor | 5 日報酬 -2.15%；產業狀態 weak | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
 | NBIS | AI Infrastructure | AI Infrastructure | red | review_replacement | 已有 risk_warning；5 日報酬 -9.68%；10 日報酬 -9.41%；相對產業 -10.07%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 neutral | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
 | MRVL | Semiconductors | Semiconductors | yellow | monitor | 5 日報酬 -1.97%；產業狀態 weak | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
-| EWT | Market ETFs | Market ETFs | orange | watch_transition | 5 日報酬 -3.16%；相對產業 -0.81%；產業狀態 neutral | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
+| EWT | Market ETFs | Market ETFs | orange | watch_transition | 5 日報酬 -3.16%；相對產業 -0.90%；產業狀態 neutral | Consumer Hardware, Defensive Staples, Cloud Software | ABBV (Defensive Healthcare), ZS (Cybersecurity), SNOW (Cloud Software), ZBRA (Robotics Automation), MDT (Defensive Healthcare) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-10-12 | 131 | 131 | 32 | 29 | 1 | 41 |
+| 2026-10-12 | 131 | 131 | 32 | 30 | 1 | 41 |
 
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| warning | 1 檔資料落後。 | 2026-10-12T22:39:51-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/38337818285 | 2026-10-12 | 0 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-10-13T20:27:13-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/38490088675 | 2026-10-12 | 1 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Yahoo Finance via yfinance | 2026-10-12 | 131 | 131 | 100.00% | 0 | 1 | 0 |
+| Yahoo Finance via yfinance | 2026-10-12 | 131 | 131 | 100.00% | 0 | 0 | 0 |
 
 | ticker | company_name | industry_group | latest_date | data_points | data_status | data_quality_note |
 | --- | --- | --- | --- | --- | --- | --- |
-| VUAA.L | Vanguard S&P 500 UCITS ETF USD Acc | Market ETFs | 2026-10-09 | 251 | stale | 最新資料日期 2026-10-09 早於本次市場日期 2026-10-12。 |
+| None |  |  |  |  |  |  |
 
 ## Leading Industries
 | industry_group | return_10d | return_5d | relative_volume | breadth_score | confirmed_signal_pct |
 | --- | --- | --- | --- | --- | --- |
 | Cybersecurity | 9.62% | 3.72% | 0.74 | 50.83% | 50.00% |
-| Cloud Software | 6.30% | 2.59% | 0.80 | 49.38% | 50.00% |
+| Cloud Software | 6.30% | 2.59% | 0.81 | 49.38% | 50.00% |
 | Consumer Platforms | 6.15% | 3.32% | 0.74 | 59.44% | 66.67% |
 | Electric Vehicles | 5.76% | -0.18% | 0.57 | 25.00% | 0.00% |
 | Defensive Staples | 2.72% | 4.25% | 0.76 | 53.33% | 50.00% |
@@ -115,15 +114,15 @@
 | ticker | company_name | industry_group | return_10d | max_drawdown_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- |
 | DPRO | Draganfly Inc. | Defense Drones | -24.93% | -32.26% | 0.66 |
-| ASTS | AST SpaceMobile Inc. | Space | -15.64% | -19.26% | 1.52 |
+| ASTS | AST SpaceMobile Inc. | Space | -15.64% | -19.26% | 1.53 |
 | SATL | Satellogic Inc. | Space | -22.15% | -17.80% | 0.67 |
-| IONQ | IonQ Inc. | Quantum Computing | -18.64% | -17.55% | 1.31 |
+| IONQ | IonQ Inc. | Quantum Computing | -18.64% | -17.55% | 1.32 |
 | ARM | Arm Holdings plc | Semiconductors | -9.91% | -16.99% | 0.62 |
 | RCAT | Red Cat Holdings Inc. | Defense Drones | -17.08% | -16.56% | 0.68 |
 | SMR | NuScale Power Corporation | Nuclear | -15.30% | -16.46% | 1.13 |
-| OKLO | Oklo Inc. | Nuclear | -13.20% | -16.45% | 1.02 |
-| NBIS | Nebius Group N.V. | AI Infrastructure | -9.41% | -15.93% | 0.87 |
-| INTC | Intel Corporation | Semiconductors | -12.65% | -15.70% | 0.68 |
+| OKLO | Oklo Inc. | Nuclear | -13.20% | -16.45% | 1.03 |
+| NBIS | Nebius Group N.V. | AI Infrastructure | -9.41% | -15.93% | 0.88 |
+| INTC | Intel Corporation | Semiconductors | -12.65% | -15.70% | 0.69 |
 
 ## Deterministic System Interpretation
 - The leading industry by 10 day return is Cybersecurity at 9.62%.
