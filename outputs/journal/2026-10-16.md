@@ -2,10 +2,9 @@
 
 ## Daily Brief
 ### 資料狀態
-**資料狀態為「注意」，本日訊號需先保守解讀**
-- 最新市場日期 2026-10-16；成功率 100.00%。
-- 缺資料 0，資料落後 1，歷史不足 0。
-- 1 檔資料落後。
+**資料狀態正常，最新市場日期 2026-10-16**
+- 成功率 100.00%；缺資料 0，資料落後 0。
+- 排程輸出與資料新鮮度目前正常。
 
 ### 追蹤名單轉換提醒
 **7 檔需開盤前檢查；紅色 7、橘色 0**
@@ -44,7 +43,7 @@
 | AVGO | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -9.07%；10 日報酬 -7.43%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Defensive Staples, Consumer Hardware, Defense | LMT (Defense), NOC (Defense), PG (Defensive Staples), KO (Defensive Staples), ISRG (Robotics Automation) |
 | NBIS | AI Infrastructure | AI Infrastructure | red | review_replacement | 已有 risk_warning；5 日報酬 -25.15%；10 日報酬 -31.85%；相對產業 -11.46%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Defensive Staples, Consumer Hardware, Defense | LMT (Defense), NOC (Defense), PG (Defensive Staples), KO (Defensive Staples), ISRG (Robotics Automation) |
 | MRVL | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -17.24%；10 日報酬 -16.31%；相對產業 -1.93%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Defensive Staples, Consumer Hardware, Defense | LMT (Defense), NOC (Defense), PG (Defensive Staples), KO (Defensive Staples), ISRG (Robotics Automation) |
-| EWT | Market ETFs | Market ETFs | red | review_replacement | 已有 risk_warning；5 日報酬 -7.04%；10 日報酬 -8.66%；相對產業 -6.44%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Defensive Staples, Consumer Hardware, Defense | LMT (Defense), NOC (Defense), PG (Defensive Staples), KO (Defensive Staples), ISRG (Robotics Automation) |
+| EWT | Market ETFs | Market ETFs | red | review_replacement | 已有 risk_warning；5 日報酬 -7.04%；10 日報酬 -8.66%；相對產業 -6.28%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Defensive Staples, Consumer Hardware, Defense | LMT (Defense), NOC (Defense), PG (Defensive Staples), KO (Defensive Staples), ISRG (Robotics Automation) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
@@ -54,24 +53,24 @@
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| warning | 1 檔資料落後。 | 2026-10-16T19:45:10-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/38982921443 | 2026-10-16 | 0 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-10-19T20:29:34-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/39347799328 | 2026-10-16 | 3 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Yahoo Finance via yfinance | 2026-10-16 | 131 | 131 | 100.00% | 0 | 1 | 0 |
+| Yahoo Finance via yfinance | 2026-10-16 | 131 | 131 | 100.00% | 0 | 0 | 0 |
 
 | ticker | company_name | industry_group | latest_date | data_points | data_status | data_quality_note |
 | --- | --- | --- | --- | --- | --- | --- |
-| VUAA.L | Vanguard S&P 500 UCITS ETF USD Acc | Market ETFs | 2026-10-15 | 252 | stale | 最新資料日期 2026-10-15 早於本次市場日期 2026-10-16。 |
+| None |  |  |  |  |  |  |
 
 ## Leading Industries
 | industry_group | return_10d | return_5d | relative_volume | breadth_score | confirmed_signal_pct |
 | --- | --- | --- | --- | --- | --- |
-| Defensive Staples | 9.52% | 5.69% | 1.16 | 80.00% | 100.00% |
-| Defense | 5.74% | 4.98% | 1.38 | 77.86% | 85.71% |
-| Defensive Healthcare | 5.71% | 3.23% | 1.07 | 53.33% | 50.00% |
-| Consumer Platforms | 4.15% | -0.76% | 1.01 | 37.22% | 44.44% |
+| Defensive Staples | 9.52% | 5.69% | 1.21 | 80.00% | 100.00% |
+| Defense | 5.74% | 4.98% | 1.39 | 77.86% | 85.71% |
+| Defensive Healthcare | 5.71% | 3.23% | 1.08 | 53.33% | 50.00% |
+| Consumer Platforms | 4.15% | -0.76% | 1.02 | 37.22% | 44.44% |
 | Consumer Hardware | 2.93% | 2.03% | 1.62 | 80.00% | 100.00% |
 
 ## Broad Strength Industries
@@ -87,8 +86,8 @@
 | ticker | company_name | industry_group | return_10d | relative_strength_vs_industry | relative_volume | risk_warning |
 | --- | --- | --- | --- | --- | --- | --- |
 | VST | Vistra Corp. | Nuclear | 8.57% | 19.46% | 0.70 | true |
-| ISRG | Intuitive Surgical Inc. | Robotics Automation | 8.87% | 17.88% | 1.31 | false |
-| CEG | Constellation Energy Corporation | Nuclear | 5.39% | 16.28% | 0.97 | true |
+| ISRG | Intuitive Surgical Inc. | Robotics Automation | 8.87% | 17.88% | 1.32 | false |
+| CEG | Constellation Energy Corporation | Nuclear | 5.39% | 16.28% | 0.99 | true |
 | IRDM | Iridium Communications Inc. | Space | -10.62% | 12.64% | 0.86 | true |
 | ZS | Zscaler Inc. | Cybersecurity | 5.48% | 12.57% | 0.95 | true |
 | KTOS | Kratos Defense & Security Solutions Inc. | Defense Drones | -6.15% | 12.34% | 1.15 | true |
@@ -101,12 +100,12 @@
 | ticker | company_name | industry_group | return_3d | return_5d | return_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- | --- |
 | LMT | Lockheed Martin Corporation | Defense | 9.54% | 8.34% | 9.24% | 1.44 |
-| NOC | Northrop Grumman Corporation | Defense | 7.99% | 8.14% | 8.76% | 1.29 |
-| MDT | Medtronic plc | Defensive Healthcare | 1.87% | 7.09% | 9.69% | 0.88 |
-| KO | The Coca-Cola Company | Defensive Staples | 4.21% | 6.64% | 9.63% | 1.41 |
+| NOC | Northrop Grumman Corporation | Defense | 7.99% | 8.14% | 8.76% | 1.30 |
+| MDT | Medtronic plc | Defensive Healthcare | 1.87% | 7.09% | 9.69% | 0.89 |
+| KO | The Coca-Cola Company | Defensive Staples | 4.21% | 6.64% | 9.63% | 1.44 |
 | CL | Colgate-Palmolive Company | Defensive Staples | 4.62% | 6.62% | 11.69% | 1.12 |
 | UNH | UnitedHealth Group Inc. | Defensive Healthcare | 6.27% | 5.83% | 7.94% | 1.37 |
-| PG | Procter & Gamble Co. | Defensive Staples | 4.12% | 5.37% | 9.96% | 1.38 |
+| PG | Procter & Gamble Co. | Defensive Staples | 4.12% | 5.37% | 9.96% | 1.59 |
 | CRM | Salesforce Inc. | Cloud Software | 1.13% | 5.05% | 2.56% | 0.93 |
 | LHX | L3Harris Technologies Inc. | Defense | 5.88% | 4.87% | 5.03% | 2.06 |
 | ABNB | Airbnb Inc. | Consumer Platforms | 4.90% | 4.72% | 6.94% | 1.03 |
@@ -115,14 +114,14 @@
 | ticker | company_name | industry_group | return_10d | max_drawdown_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- |
 | ASTS | AST SpaceMobile Inc. | Space | -30.44% | -35.58% | 1.03 |
-| NBIS | Nebius Group N.V. | AI Infrastructure | -31.85% | -33.78% | 1.84 |
-| RKLB | Rocket Lab USA Inc. | Space | -31.22% | -32.27% | 1.05 |
-| SATL | Satellogic Inc. | Space | -32.98% | -30.31% | 0.80 |
-| SMCI | Super Micro Computer Inc. | AI Infrastructure | -27.60% | -29.62% | 1.28 |
+| NBIS | Nebius Group N.V. | AI Infrastructure | -31.85% | -33.78% | 1.85 |
+| RKLB | Rocket Lab USA Inc. | Space | -31.22% | -32.27% | 1.06 |
+| SATL | Satellogic Inc. | Space | -32.98% | -30.31% | 0.81 |
+| SMCI | Super Micro Computer Inc. | AI Infrastructure | -27.60% | -29.62% | 1.29 |
 | LUNR | Intuitive Machines Inc. | Space | -26.72% | -28.42% | 0.82 |
-| FLNC | Fluence Energy Inc. | Energy Storage | -23.78% | -27.77% | 0.66 |
-| IONQ | IonQ Inc. | Quantum Computing | -28.54% | -27.74% | 1.01 |
-| OKLO | Oklo Inc. | Nuclear | -22.02% | -27.44% | 0.97 |
+| FLNC | Fluence Energy Inc. | Energy Storage | -23.78% | -27.77% | 0.67 |
+| IONQ | IonQ Inc. | Quantum Computing | -28.54% | -27.74% | 1.02 |
+| OKLO | Oklo Inc. | Nuclear | -22.02% | -27.44% | 0.98 |
 | SMR | NuScale Power Corporation | Nuclear | -24.77% | -27.31% | 0.70 |
 
 ## Deterministic System Interpretation
