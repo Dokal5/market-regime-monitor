@@ -2,10 +2,9 @@
 
 ## Daily Brief
 ### 資料狀態
-**資料狀態為「注意」，本日訊號需先保守解讀**
-- 最新市場日期 2026-10-23；成功率 100.00%。
-- 缺資料 0，資料落後 1，歷史不足 0。
-- 1 檔資料落後。
+**資料狀態正常，最新市場日期 2026-10-23**
+- 成功率 100.00%；缺資料 0，資料落後 0。
+- 排程輸出與資料新鮮度目前正常。
 
 ### 追蹤名單轉換提醒
 **6 檔需開盤前檢查；紅色 6、橘色 0**
@@ -44,7 +43,7 @@
 | AVGO | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -2.15%；10 日報酬 -11.03%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Consumer Hardware, Defense, Defensive Healthcare | ISRG (Robotics Automation), LMT (Defense), SEDG (Energy Storage), SPOT (Consumer Platforms), NOW (Cloud Software) |
 | NBIS | AI Infrastructure | AI Infrastructure | red | review_replacement | 已有 risk_warning；5 日報酬 -4.07%；10 日報酬 -28.19%；相對產業 -6.83%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Consumer Hardware, Defense, Defensive Healthcare | ISRG (Robotics Automation), LMT (Defense), SEDG (Energy Storage), SPOT (Consumer Platforms), NOW (Cloud Software) |
 | MRVL | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；10 日報酬 -16.99%；相對產業 -5.28%；watch_status=avoid_for_now；產業狀態 weak | Consumer Hardware, Defense, Defensive Healthcare | ISRG (Robotics Automation), LMT (Defense), SEDG (Energy Storage), SPOT (Consumer Platforms), NOW (Cloud Software) |
-| EWT | Market ETFs | Market ETFs | red | review_replacement | 已有 risk_warning；5 日報酬 -1.28%；10 日報酬 -8.23%；相對產業 -5.35%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Consumer Hardware, Defense, Defensive Healthcare | ISRG (Robotics Automation), LMT (Defense), SEDG (Energy Storage), SPOT (Consumer Platforms), NOW (Cloud Software) |
+| EWT | Market ETFs | Market ETFs | red | review_replacement | 已有 risk_warning；5 日報酬 -1.28%；10 日報酬 -8.23%；相對產業 -5.30%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Consumer Hardware, Defense, Defensive Healthcare | ISRG (Robotics Automation), LMT (Defense), SEDG (Energy Storage), SPOT (Consumer Platforms), NOW (Cloud Software) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
@@ -54,24 +53,24 @@
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| warning | 1 檔資料落後。 | 2026-10-23T19:54:50-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/40042161904 | 2026-10-23 | 0 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-10-26T20:39:44-04:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/40427629523 | 2026-10-23 | 3 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Yahoo Finance via yfinance | 2026-10-23 | 131 | 131 | 100.00% | 0 | 1 | 0 |
+| Yahoo Finance via yfinance | 2026-10-23 | 131 | 131 | 100.00% | 0 | 0 | 0 |
 
 | ticker | company_name | industry_group | latest_date | data_points | data_status | data_quality_note |
 | --- | --- | --- | --- | --- | --- | --- |
-| VUAA.L | Vanguard S&P 500 UCITS ETF USD Acc | Market ETFs | 2026-10-22 | 252 | stale | 最新資料日期 2026-10-22 早於本次市場日期 2026-10-23。 |
+| None |  |  |  |  |  |  |
 
 ## Leading Industries
 | industry_group | return_10d | return_5d | relative_volume | breadth_score | confirmed_signal_pct |
 | --- | --- | --- | --- | --- | --- |
-| Defense | 9.14% | 3.92% | 0.94 | 67.86% | 85.71% |
-| Defensive Staples | 6.72% | 0.98% | 0.95 | 54.17% | 50.00% |
+| Defense | 9.14% | 3.92% | 0.95 | 67.86% | 85.71% |
+| Defensive Staples | 6.84% | 1.09% | 0.98 | 54.17% | 50.00% |
 | Defensive Healthcare | 4.81% | 1.53% | 0.70 | 50.00% | 50.00% |
-| Consumer Hardware | 3.29% | 1.24% | 1.02 | 70.00% | 100.00% |
+| Consumer Hardware | 3.29% | 1.24% | 1.03 | 70.00% | 100.00% |
 | Cloud Software | -0.32% | 5.99% | 0.73 | 30.63% | 25.00% |
 
 ## Broad Strength Industries
@@ -89,11 +88,11 @@
 | SEDG | SolarEdge Technologies Inc. | Energy Storage | 3.45% | 17.36% | 0.44 | false |
 | NXPI | NXP Semiconductors N.V. | Semiconductors | 3.25% | 14.96% | 0.99 | false |
 | SPOT | Spotify Technology S.A. | Consumer Platforms | 10.41% | 13.56% | 1.44 | false |
-| NOW | ServiceNow Inc. | Cloud Software | 12.85% | 13.17% | 0.98 | false |
+| NOW | ServiceNow Inc. | Cloud Software | 12.85% | 13.17% | 0.99 | false |
 | ISRG | Intuitive Surgical Inc. | Robotics Automation | 6.68% | 13.00% | 1.32 | false |
 | WDAY | Workday Inc. | Cloud Software | 12.54% | 12.86% | 0.91 | false |
-| TXN | Texas Instruments Incorporated | Semiconductors | 0.33% | 12.04% | 1.06 | false |
-| QCOM | Qualcomm Incorporated | Semiconductors | 0.23% | 11.94% | 0.71 | false |
+| TXN | Texas Instruments Incorporated | Semiconductors | 0.33% | 12.04% | 1.21 | false |
+| QCOM | Qualcomm Incorporated | Semiconductors | 0.23% | 11.94% | 0.72 | false |
 | ZS | Zscaler Inc. | Cybersecurity | 9.16% | 11.65% | 1.45 | true |
 | IRDM | Iridium Communications Inc. | Space | -6.47% | 10.59% | 0.75 | false |
 
@@ -101,21 +100,21 @@
 | ticker | company_name | industry_group | return_3d | return_5d | return_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- | --- |
 | ZS | Zscaler Inc. | Cybersecurity | 18.95% | 23.04% | 9.16% | 1.45 |
-| TENB | Tenable Holdings Inc. | Cybersecurity | 14.39% | 19.87% | 7.21% | 1.42 |
+| TENB | Tenable Holdings Inc. | Cybersecurity | 14.39% | 19.87% | 7.21% | 1.43 |
 | OKTA | Okta Inc. | Cybersecurity | 9.81% | 13.77% | -8.22% | 0.95 |
 | CRWD | CrowdStrike Holdings Inc. | Cybersecurity | 13.28% | 13.27% | -6.35% | 1.55 |
-| NOW | ServiceNow Inc. | Cloud Software | 6.30% | 11.97% | 12.85% | 0.98 |
-| PANW | Palo Alto Networks Inc. | Cybersecurity | 11.83% | 11.27% | -9.13% | 1.22 |
+| NOW | ServiceNow Inc. | Cloud Software | 6.30% | 11.97% | 12.85% | 0.99 |
+| PANW | Palo Alto Networks Inc. | Cybersecurity | 11.83% | 11.27% | -9.13% | 1.23 |
 | SPOT | Spotify Technology S.A. | Consumer Platforms | 11.05% | 10.13% | 10.41% | 1.44 |
 | WDAY | Workday Inc. | Cloud Software | 2.95% | 10.05% | 12.54% | 0.91 |
 | MDB | MongoDB Inc. | Cloud Software | 1.34% | 9.93% | -3.85% | 0.39 |
-| LMT | Lockheed Martin Corporation | Defense | 10.11% | 9.44% | 18.56% | 1.40 |
+| LMT | Lockheed Martin Corporation | Defense | 10.11% | 9.44% | 18.56% | 1.41 |
 
 ## Risk Warnings
 | ticker | company_name | industry_group | return_10d | max_drawdown_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- |
-| STEM | Stem Inc. | Energy Storage | -27.64% | -25.86% | 0.89 |
-| LRCX | Lam Research Corporation | Semiconductors | -27.83% | -25.67% | 1.26 |
+| STEM | Stem Inc. | Energy Storage | -27.64% | -25.86% | 0.90 |
+| LRCX | Lam Research Corporation | Semiconductors | -27.83% | -25.67% | 1.31 |
 | ASTS | AST SpaceMobile Inc. | Space | -21.93% | -24.66% | 0.73 |
 | AMAT | Applied Materials Inc. | Semiconductors | -25.60% | -24.51% | 0.99 |
 | NBIS | Nebius Group N.V. | AI Infrastructure | -28.19% | -24.43% | 0.66 |
