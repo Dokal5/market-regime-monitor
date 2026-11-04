@@ -2,10 +2,9 @@
 
 ## Daily Brief
 ### 資料狀態
-**資料狀態為「注意」，本日訊號需先保守解讀**
-- 最新市場日期 2026-11-02；成功率 100.00%。
-- 缺資料 0，資料落後 1，歷史不足 0。
-- 1 檔資料落後。
+**資料狀態正常，最新市場日期 2026-11-02**
+- 成功率 100.00%；缺資料 0，資料落後 0。
+- 排程輸出與資料新鮮度目前正常。
 
 ### 追蹤名單轉換提醒
 **7 檔需開盤前檢查；紅色 7、橘色 0**
@@ -44,7 +43,7 @@
 | AVGO | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -2.11%；10 日報酬 -3.69%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Defense, Defensive Healthcare, Defensive Staples | PYPL (Fintech), PFE (Defensive Healthcare), TXN (Semiconductors), ADI (Semiconductors), GNRC (Energy Storage) |
 | NBIS | AI Infrastructure | AI Infrastructure | red | review_replacement | 已有 risk_warning；5 日報酬 -7.75%；10 日報酬 -16.95%；相對產業 -9.50%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Defense, Defensive Healthcare, Defensive Staples | PYPL (Fintech), PFE (Defensive Healthcare), TXN (Semiconductors), ADI (Semiconductors), GNRC (Energy Storage) |
 | MRVL | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -26.68%；10 日報酬 -27.70%；相對產業 -20.14%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Defense, Defensive Healthcare, Defensive Staples | PYPL (Fintech), PFE (Defensive Healthcare), TXN (Semiconductors), ADI (Semiconductors), GNRC (Energy Storage) |
-| EWT | Market ETFs | Market ETFs | red | review_replacement | 5 日報酬 -4.69%；10 日報酬 -6.15%；相對產業 -4.26%；產業狀態 weak | Defense, Defensive Healthcare, Defensive Staples | PYPL (Fintech), PFE (Defensive Healthcare), TXN (Semiconductors), ADI (Semiconductors), GNRC (Energy Storage) |
+| EWT | Market ETFs | Market ETFs | red | review_replacement | 5 日報酬 -4.69%；10 日報酬 -6.15%；相對產業 -4.30%；產業狀態 weak | Defense, Defensive Healthcare, Defensive Staples | PYPL (Fintech), PFE (Defensive Healthcare), TXN (Semiconductors), ADI (Semiconductors), GNRC (Energy Storage) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
@@ -54,25 +53,25 @@
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| warning | 1 檔資料落後。 | 2026-11-02T21:59:29-05:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/41569331817 | 2026-11-02 | 0 | 100.00% |
+| healthy | 排程輸出與資料新鮮度目前正常。 | 2026-11-03T20:32:36-05:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/41754597018 | 2026-11-02 | 1 | 100.00% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Yahoo Finance via yfinance | 2026-11-02 | 131 | 131 | 100.00% | 0 | 1 | 0 |
+| Yahoo Finance via yfinance | 2026-11-02 | 131 | 131 | 100.00% | 0 | 0 | 0 |
 
 | ticker | company_name | industry_group | latest_date | data_points | data_status | data_quality_note |
 | --- | --- | --- | --- | --- | --- | --- |
-| VUAA.L | Vanguard S&P 500 UCITS ETF USD Acc | Market ETFs | 2026-10-30 | 252 | stale | 最新資料日期 2026-10-30 早於本次市場日期 2026-11-02。 |
+| None |  |  |  |  |  |  |
 
 ## Leading Industries
 | industry_group | return_10d | return_5d | relative_volume | breadth_score | confirmed_signal_pct |
 | --- | --- | --- | --- | --- | --- |
 | Defense | 12.30% | 4.09% | 0.97 | 63.57% | 85.71% |
-| Electric Vehicles | 9.72% | 3.12% | 1.18 | 45.00% | 0.00% |
+| Electric Vehicles | 9.72% | 3.12% | 1.19 | 45.00% | 0.00% |
 | Renewables | 7.58% | 10.88% | 1.34 | 54.00% | 40.00% |
 | Defensive Staples | 4.88% | 3.97% | 1.17 | 54.17% | 16.67% |
-| Defensive Healthcare | 3.62% | 2.17% | 1.09 | 56.67% | 50.00% |
+| Defensive Healthcare | 3.62% | 2.17% | 1.10 | 56.67% | 50.00% |
 
 ## Broad Strength Industries
 | industry_group | breadth_score | positive_5d_pct | positive_10d_pct | confirmed_signal_pct | strong_signal_pct | high_relative_volume_pct |
@@ -90,7 +89,7 @@
 | TENB | Tenable Holdings Inc. | Cybersecurity | 21.89% | 20.97% | 0.90 | true |
 | SPOT | Spotify Technology S.A. | Consumer Platforms | 14.51% | 20.47% | 0.95 | false |
 | NXPI | NXP Semiconductors N.V. | Semiconductors | 11.75% | 19.32% | 1.13 | false |
-| SOFI | SoFi Technologies Inc. | Fintech | 16.08% | 17.86% | 0.98 | false |
+| SOFI | SoFi Technologies Inc. | Fintech | 16.08% | 17.86% | 0.99 | false |
 | TXN | Texas Instruments Incorporated | Semiconductors | 9.90% | 17.47% | 1.47 | false |
 | VRT | Vertiv Holdings Co. | AI Infrastructure | 8.81% | 16.25% | 0.84 | true |
 | GNRC | Generac Holdings Inc. | Energy Storage | 4.52% | 14.95% | 0.81 | false |
@@ -109,20 +108,20 @@
 | GNRC | Generac Holdings Inc. | Energy Storage | 0.35% | 6.77% | 4.52% | 0.81 |
 | WMT | Walmart Inc. | Defensive Staples | 7.51% | 6.15% | 7.57% | 1.36 |
 | AFRM | Affirm Holdings Inc. | Fintech | 0.35% | 5.89% | 1.07% | 1.08 |
-| MRK | Merck & Co. Inc. | Defensive Healthcare | 5.27% | 5.51% | 3.29% | 0.88 |
+| MRK | Merck & Co. Inc. | Defensive Healthcare | 5.27% | 5.51% | 3.29% | 0.89 |
 
 ## Risk Warnings
 | ticker | company_name | industry_group | return_10d | max_drawdown_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- |
-| INTC | Intel Corporation | Semiconductors | -34.84% | -37.22% | 1.85 |
+| INTC | Intel Corporation | Semiconductors | -34.84% | -37.22% | 1.86 |
 | STEM | Stem Inc. | Energy Storage | -34.02% | -36.57% | 0.72 |
 | NOW | ServiceNow Inc. | Cloud Software | -27.07% | -33.87% | 1.36 |
-| MRVL | Marvell Technology Inc. | Semiconductors | -27.70% | -31.89% | 2.41 |
+| MRVL | Marvell Technology Inc. | Semiconductors | -27.70% | -31.89% | 2.42 |
 | FTNT | Fortinet Inc. | Cybersecurity | -26.41% | -31.78% | 2.19 |
 | TER | Teradyne Inc. | Robotics Automation | -22.21% | -24.45% | 1.42 |
 | DDOG | Datadog Inc. | Cloud Software | -17.00% | -23.05% | 1.54 |
 | ENPH | Enphase Energy Inc. | Energy Storage | -8.81% | -22.46% | 1.27 |
-| NBIS | Nebius Group N.V. | AI Infrastructure | -16.95% | -22.46% | 0.87 |
+| NBIS | Nebius Group N.V. | AI Infrastructure | -16.95% | -22.46% | 0.88 |
 | COIN | Coinbase Global Inc. | Fintech | -18.18% | -22.17% | 1.27 |
 
 ## Deterministic System Interpretation
