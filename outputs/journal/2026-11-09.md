@@ -3,9 +3,9 @@
 ## Daily Brief
 ### 資料狀態
 **資料狀態為「注意」，本日訊號需先保守解讀**
-- 最新市場日期 2026-11-09；成功率 100.00%。
-- 缺資料 0，資料落後 1，歷史不足 1。
-- 1 檔資料落後。
+- 最新市場日期 2026-11-09；成功率 98.47%。
+- 缺資料 2，資料落後 0，歷史不足 1。
+- 2 檔缺資料。
 
 ### 追蹤名單轉換提醒
 **7 檔需開盤前檢查；紅色 7、橘色 0**
@@ -44,35 +44,36 @@
 | AVGO | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -0.85%；10 日報酬 -2.94%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Adtech, Quantum Computing, Defensive Staples | XYZ (Fintech), ABNB (Consumer Platforms), UBER (Consumer Platforms), AMZN (Consumer Platforms), JNJ (Defensive Healthcare) |
 | NBIS | AI Infrastructure | AI Infrastructure | red | review_replacement | 已有 risk_warning；10 日報酬 -7.71%；watch_status=avoid_for_now；產業狀態 weak | Adtech, Quantum Computing, Defensive Staples | XYZ (Fintech), ABNB (Consumer Platforms), UBER (Consumer Platforms), AMZN (Consumer Platforms), JNJ (Defensive Healthcare) |
 | MRVL | Semiconductors | Semiconductors | red | review_replacement | 已有 risk_warning；5 日報酬 -9.81%；10 日報酬 -33.87%；相對產業 -23.84%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Adtech, Quantum Computing, Defensive Staples | XYZ (Fintech), ABNB (Consumer Platforms), UBER (Consumer Platforms), AMZN (Consumer Platforms), JNJ (Defensive Healthcare) |
-| EWT | Market ETFs | Market ETFs | red | review_replacement | 已有 risk_warning；5 日報酬 -4.98%；10 日報酬 -9.43%；相對產業 -7.00%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak | Adtech, Quantum Computing, Defensive Staples | XYZ (Fintech), ABNB (Consumer Platforms), UBER (Consumer Platforms), AMZN (Consumer Platforms), JNJ (Defensive Healthcare) |
+| EWT | Market ETFs | Market ETFs | red | review_replacement | 已有 risk_warning；5 日報酬 -4.98%；10 日報酬 -9.43%；相對產業 -6.76%；current_state=falling_knife；watch_status=avoid_for_now；產業狀態 weak；產業風險 data_limited | Adtech, Quantum Computing, Defensive Staples | XYZ (Fintech), ABNB (Consumer Platforms), UBER (Consumer Platforms), AMZN (Consumer Platforms), JNJ (Defensive Healthcare) |
 
 ## Market Snapshot
 | latest market date | total tickers | tickers with data | early momentum count | confirmed momentum count | strong momentum count | risk warning count |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-11-09 | 131 | 131 | 36 | 18 | 5 | 92 |
+| 2026-11-09 | 131 | 129 | 36 | 18 | 5 | 92 |
 
 ## Update Health
 | update_health_status | update_health_note | generated_at_new_york | run_context | github_run_url | latest_market_date | market_data_age_days | success_rate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| warning | 1 檔資料落後。 | 2026-11-09T22:41:14-05:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/42750905707 | 2026-11-09 | 0 | 100.00% |
+| warning | 2 檔缺資料。 | 2026-11-10T20:22:10-05:00 | github_actions | https://github.com/Dokal5/market-regime-monitor/actions/runs/42938168018 | 2026-11-09 | 1 | 98.47% |
 
 ## Data Quality
 | data source | latest market date | tickers with data | total tickers | success rate | missing | stale | limited history |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Yahoo Finance via yfinance | 2026-11-09 | 131 | 131 | 100.00% | 0 | 1 | 1 |
+| Yahoo Finance via yfinance | 2026-11-09 | 129 | 131 | 98.47% | 2 | 0 | 1 |
 
 | ticker | company_name | industry_group | latest_date | data_points | data_status | data_quality_note |
 | --- | --- | --- | --- | --- | --- | --- |
 | ROKU | Roku Inc. | Adtech | 2026-11-09 | 2 | limited_history | 僅有 2 筆日線資料；長週期位置需保守解讀。 |
-| VUAA.L | Vanguard S&P 500 UCITS ETF USD Acc | Market ETFs | 2026-11-06 | 252 | stale | 最新資料日期 2026-11-06 早於本次市場日期 2026-11-09。 |
+| DIA | SPDR Dow Jones Industrial Average ETF Trust | Market ETFs |  | 0 | missing | 未取得可用日線資料；此標的不參與有效動能比較。 |
+| MRK | Merck & Co. Inc. | Defensive Healthcare |  | 0 | missing | 未取得可用日線資料；此標的不參與有效動能比較。 |
 
 ## Leading Industries
 | industry_group | return_10d | return_5d | relative_volume | breadth_score | confirmed_signal_pct |
 | --- | --- | --- | --- | --- | --- |
-| Adtech | 24.65% | 30.91% | 2.08 | 64.17% | 66.67% |
+| Adtech | 24.65% | 30.91% | 2.10 | 64.17% | 66.67% |
 | Renewables | 24.29% | 11.21% | 1.08 | 64.00% | 80.00% |
-| Quantum Computing | 14.89% | 25.45% | 1.35 | 55.00% | 0.00% |
-| Space | 8.17% | 14.04% | 1.51 | 52.73% | 9.09% |
+| Quantum Computing | 14.89% | 25.45% | 1.36 | 55.00% | 0.00% |
+| Space | 8.17% | 14.04% | 1.52 | 52.73% | 9.09% |
 | Defensive Staples | 4.91% | 0.93% | 0.96 | 54.17% | 50.00% |
 
 ## Broad Strength Industries
@@ -90,12 +91,12 @@
 | ARRY | Array Technologies Inc. | Renewables | 64.76% | 40.47% | 1.22 | true |
 | APP | AppLovin Corporation | Adtech | 57.24% | 32.59% | 1.31 | true |
 | BKSY | BlackSky Technology Inc. | Space | 33.97% | 25.80% | 1.48 | true |
-| MSFT | Microsoft Corporation | Cloud Software | 2.36% | 17.92% | 0.97 | false |
+| MSFT | Microsoft Corporation | Cloud Software | 2.36% | 17.92% | 0.98 | false |
 | XYZ | Block Inc. | Fintech | 18.79% | 16.00% | 1.21 | false |
 | LEU | Centrus Energy Corp. | Nuclear | 19.20% | 15.11% | 1.11 | true |
 | NXPI | NXP Semiconductors N.V. | Semiconductors | 4.31% | 14.34% | 1.69 | true |
 | ANET | Arista Networks Inc. | AI Infrastructure | 5.04% | 14.06% | 1.30 | true |
-| SOFI | SoFi Technologies Inc. | Fintech | 15.84% | 13.04% | 0.68 | true |
+| SOFI | SoFi Technologies Inc. | Fintech | 15.84% | 13.04% | 0.69 | true |
 | NXT | Nextracker Inc. | Renewables | 37.15% | 12.86% | 0.91 | true |
 
 ## Early Momentum Candidates
@@ -105,26 +106,26 @@
 | BKSY | BlackSky Technology Inc. | Space | 42.52% | 43.63% | 33.97% | 1.48 |
 | MGNI | Magnite Inc. | Adtech | 27.42% | 34.20% | 34.32% | 1.52 |
 | SATL | Satellogic Inc. | Space | 23.52% | 28.73% | 6.87% | 1.17 |
-| IONQ | IonQ Inc. | Quantum Computing | 19.63% | 25.45% | 14.89% | 1.35 |
+| IONQ | IonQ Inc. | Quantum Computing | 19.63% | 25.45% | 14.89% | 1.36 |
 | LEU | Centrus Energy Corp. | Nuclear | 26.74% | 23.65% | 19.20% | 1.11 |
 | PUBM | PubMatic Inc. | Adtech | 16.32% | 22.22% | 14.71% | 1.43 |
-| LUNR | Intuitive Machines Inc. | Space | 21.25% | 22.11% | 14.89% | 2.36 |
-| TTD | The Trade Desk Inc. | Adtech | 12.85% | 18.96% | 16.91% | 5.19 |
+| LUNR | Intuitive Machines Inc. | Space | 21.25% | 22.11% | 14.89% | 2.37 |
+| TTD | The Trade Desk Inc. | Adtech | 12.85% | 18.96% | 16.91% | 5.33 |
 | SPCE | Virgin Galactic Holdings Inc. | Space | 14.34% | 16.19% | 12.11% | 1.69 |
 
 ## Risk Warnings
 | ticker | company_name | industry_group | return_10d | max_drawdown_10d | relative_volume |
 | --- | --- | --- | --- | --- | --- |
 | MRVL | Marvell Technology Inc. | Semiconductors | -33.87% | -46.93% | 1.14 |
-| INTC | Intel Corporation | Semiconductors | -34.38% | -45.31% | 0.99 |
+| INTC | Intel Corporation | Semiconductors | -34.38% | -45.31% | 1.00 |
 | DDOG | Datadog Inc. | Cloud Software | -35.90% | -37.82% | 0.97 |
 | DELL | Dell Technologies Inc. | AI Infrastructure | -25.86% | -36.87% | 0.88 |
 | FTNT | Fortinet Inc. | Cybersecurity | -33.20% | -35.76% | 0.86 |
 | ONDS | Ondas Holdings Inc. | Defense Drones | -3.08% | -34.30% | 1.02 |
 | TER | Teradyne Inc. | Robotics Automation | -20.39% | -34.27% | 1.18 |
 | NOW | ServiceNow Inc. | Cloud Software | -35.04% | -34.12% | 0.65 |
-| NBIS | Nebius Group N.V. | AI Infrastructure | -7.71% | -33.99% | 0.74 |
-| MU | Micron Technology Inc. | Semiconductors | -18.87% | -33.24% | 1.03 |
+| NBIS | Nebius Group N.V. | AI Infrastructure | -7.71% | -33.99% | 0.75 |
+| MU | Micron Technology Inc. | Semiconductors | -18.87% | -33.24% | 1.04 |
 
 ## Deterministic System Interpretation
 - The leading industry by 10 day return is Adtech at 24.65%.
