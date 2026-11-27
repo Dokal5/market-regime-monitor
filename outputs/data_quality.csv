@@ -64,7 +64,7 @@ ORCL,Oracle Corporation,Cloud Software,2026-11-25,251,ok,資料日期與本次�
 NOK,Nokia Oyj,Telecom Infrastructure,2026-11-25,251,ok,資料日期與本次市場日期一致。
 TTD,The Trade Desk Inc.,Adtech,2026-11-25,251,ok,資料日期與本次市場日期一致。
 APP,AppLovin Corporation,Adtech,2026-11-25,251,ok,資料日期與本次市場日期一致。
-ROKU,Roku Inc.,Adtech,2026-11-06,238,stale,最新資料日期 2026-11-06 早於本次市場日期 2026-11-25。
+ROKU,Roku Inc.,Adtech,2026-11-09,2,stale,最新資料日期 2026-11-09 早於本次市場日期 2026-11-25。
 MGNI,Magnite Inc.,Adtech,2026-11-25,251,ok,資料日期與本次市場日期一致。
 PUBM,PubMatic Inc.,Adtech,2026-11-25,251,ok,資料日期與本次市場日期一致。
 DV,DoubleVerify Holdings Inc.,Adtech,2026-11-25,251,ok,資料日期與本次市場日期一致。
@@ -129,4 +129,4 @@ DIA,SPDR Dow Jones Industrial Average ETF Trust,Market ETFs,2026-11-25,251,ok,�
 VTI,Vanguard Total Stock Market ETF,Market ETFs,2026-11-25,251,ok,資料日期與本次市場日期一致。
 VOO,Vanguard S&P 500 ETF,Market ETFs,2026-11-25,251,ok,資料日期與本次市場日期一致。
 EWT,iShares MSCI Taiwan ETF,Market ETFs,2026-11-25,251,ok,資料日期與本次市場日期一致。
-VUAA.L,Vanguard S&P 500 UCITS ETF USD Acc,Market ETFs,2026-11-24,253,stale,最新資料日期 2026-11-24 早於本次市場日期 2026-11-25。
+VUAA.L,Vanguard S&P 500 UCITS ETF USD Acc,Market ETFs,2026-11-25,253,ok,資料日期與本次市場日期一致。
